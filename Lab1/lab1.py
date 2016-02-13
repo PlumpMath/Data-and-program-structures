@@ -10,10 +10,8 @@ def next(x): return x+1
 
 def sum(term, lower, successor, upper):
 	if lower > upper:
-		print ("0 = ")
 		return 0
 	else:
-		print(lower, "+")
 		return term(lower) + \
 			sum(term, successor(lower), successor, upper)
 
@@ -23,7 +21,6 @@ def sum_iter(term, lower, successor, upper):
 		if lower > upper :
 			return result
 		else:
-			print("lower: ", lower , "result: ", result)
 			return iter(successor(lower), result + term(lower))
 	return iter(lower,0)
 # every step of the recursion calculates it's own result, no need to save everything on the stack.
@@ -35,7 +32,6 @@ def product(term, lower, successor, upper):
 		print ("1 = ")
 		return 1
 	else:
-		print(lower, "*")
 		return term(lower) * product(term, successor(lower), successor, upper)
 
 
@@ -44,7 +40,6 @@ def product_iter(term, lower, successor, upper):
 		if lower > upper :
 			return result
 		else:
-			print("lower: ", lower , "result: ", result)
 			return iter_p(successor(lower), result * term(lower))
 	return iter_p(lower,1)
 
@@ -52,6 +47,15 @@ def product_iter(term, lower, successor, upper):
 
 def factorial(value):
     return product((lambda n: n),2,(lambda n: n + 1),value)
+
+def even_function(n):
+	if (n % 2 == 0):
+		return (n+2)/(n+1)
+	else:
+		return (n+1)/(n+2)
+	
+def approx_pi (n):
+	return 4*product_iter(even_function, 1, next, n) 
 
 ###################################################################
 
@@ -167,6 +171,7 @@ def output_function():
     print("----------- factorial ---------")
     print(" based on recursive product ")
     print("result: {0}".format(factorial(x)))
+    print("Pi approximation: {0}".format(approx_pi(800)))
     
     print("----------- Accumulators ---------")
     print("accumulate sum result: {0}".format(accumulate(add,0,(lambda n: n),x,next,y)))
@@ -186,11 +191,11 @@ def output_function():
     print("----------- Repeat -----------")
     sq_twice = repeat(square,2)    
     print("repeat square twice with input 5 result: ", sq_twice(5))    
-    print("Smooth square of 4 result: ", smooth(square,4))
-	five_sm = n_fold_smooth(square, 5)
-    print(five_sm(4))
-    regular = n_fold_smooth(square, 0)
-    print(regular(4))
+    print("Smooth square of 4 result: ", smooth(square)(4))
+    five_sm = n_fold_smooth(square,5)
+    print("5-fold-smooth square of 4 result: ",five_sm(4))
+    regular = n_fold_smooth(square,0)
+    print("regular square of 4 result: ",regular(4))
 
 
     print(test())
