@@ -63,50 +63,6 @@ class Function:
       self.environment.setVariable("that", that)
 
     self.__call__(self, this, *args)
-    '''
-    Problem analys:
-    
-    Test delen som skapar error är följande
-    def func2(self, env):
-        self.assertEqual(env.value("this"), 10)
-        self.assertEqual(env.value("arg1"), 2)
-        self.assertEqual(env.value("arg2"), 5)
-
-
-    env  = Environment()
-    function = Function(["arg1", "arg2"], env, lambda environment: self.func2(environment))
-    function(10, 2, 5)
-    function.call(None, 10, 2, 5)
-
-
-    function(10, 2, 5) säger att this: 10 args: (2,5) vilket är rätt.
-    medan
-    function.call(None, 10, 2, 5) säger att this är ett Function object. vilket är fel
-
-    Min output säger för funcion respektive .call:
-
-    this: 10 args:  (2, 5)
-    ['arg1', 'arg2'] (2, 5)
-    this: <Interpreter.Function.Function object at 0x7f07ccbebf28> args:  (10, 2, 5)
-    ['arg1', 'arg2'] (10, 2, 5)
-    more args then argNames
-
-
-
-    Traceback output:
-    AssertionError: <Interpreter.Function.Function object at 0x7f07ccbebf28> != 10
-
-
-
-    Detta betyder att om funktionen kallas direkt har vi ett beteende och gör vi ett call har vi ett annat?
-
-    vi vet också från problem beskrivningen att
-
-    "this is the pointer to the object (equivalent of self in python)"
-    vilket jag skulle säga stämmer för .call men inte för function. vilket gör detta ännu mer invecklat då det är function som beter sig så som de verkar förvänta sig.
-
-    '''
-
 
   def __call__(self, this, *args):
     '''
@@ -117,7 +73,7 @@ class Function:
     self.environment = Environment(self.parent)
     self.environment.defineVariable("this", this)
     numberofNone = 0 # Handle extra None-arguments
-    strangeTHIS = 0  # if call-function we need to handle it
+    strangeTHIS = 0  # call-function needs to be handled differently?
     for count, value in enumerate(args):
       if (value == None):
         numberofNone += 1                 # ??
