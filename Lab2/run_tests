@@ -12,16 +12,15 @@ fi
 
 if [ $TEST_NAME = "all" -o $TEST_NAME = "environment" ]
 then
-  PYTHONPATH="$ESPY_DIR:$PYTHONPATH" $DIR/Tests/Environment.py
+  PYTHONPATH="$ESPY_DIR:$PYTHONPATH" "$DIR"/Tests/Environment.py
 fi
 
 if [ $TEST_NAME = "all" -o $TEST_NAME = "function" ]
 then
-  PYTHONPATH="$ESPY_DIR:$PYTHONPATH" $DIR/Tests/Function.py
+  PYTHONPATH="$ESPY_DIR:$PYTHONPATH" "$DIR"/Tests/Function.py
 fi
 
 if [ $TEST_NAME = "all" -o $TEST_NAME = "property" ]
 then
-  PYTHONPATH="$ESPY_DIR:$PYTHONPATH" $DIR/Tests/Property.py
+  PYTHONPATH="$ESPY_DIR:$PYTHONPATH" "$DIR"/Tests/Property.py
 fi
-
