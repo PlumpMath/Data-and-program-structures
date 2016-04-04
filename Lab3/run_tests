@@ -3,4 +3,4 @@
 ESPY_DIR="`pwd`/$1"
 DIR=$( cd -P "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 
-$DIR/../espytester/espytester.py $ESPY_DIR/es.py $DIR/../Lab3 $2
+"$DIR"/../espytester/espytester.py "$ESPY_DIR"/es.py "$DIR"/../Lab3 "$2"
