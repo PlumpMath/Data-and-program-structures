@@ -22,21 +22,13 @@ class Function:
     This creates a new function with a set of args (which is an array of string with the name of the variables used as arguments), the global environment
     used when defining the function and a lambda function defining the body to be called (should take one single argument, which is the environment)
     '''
-
     self.parent = environment
-    self.argNames = args; # argNames contain a list of the names of the arguments
+    self.argNames = args;
     self.body = body
-
-
-# ---------------------
-    for i in args:
-        environment.defineVariable(i); # must be defined in environment so a value can be added in __call__.
-
-
 
   def call(self, that, this, *args):
     '''
-    Call the function. This function is usefull since in ECMAScript, a function is an object and it can be called with the function "call". For instance:
+    Call the function. This function is useful since in ECMAScript, a function is an object and it can be called with the function "call". For instance:
 
     function MyFunction(arg)
     {
@@ -58,32 +50,15 @@ class Function:
     * this is the pointer to the object (equivalent of self in python)
     * args is the list of arguments passed to the function
     '''
-    
-    if that != None:
-      self.environment.setVariable("that", that)
-
-    self.__call__(self, this, *args)
+    return that.__call__(this, *args)
 
   def __call__(self, this, *args):
     '''
     Call the function. With the this argument.
     '''
-
-    print(self.argNames, args)
     self.environment = Environment(self.parent)
     self.environment.defineVariable("this", this)
-    numberofNone = 0 # Handle extra None-arguments
-    strangeTHIS = 0  # call-function needs to be handled differently?
     for count, value in enumerate(args):
-      if (value == None):
-        numberofNone += 1                 # ??
-      elif (count > ((len(self.argNames) + numberofNone) -1 + strangeTHIS)):
-        pass  
-      else:
-        if((this == self) and (strangeTHIS == 0)):
-            self.environment.setVariable("this", value)
-            strangeTHIS = -1
-        else:  
-            self.environment.setVariable(self.argNames[count - numberofNone], value) 
-            #fails if variable isn't defined in init. It could probably also be done by defining the variable here(?)
+      self.environment.defineVariable(self.argNames[count], value)
+
     return self.body(self.environment)
