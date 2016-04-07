@@ -1,3 +1,4 @@
+import inspect
 import antlr4
 import Utils
 
@@ -8,13 +9,23 @@ from Interpreter.Math import MathModule
 from Interpreter.Environment import Environment
 from Interpreter.Object import Object, ObjectModule
 
+
 class InterpreterVisitor(ECMAScriptVisitor):
 
     def __init__(self, environment = Environment(), input=None):
-      self.environment = environment
-      self.environment.defineVariable("console", Console())
-      self.environment.defineVariable("Math", MathModule())
-      self.environment.defineVariable("Object", ObjectModule())
+        self.environment = environment
+        self.environment.defineVariable("console", Console())
+        self.environment.defineVariable("Math", MathModule())
+        self.environment.defineVariable("Object", ObjectModule())
+
+
+    def inspector(self, ctx):
+        print("‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾")
+        print("In function: " + str(inspect.stack()[1].function))
+        print("_______________________")
+        for child in ctx.children:
+            print(child.accept(self))
+
 
     def visitTerminal(self, node):
         if node.symbol.text == "true":
@@ -77,7 +88,11 @@ class InterpreterVisitor(ECMAScriptVisitor):
 
     # Visit a parse tree produced by ECMAScriptParser#BinaryExpression.
     def visitBinaryExpression(self, ctx):
-        raise Utils.UnimplementedVisitorException(ctx)
+        self.inspector(ctx)
+        arg1 = ctx.children[0].accept(self)
+        operator = ctx.children[1].accept(self)
+        arg2 = ctx.children[2].accept(self)
+        return self.binaryOperators[operator](arg1, arg2)
 
 
     # Visit a parse tree produced by ECMAScriptParser#futureReservedWord.
