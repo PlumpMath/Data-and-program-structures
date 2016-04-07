@@ -22,8 +22,9 @@ class InterpreterVisitor(ECMAScriptVisitor):
       self.environment.defineVariable("Object", ObjectModule())
       self.operators = { "+": operator.add, "-": operator.sub, "*": operator.mul,
                          "/": operator.truediv, "%": operator.mod,
-                         "<<": operator.lshift, ">>": operator.rshift,
-                         ">>>": lambda x, y: (x % 0x100000000) >> y,
+                         "<<": lambda x, y: float(operator.lshift(int(x), int(y))),
+                         ">>": lambda x, y: float(operator.rshift(int(x), int(y))),
+                         ">>>": lambda x, y: float((int(x) % 0x100000000) >> int(y)),
                          "<": operator.lt, ">": operator.gt,
                          "<=": operator.le, ">=": operator.ge,
                          "==": operator.eq, "!=": operator.ne,
@@ -31,7 +32,7 @@ class InterpreterVisitor(ECMAScriptVisitor):
                          "!==": lambda x, y: type(x) != type(y) or x != y,
                          "||": lambda x, y: x or y, "&&": lambda x, y: x and y }
 
-      self.unaries = { "+": lambda x: +x, "-": lambda x: -x, "~": lambda x: ~x,
+      self.unaries = { "+": lambda x: +x, "-": lambda x: -x, "~": lambda x: float(~int(x)),
                        "!": lambda x: not x, "--": lambda x: x - 1,
                        "++": lambda x: x + 1 }
 
@@ -44,7 +45,7 @@ class InterpreterVisitor(ECMAScriptVisitor):
         elif node.symbol.text[0] == '"':
             return node.symbol.text[1:-1]
         elif node.symbol.text[0:2] == "0x":
-            return float(int(node.symbol.text, 16))
+            return float.fromhex(node.symbol.text)
         else:
             return node.symbol.text
 
@@ -152,10 +153,7 @@ class InterpreterVisitor(ECMAScriptVisitor):
     # Visit a parse tree produced by ECMAScriptParser#numericLiteral.
     def visitNumericLiteral(self, ctx):
         s = ctx.children[0].accept(self)
-        try:
-            return int(s)
-        except ValueError:
-            return float(s)
+        return float(s)
 
 
     # Visit a parse tree produced by ECMAScriptParser#ForInStatement.
