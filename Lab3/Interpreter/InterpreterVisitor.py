@@ -1,4 +1,6 @@
 import inspect
+import operator
+
 import antlr4
 import Utils
 
@@ -17,6 +19,8 @@ class InterpreterVisitor(ECMAScriptVisitor):
         self.environment.defineVariable("console", Console())
         self.environment.defineVariable("Math", MathModule())
         self.environment.defineVariable("Object", ObjectModule())
+        self.operators = { "+": operator.add, "-": operator.sub, "*": operator.mul,
+                         "/": operator.truediv, "%": operator.mod}
 
 
     def inspector(self, ctx):
@@ -24,7 +28,8 @@ class InterpreterVisitor(ECMAScriptVisitor):
         print("In function: " + str(inspect.stack()[1].function))
         print("_______________________")
         for child in ctx.children:
-            print(child.accept(self))
+            val = child.accept(self)
+            print(str(type(val)) + ": " + str(val))
 
 
     def visitTerminal(self, node):
@@ -38,6 +43,7 @@ class InterpreterVisitor(ECMAScriptVisitor):
             return float.fromhex(node.symbol.text)
         else:
             return node.symbol.text
+
 
     # Visit a parse tree produced by ECMAScriptParser#PropertyExpressionAssignment.
     def visitPropertyExpressionAssignment(self, ctx):
@@ -88,11 +94,10 @@ class InterpreterVisitor(ECMAScriptVisitor):
 
     # Visit a parse tree produced by ECMAScriptParser#BinaryExpression.
     def visitBinaryExpression(self, ctx):
-        self.inspector(ctx)
         arg1 = ctx.children[0].accept(self)
         operator = ctx.children[1].accept(self)
         arg2 = ctx.children[2].accept(self)
-        return self.binaryOperators[operator](arg1, arg2)
+        return self.operators[operator](arg1, arg2)
 
 
     # Visit a parse tree produced by ECMAScriptParser#futureReservedWord.
@@ -137,7 +142,7 @@ class InterpreterVisitor(ECMAScriptVisitor):
 
     # Visit a parse tree produced by ECMAScriptParser#numericLiteral.
     def visitNumericLiteral(self, ctx):
-        return self.visitChildren(ctx)
+        return float(self.visitChildren(ctx))
 
 
     # Visit a parse tree produced by ECMAScriptParser#ForInStatement.
