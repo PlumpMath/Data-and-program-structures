@@ -18,7 +18,7 @@ class InterpreterVisitor(ECMAScriptVisitor):
 
     def visitTerminal(self, node):
       return node.symbol.text
-    
+
     # Visit a parse tree produced by ECMAScriptParser#PropertyExpressionAssignment.
     def visitPropertyExpressionAssignment(self, ctx):
         raise Utils.UnimplementedVisitorException(ctx)
@@ -113,7 +113,7 @@ class InterpreterVisitor(ECMAScriptVisitor):
 
     # Visit a parse tree produced by ECMAScriptParser#numericLiteral.
     def visitNumericLiteral(self, ctx):
-        raise Utils.UnimplementedVisitorException(ctx)
+        return self.visitChildren(ctx)
 
 
     # Visit a parse tree produced by ECMAScriptParser#ForInStatement.
@@ -250,12 +250,12 @@ class InterpreterVisitor(ECMAScriptVisitor):
 
     # Visit a parse tree produced by ECMAScriptParser#expressionSequence.
     def visitExpressionSequence(self, ctx):
-      return self.visitChildren(ctx)
+        return self.visitChildren(ctx)
 
 
     # Visit a parse tree produced by ECMAScriptParser#literal.
     def visitLiteral(self, ctx):
-      return child.accept(self)
+        return ctx.children[0].accept(self)
 
 
     # Visit a parse tree produced by ECMAScriptParser#variableStatement.
@@ -275,7 +275,7 @@ class InterpreterVisitor(ECMAScriptVisitor):
 
     # Visit a parse tree produced by ECMAScriptParser#statement.
     def visitStatement(self, ctx):
-      self.visitChildren(ctx)
+        self.visitChildren(ctx)
 
 
     # Visit a parse tree produced by ECMAScriptParser#ForStatement.
@@ -376,5 +376,3 @@ class InterpreterVisitor(ECMAScriptVisitor):
     # Visit a parse tree produced by ECMAScriptParser#UnaryAssignmentExpression.
     def visitUnaryAssignmentExpression(self, ctx):
         raise Utils.UnimplementedVisitorException(ctx)
-
-
