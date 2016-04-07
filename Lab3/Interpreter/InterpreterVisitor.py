@@ -19,9 +19,9 @@ class InterpreterVisitor(ECMAScriptVisitor):
         self.environment.defineVariable("console", Console())
         self.environment.defineVariable("Math", MathModule())
         self.environment.defineVariable("Object", ObjectModule())
-        self.operators = { "+": operator.add, "-": operator.sub, "*": operator.mul,
+        self.binaryOperators = { "+": operator.add, "-": operator.sub, "*": operator.mul,
                          "/": operator.truediv, "%": operator.mod}
-
+        self.unaryOperators = {}
 
     def inspector(self, ctx):
         print("‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾")
@@ -97,7 +97,7 @@ class InterpreterVisitor(ECMAScriptVisitor):
         arg1 = ctx.children[0].accept(self)
         operator = ctx.children[1].accept(self)
         arg2 = ctx.children[2].accept(self)
-        return self.operators[operator](arg1, arg2)
+        return self.binaryOperators[operator](arg1, arg2)
 
 
     # Visit a parse tree produced by ECMAScriptParser#futureReservedWord.
@@ -319,7 +319,8 @@ class InterpreterVisitor(ECMAScriptVisitor):
 
     # Visit a parse tree produced by ECMAScriptParser#ParenthesizedExpression.
     def visitParenthesizedExpression(self, ctx):
-        raise Utils.UnimplementedVisitorException(ctx)
+        # Return what's between the parenthesis ( what ).
+        return ctx.children[1].accept(self)
 
 
     # Visit a parse tree produced by ECMAScriptParser#objectLiteral.
