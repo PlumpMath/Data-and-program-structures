@@ -28,6 +28,7 @@ class Environment:
 
 
 
+
     def setVariable(self, name, value):
         """
         Set the value of a variable. If the variable is not defined in
@@ -35,22 +36,13 @@ class Environment:
         If it is not found in the root environment, it should raise the
         exception Utils.UnknownVariable.
         """
-        for key in self.var_dictionary:
-            if (key == name):
-                self.var_dictionary[name] = value
-                return
-            else:
-                pass #Nothing
-        if (self.parent == None):
-            pass
+        if name in self.var_dictionary:
+            self.var_dictionary[name] = value
+        elif self.parent:
+            self.parent.setVariable(name, value)
         else:
-            for key in self.parent.var_dictionary:
-                if (key == name):
-                    self.parent.var_dictionary[name] = value
-                    return
-                else:
-                    pass #Nothing
-        raise UnknownVariable(name)
+            raise UnknownVariable(name)
+
 
     def value(self, name):
         """
@@ -59,21 +51,12 @@ class Environment:
         If it is not found in the root environment, it should raise the
         exception Utils.UnknownVariable.
         """
-        for key in self.var_dictionary:
-            if (key == name):                
-                return self.var_dictionary.get(name)
-            else:
-                pass #Nothing
-        if (self.parent == None):
-            pass
+        if name in self.var_dictionary:
+            return self.var_dictionary[name]
+        elif self.parent: 
+            return self.parent.value(name)
         else:
-            for key in self.parent.var_dictionary:
-                if (key == name):                    
-                    return self.parent.var_dictionary.get(name)
-                else:
-                    pass #Nothing
-        raise UnknownVariable(name)
-
+            raise UnknownVariable(name)
 
 
 
