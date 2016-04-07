@@ -17,7 +17,16 @@ class InterpreterVisitor(ECMAScriptVisitor):
       self.environment.defineVariable("Object", ObjectModule())
 
     def visitTerminal(self, node):
-      return node.symbol.text
+        if node.symbol.text == "true":
+            return True
+        elif node.symbol.text == "false":
+            return False
+        elif node.symbol.text[0] == '"':
+            return node.symbol.text[1:-1]
+        elif node.symbol.text[0:2] == "0x":
+            return float.fromhex(node.symbol.text)
+        else:
+            return node.symbol.text
 
     # Visit a parse tree produced by ECMAScriptParser#PropertyExpressionAssignment.
     def visitPropertyExpressionAssignment(self, ctx):
