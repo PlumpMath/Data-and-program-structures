@@ -19,9 +19,22 @@ class InterpreterVisitor(ECMAScriptVisitor):
         self.environment.defineVariable("console", Console())
         self.environment.defineVariable("Math", MathModule())
         self.environment.defineVariable("Object", ObjectModule())
-        self.binaryOperators = { "+": operator.add, "-": operator.sub, "*": operator.mul,
-                         "/": operator.truediv, "%": operator.mod}
-        self.unaryOperators = {}
+        self.binaries = { '+': operator.add, '-': operator.sub,
+                          '*': operator.mul, '/': operator.truediv,
+                          '%': operator.mod,
+                          '<<': lambda x, y: float(operator.lshift(int(x), int(y))),
+                          '>>': lambda x, y: float(operator.rshift(int(x), int(y))),
+                          '>>>': lambda x, y: float((int(x) % 0x100000000) >> int(y)),
+                          '<': operator.lt, '>': operator.gt,
+                          '<=': operator.le, '>=': operator.ge,
+                          '==': operator.eq, '!=': operator.ne,
+                          '===': lambda x, y: type(x) == type(y) and x == y,
+                          '!==': lambda x, y: type(x) != type(y) or x != y,
+                          '||': lambda x, y: x or y, '&&': lambda x, y: x and y }
+
+        self.unaries = { '-': operator.neg, '+': operator.pos,
+                         '~': lambda x: float(~int(x)), '!': operator.not_ }
+
 
     def inspector(self, ctx):
         print("‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾")
@@ -97,7 +110,7 @@ class InterpreterVisitor(ECMAScriptVisitor):
         arg1 = ctx.children[0].accept(self)
         operator = ctx.children[1].accept(self)
         arg2 = ctx.children[2].accept(self)
-        return self.binaryOperators[operator](arg1, arg2)
+        return self.binaries[operator](arg1, arg2)
 
 
     # Visit a parse tree produced by ECMAScriptParser#futureReservedWord.
@@ -259,7 +272,9 @@ class InterpreterVisitor(ECMAScriptVisitor):
 
     # Visit a parse tree produced by ECMAScriptParser#UnaryExpression.
     def visitUnaryExpression(self, ctx):
-        raise Utils.UnimplementedVisitorException(ctx)
+        operator = ctx.children[0].accept(self)
+        argument = ctx.children[1].accept(self)
+        return self.unaries[operator](argument)
 
 
     # Visit a parse tree produced by ECMAScriptParser#WhileStatement.
