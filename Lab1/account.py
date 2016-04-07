@@ -23,7 +23,7 @@ def make_account(balance, rate):
 
 	def deposit(amount, t):
 		nonlocal time
-		#nonlocal balance
+		nonlocal balance
 		if (t < time):
 			raise AccountError("Time moving backwards?")
 		intrest = (t-time)*rate*balance
@@ -38,9 +38,9 @@ def make_account(balance, rate):
 
 def test():
 	a1 = make_account(10,0.1)		# frame 1
-	a2 = make_account(10,0.01)		# frame 2
+	a2 = make_account(100,0.01)		# frame 2
 	a1['deposit'](100,10)			# changes in frame 1
-	a2['withdraw'](10,10)			# no changes due to AccountError raised from frame 2
+	a2['withdraw'](10,10)			# 
 	print("balance for a1: {0}".format(a1['get_value']())) # display a1
 	print("balance for a2: {0}".format(a2['get_value']())) # display a2
 test()
