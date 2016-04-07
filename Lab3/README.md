@@ -16,3 +16,9 @@ Note how 01_literals is the name a file inside the Tests folder. So in order to 
 ```
 ./espytester.py ./es.py ./ 02_expressions/01_addition
 ```
+
+To run all tests:
+
+```
+./espytester.py ./es.py ./
+```
