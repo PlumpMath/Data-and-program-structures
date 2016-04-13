@@ -9,38 +9,38 @@ def next(x): return x+1
 
 
 def sum(term, lower, successor, upper):
-	if lower > upper:
-		return 0
-	else:
-		return term(lower) + \
-			sum(term, successor(lower), successor, upper)
+    if lower > upper:
+        return 0
+    else:
+        return term(lower) + \
+            sum(term, successor(lower), successor, upper)
 
 
 def sum_iter(term, lower, successor, upper):
-	def iter(lower, result):
-		if lower > upper :
-			return result
-		else:
-			return iter(successor(lower), result + term(lower))
-	return iter(lower,0)
+    def iter(lower, result):
+        if lower > upper :
+            return result
+        else:
+            return iter(successor(lower), result + term(lower))
+    return iter(lower,0)
 # every step of the recursion calculates it's own result, no need to save everything on the stack.
 
 ###################################################################
 
 def product(term, lower, successor, upper):
-	if lower > upper:
-		return 1
-	else:
-		return term(lower) * product(term, successor(lower), successor, upper)
+    if lower > upper:
+        return 1
+    else:
+        return term(lower) * product(term, successor(lower), successor, upper)
 
 
 def product_iter(term, lower, successor, upper):
-	def iter_p(lower, result):
-		if lower > upper :
-			return result
-		else:
-			return iter_p(successor(lower), result * term(lower))
-	return iter_p(lower,1)
+    def iter_p(lower, result):
+        if lower > upper :
+            return result
+        else:
+            return iter_p(successor(lower), result * term(lower))
+    return iter_p(lower,1)
 
 ###################################################################
 
@@ -48,30 +48,30 @@ def factorial(value):
     return product((lambda n: n),2,(lambda n: n + 1),value)
 
 def even_function(n):
-	if (n % 2 == 0):
-		return (n+2)/(n+1)
-	else:
-		return (n+1)/(n+2)
+    if (n % 2 == 0):
+        return (n+2)/(n+1)
+    else:
+        return (n+1)/(n+2)
 
 def approx_pi (n):
-	return 4*product_iter(even_function, 1, next, n)
+    return 4*product_iter(even_function, 1, next, n)
 
 ###################################################################
 
 def accumulate (combiner, null, term, lower, succ, upper):
-	if lower > upper:
-		return null
-	else:
-		return combiner(term(lower),  accumulate(combiner, null, term, succ(lower), succ, upper))
+    if lower > upper:
+        return null
+    else:
+        return combiner(term(lower),  accumulate(combiner, null, term, succ(lower), succ, upper))
 
 
 def accumulate_iter (combiner, null, term, lower, succ, upper):
-	def iter_a(lower, result):
-		if lower > upper :
-			return result
-		else:
-			return iter_a(succ(lower), combiner(result,  term(lower)))
-	return iter_a(lower, null)
+    def iter_a(lower, result):
+        if lower > upper :
+            return result
+        else:
+            return iter_a(succ(lower), combiner(result,  term(lower)))
+    return iter_a(lower, null)
 
 #c) non-linear functions ?
 
@@ -104,21 +104,21 @@ def reverse_l (seq):
 
 
 def repeat(f,n):
-	if n == 0:
-		return (lambda x: x)
-	else:
-		return (lambda x: f(repeat(f,n-1)(x)))
+    if n == 0:
+        return (lambda x: x)
+    else:
+        return (lambda x: f(repeat(f,n-1)(x)))
 
 # f,g => f o g = f(g(x))
 def compose(f,g):
-	return (lambda x: f(g(x)))
+    return (lambda x: f(g(x)))
 
 
 
 def repeated_application(f, n):
-	if n == 0:
-		return lambda x: x
-	return accumulate_iter (compose, f, lambda x: f, 1, next, n-1)
+    if n == 0:
+        return lambda x: x
+    return accumulate_iter (compose, f, lambda x: f, 1, next, n-1)
 
 # iter_a(succ(lower), combiner(result,  term(lower)))
 # target for accumulate: compose (old_f , new_f )
@@ -131,10 +131,10 @@ def repeated_application(f, n):
 
 ###################################################################
 def smooth(f):
-	return (lambda x: ( f(x + 0.01) + f(x) + f(x - 0.01) ) / 3 )
+    return (lambda x: ( f(x + 0.01) + f(x) + f(x - 0.01) ) / 3 )
 
 def n_fold_smooth(f,n):
-	return(lambda x: (repeat(smooth,n))(f)(x))
+    return(lambda x: (repeat(smooth,n))(f)(x))
 # repeat f,4 -> f(f(f(f(x))))
 # smooth f,4 -> (f(4.01) + f(4) + f(3.99))/3 -> y
 # om repeat tar in smooth -> smooth(smooth(x)) dvs x = f?
