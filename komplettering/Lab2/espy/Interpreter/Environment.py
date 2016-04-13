@@ -14,7 +14,6 @@ class Environment:
         """
         self.parent = parent
         self.var_dictionary = {}
-        pass
 
 
 
@@ -24,8 +23,6 @@ class Environment:
         "init".
         """        
         self.var_dictionary[name] = init        
-        pass
-
 
 
 

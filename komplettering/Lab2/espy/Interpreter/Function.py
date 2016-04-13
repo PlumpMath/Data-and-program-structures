@@ -28,12 +28,6 @@ class Function:
     self.body = body
 
 
-# ---------------------
-    for i in args:
-        environment.defineVariable(i); # must be defined in environment so a value can be added in __call__.
-
-
-
   def call(self, that, this, *args):
     '''
     Call the function. This function is usefull since in ECMAScript, a function is an object and it can be called with the function "call". For instance:
@@ -65,25 +59,20 @@ class Function:
     self.__call__(self, this, *args)
 
   def __call__(self, this, *args):
-    '''
+      '''
     Call the function. With the this argument.
+	
+	step by step:
+	create function-environment with correct parent in the local scope
+	create pointer to self (this)
+	zip argument names from function initiation with argument values
+	set all environment variables with its values
+	return function-body(function-arguments) == return f(x)
     '''
-
-    print(self.argNames, args)
-    self.environment = Environment(self.parent)
-    self.environment.defineVariable("this", this)
-    numberofNone = 0 # Handle extra None-arguments
-    strangeTHIS = 0  # call-function needs to be handled differently?
-    for count, value in enumerate(args):
-      if (value == None):
-        numberofNone += 1                 # ??
-      elif (count > ((len(self.argNames) + numberofNone) -1 + strangeTHIS)):
-        pass  
-      else:
-        if((this == self) and (strangeTHIS == 0)):
-            self.environment.setVariable("this", value)
-            strangeTHIS = -1
-        else:  
-            self.environment.setVariable(self.argNames[count - numberofNone], value) 
-            #fails if variable isn't defined in init. It could probably also be done by defining the variable here(?)
-    return self.body(self.environment)
+	localEnvironment = Environment(self.parent)
+    localEnvironment.defineVariable("this", this)
+	
+	argValuePairs = zip(self.argNames, args)
+	for name,value in argValuePairs:
+		localEnvironment.definedVariable(name,value)
+	return self.body(localEnvironment)
