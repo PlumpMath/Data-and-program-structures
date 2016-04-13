@@ -52,27 +52,28 @@ class Function:
     * this is the pointer to the object (equivalent of self in python)
     * args is the list of arguments passed to the function
     '''
-    
+
     if that != None:
       self.environment.setVariable("that", that)
 
     self.__call__(self, this, *args)
 
   def __call__(self, this, *args):
-      '''
-    Call the function. With the this argument.
-	
-	step by step:
-	create function-environment with correct parent in the local scope
-	create pointer to self (this)
-	zip argument names from function initiation with argument values
-	set all environment variables with its values
-	return function-body(function-arguments) == return f(x)
     '''
-	localEnvironment = Environment(self.parent)
+    Call the function. With the this argument.
+
+    step by step:
+    create function-environment with correct parent in the local scope
+    create pointer to self (this)
+    zip argument names from function initiation with argument values
+    set all environment variables with its values
+    return function-body(function-arguments) == return f(x)
+    '''
+    localEnvironment = Environment(self.parent)
     localEnvironment.defineVariable("this", this)
-	
-	argValuePairs = zip(self.argNames, args)
-	for name,value in argValuePairs:
-		localEnvironment.definedVariable(name,value)
-	return self.body(localEnvironment)
+
+    argValuePairs = zip(self.argNames, args)
+    for name,value in argValuePairs:
+      localEnvironment.defineVariable(name, value)
+
+    return self.body(localEnvironment)
