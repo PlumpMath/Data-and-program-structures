@@ -40,7 +40,10 @@ def test():
 	a1 = make_account(10,0.1)		# frame 1
 	a2 = make_account(100,0.01)		# frame 2
 	a1['deposit'](100,10)			# changes in frame 1
-	a2['withdraw'](10,10)			# 
+	a2['withdraw'](10,10)			#
 	print("balance for a1: {0}".format(a1['get_value']())) # display a1
 	print("balance for a2: {0}".format(a2['get_value']())) # display a2
 test()
+
+
+# Varför skulle en bank inte kunna ha negativ inlåningsränt? Riksbanken är ju farligt nära i dagsläget.
