@@ -23,7 +23,10 @@ def sum_iter(term, lower, successor, upper):
         else:
             return iter(successor(lower), result + term(lower))
     return iter(lower,0)
-# every step of the recursion calculates it's own result, no need to save everything on the stack.
+
+# 1.1 b) It is tail recursive since it recurses as its very last
+#        action. The compiler/interpreter might take advantage of this
+#        when optimizing execution.
 
 ###################################################################
 
@@ -73,7 +76,9 @@ def accumulate_iter (combiner, null, term, lower, succ, upper):
             return iter_a(succ(lower), combiner(result,  term(lower)))
     return iter_a(lower, null)
 
-#c) non-linear functions ?
+# 1.3 c) Transitivitet. Vi måste kunna ändra ordning på operanderna
+#        utan att detta påverkar resultatet. Plus och gånger fungerar,
+#        minus och delat med ger inte rätt resultat.
 
 ###################################################################
 
@@ -103,7 +108,7 @@ def reverse_l (seq):
 ###################################################################
 
 
-def repeat(f,n):
+def repeat(f, n):
     if n == 0:
         return (lambda x: x)
     else:
@@ -120,14 +125,7 @@ def repeated_application(f, n):
         return lambda x: x
     return accumulate_iter (compose, f, lambda x: f, 1, next, n-1)
 
-# iter_a(succ(lower), combiner(result,  term(lower)))
-# target for accumulate: compose (old_f , new_f )
-# term must remove pendence on lower? -> (lambda x: f)
-# start with f
-# combiner is compose
-# go from 0 to N (number of iterations)
-# next element is lower+1
-
+# 1.5 b) Vi kan skriva signaturen repeat: func, Int -> func.
 
 ###################################################################
 def smooth(f):
@@ -202,36 +200,54 @@ output_function()
 
 
 
-#2.1
-#python seems to try and validate the arguments before executing the function.
-#Both f and test are considered ok as functions, but when you use f as an argument for test it seems like we get a infinite f()-call.
+# 2.1
+
+# Normal order evaluation, or lazy evaluation, would not consider f at
+# all since its not needed in order to execute the body of test. Since
+# x is equal to 0, the normal order evaluator doesn't have to resolve
+# f. This is because normal order evaluation evaluates function bodies
+# before function arguments.
+
+# Applicative order evaluation means that the arguments are evaluated
+# before the function budy in a left to right order. The implication
+# being that an applicative order evaluator would get stuck in an
+# infinite loop evaluating f.
+
 
 #2.2
-#print_mess is declared as a function-call with a preset-argument?
-#which means print_mess has created it's own scope for keep_val
 
-#value is defined on a global level
-#* we run keep_val with the preset given by print_mess. (local value + global x as x is not defined locally)
-#* g gets a local x and prints it while f do not inherit the x from g so it uses the global one.
-#* same conditions as before but with a new global x. (local x for g and global x for f)
+# print_mess is declared as a function-call with a preset-argument?
+# which means print_mess has created it's own scope for keep_val
 
-#b)
-#global frame:
-#x
-#f
-#g
-#keep_val
-#print_mess **
+# value is defined on a global level
+# * we run keep_val with the preset given by print_mess. (local value + global x as x is not defined locally)
+# * g gets a local x and prints it while f do not inherit the x from g so it uses the global one.
+# * same conditions as before but with a new global x. (local x for g and global x for f)
 
-#** f1:
-#value = "Stored"
-#f
-#return?
+# b)
+# global frame:
+# x
+# f
+# g
+# keep_val
+# print_mess **
 
-#g
+# ** f1:
+# value = "Stored"
+# f
+# return?
 
-#f
+# g
 
-#c)
-#dynamic scoping would lead to f inheriting values/arguments from g.
-#x in g's local scope would be assessible from f.
+# f
+
+# c) If python didn't have lexical scoping, but rather dynamic scoping,
+#    it would mean that name lookup would step upwards the call stack
+#    instead of upwards the functions definition in the code.
+#
+#    The output would then be:
+#    --- x=10, value="New and updated"
+#    In g: 5000
+#    In f: 5000
+#    In g: 5000
+#    In f: 5000
