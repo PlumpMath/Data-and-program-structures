@@ -52,11 +52,11 @@ class Function:
     * this is the pointer to the object (equivalent of self in python)
     * args is the list of arguments passed to the function
     '''
-
     if that != None:
       self.environment.setVariable("that", that)
 
-    self.__call__(self, this, *args)
+    self.__call__( this, *args)
+
 
   def __call__(self, this, *args):
     '''
@@ -71,9 +71,8 @@ class Function:
     '''
     localEnvironment = Environment(self.parent)
     localEnvironment.defineVariable("this", this)
-
     argValuePairs = zip(self.argNames, args)
-    for name,value in argValuePairs:
+    for name, value in argValuePairs:
       localEnvironment.defineVariable(name, value)
 
     return self.body(localEnvironment)
