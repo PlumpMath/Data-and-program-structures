@@ -43,10 +43,15 @@ class InterpreterVisitor(ECMAScriptVisitor):
         print("In function: ", inspect.stack()[1].function)
         print("_______________________")
         print("")
-        print("Begin child list.")
+        print("Begin child list, there are", len(ctx.children), "children.")
+        i = 0
         for child in ctx.children:
-            val = child.accept(self)
-            print(str(type(val)) + ": " + str(val))
+            try:
+                val = child.accept(self)
+            except:
+                pass
+            print(i, str(type(val)) + ": " + str(val))
+            i += 1
         print("End child list of", inspect.stack()[1].function, "\t.!.")
         print("")
 
@@ -302,7 +307,12 @@ class InterpreterVisitor(ECMAScriptVisitor):
     # Visit a parse tree produced by ECMAScriptParser#WhileStatement.
     def visitWhileStatement(self, ctx):
         while ctx.children[2].accept(self):
-            ctx.children[4].accept(self)
+            try:
+                ctx.children[4].accept(self)
+            except BreakException:
+                break
+            except ContinueException:
+                continue
 
 
     # Visit a parse tree produced by ECMAScriptParser#returnStatement.
@@ -359,12 +369,10 @@ class InterpreterVisitor(ECMAScriptVisitor):
         incrementorIndex = condIndex + 2
         if condition == ';':
             incrementorIndex -= 1
-
         incrementor = ctx.children[incrementorIndex].getText()
         expressionIndex = incrementorIndex + 2
-        if incrementor == ';':
+        if incrementor == ')':
             expressionIndex -= 1
-
         while ctx.children[condIndex].accept(self):
             try:
                 ctx.children[expressionIndex].accept(self)
@@ -372,6 +380,7 @@ class InterpreterVisitor(ECMAScriptVisitor):
             except BreakException:
                 break
             except ContinueException:
+                ctx.children[incrementorIndex].accept(self)
                 continue
 
     # Visit a parse tree produced by ECMAScriptParser#caseBlock.
@@ -446,7 +455,7 @@ class InterpreterVisitor(ECMAScriptVisitor):
 
     # Visit a parse tree produced by ECMAScriptParser#continueStatement.
     def visitContinueStatement(self, ctx):
-        raise Utils.UnimplementedVisitorException(ctx)
+        raise ContinueException
 
 
     # Visit a parse tree produced by ECMAScriptParser#caseClause.
