@@ -70,6 +70,10 @@ class Environment:
 
 
     def defineGlobal(self, name):
+        """
+        Defines a variable in the global scope
+        Ref: http://stackoverflow.com/questions/1470488/what-is-the-function-of-the-var-keyword-and-when-to-use-it-or-omit-it
+        """
         if self.parent:
             self.parent.defineGlobal(name)
         else:

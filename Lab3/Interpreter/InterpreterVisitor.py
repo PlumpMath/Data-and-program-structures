@@ -31,18 +31,22 @@ class InterpreterVisitor(ECMAScriptVisitor):
                           '===': lambda x, y: type(x) == type(y) and x == y,
                           '!==': lambda x, y: type(x) != type(y) or x != y,
                           '||': lambda x, y: x or y, '&&': lambda x, y: x and y }
-
         self.unaries = { '-': operator.neg, '+': operator.pos,
                          '~': lambda x: float(~int(x)), '!': operator.not_ }
-
+        self.assignment = { '=': lambda x, y: y,
+                            '+=': operator.iadd, '-=': operator.isub}
 
     def inspector(self, ctx):
         print("‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾")
-        print("In function: " + str(inspect.stack()[1].function))
+        print("In function: ", inspect.stack()[1].function)
         print("_______________________")
+        print("")
+        print("Begin child list.")
         for child in ctx.children:
             val = child.accept(self)
             print(str(type(val)) + ": " + str(val))
+        print("End child list of", inspect.stack()[1].function, "\t.!.")
+        print("")
 
 
     def visitTerminal(self, node):
@@ -65,12 +69,12 @@ class InterpreterVisitor(ECMAScriptVisitor):
 
     # Visit a parse tree produced by ECMAScriptParser#assignmentOperator.
     def visitAssignmentOperator(self, ctx):
-        raise Utils.UnimplementedVisitorException(ctx)
+        return ctx.children[0].accept(self)
 
 
     # Visit a parse tree produced by ECMAScriptParser#eos.
     def visitEos(self, ctx):
-        raise Utils.UnimplementedVisitorException(ctx)
+        return
 
 
     # Visit a parse tree produced by ECMAScriptParser#program.
@@ -120,7 +124,7 @@ class InterpreterVisitor(ECMAScriptVisitor):
 
     # Visit a parse tree produced by ECMAScriptParser#initialiser.
     def visitInitialiser(self, ctx):
-        raise Utils.UnimplementedVisitorException(ctx)
+        return ctx.children[1].accept(self)
 
 
     # Visit a parse tree produced by ECMAScriptParser#statementList.
@@ -165,7 +169,7 @@ class InterpreterVisitor(ECMAScriptVisitor):
 
     # Visit a parse tree produced by ECMAScriptParser#emptyStatement.
     def visitEmptyStatement(self, ctx):
-        raise Utils.UnimplementedVisitorException(ctx)
+        return
 
 
     # Visit a parse tree produced by ECMAScriptParser#labelledStatement.
@@ -222,7 +226,16 @@ class InterpreterVisitor(ECMAScriptVisitor):
 
     # Visit a parse tree produced by ECMAScriptParser#AssignmentOperatorExpression.
     def visitAssignmentOperatorExpression(self, ctx):
-        raise Utils.UnimplementedVisitorException(ctx)
+        self.inspector(ctx)
+        name = ctx.children[0].accept(self)
+        operator = ctx.children[1].accept(self)
+        rhs = ctx.children[2].accept(self)
+
+        if self.environment.exists(name):
+            self.environment.defineGlobal(name)
+
+        result = self.assignment[operator](name, rhs)
+        self.environment.setVariable(name, result)
 
 
     # Visit a parse tree produced by ECMAScriptParser#PostUnaryAssignmentExpression.
@@ -304,7 +317,7 @@ class InterpreterVisitor(ECMAScriptVisitor):
 
     # Visit a parse tree produced by ECMAScriptParser#variableStatement.
     def visitVariableStatement(self, ctx):
-        raise Utils.UnimplementedVisitorException(ctx)
+        self.visitChildren(ctx)
 
 
     # Visit a parse tree produced by ECMAScriptParser#FunctionExpression.
@@ -365,7 +378,10 @@ class InterpreterVisitor(ECMAScriptVisitor):
 
     # Visit a parse tree produced by ECMAScriptParser#variableDeclaration.
     def visitVariableDeclaration(self, ctx):
-        raise Utils.UnimplementedVisitorException(ctx)
+        self.inspector(ctx)
+        name = ctx.children[0].accept(self)
+        value = ctx.children[1].accept(self)
+        self.environment.defineVariable(name, value)
 
 
     # Visit a parse tree produced by ECMAScriptParser#finallyProduction.
@@ -405,7 +421,7 @@ class InterpreterVisitor(ECMAScriptVisitor):
 
     # Visit a parse tree produced by ECMAScriptParser#variableDeclarationList.
     def visitVariableDeclarationList(self, ctx):
-        raise Utils.UnimplementedVisitorException(ctx)
+        self.visitChildren(ctx)
 
 
     # Visit a parse tree produced by ECMAScriptParser#functionBody.
