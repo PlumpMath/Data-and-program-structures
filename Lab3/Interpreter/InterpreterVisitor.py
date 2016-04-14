@@ -375,7 +375,11 @@ class InterpreterVisitor(ECMAScriptVisitor):
 
     # Visit a parse tree produced by ECMAScriptParser#ifStatement.
     def visitIfStatement(self, ctx):
-        raise Utils.UnimplementedVisitorException(ctx)
+        if ctx.children[2].accept(self):
+            ctx.children[4].accept(self)
+        # If there is an else statement
+        elif len(ctx.children) > 6:
+            ctx.children[6].accept(self)
 
 
     # Visit a parse tree produced by ECMAScriptParser#reservedWord.
