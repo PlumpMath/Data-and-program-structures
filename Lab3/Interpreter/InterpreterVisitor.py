@@ -10,7 +10,7 @@ from Interpreter.Console import Console
 from Interpreter.Math import MathModule
 from Interpreter.Environment import Environment
 from Interpreter.Object import Object, ObjectModule
-
+from Interpreter.ControlExceptions import BreakException, ContinueException, ReturnException
 
 class InterpreterVisitor(ECMAScriptVisitor):
 
@@ -267,7 +267,9 @@ class InterpreterVisitor(ECMAScriptVisitor):
 
     # Visit a parse tree produced by ECMAScriptParser#DoStatement.
     def visitDoStatement(self, ctx):
-        raise Utils.UnimplementedVisitorException(ctx)
+        ctx.children[1].accept(self)
+        while ctx.children[4].accept(self):
+            ctx.children[1].accept(self)
 
 
     # Visit a parse tree produced by ECMAScriptParser#ObjectLiteralExpression.
@@ -299,7 +301,8 @@ class InterpreterVisitor(ECMAScriptVisitor):
 
     # Visit a parse tree produced by ECMAScriptParser#WhileStatement.
     def visitWhileStatement(self, ctx):
-        raise Utils.UnimplementedVisitorException(ctx)
+        while ctx.children[2].accept(self):
+            ctx.children[4].accept(self)
 
 
     # Visit a parse tree produced by ECMAScriptParser#returnStatement.
@@ -344,8 +347,32 @@ class InterpreterVisitor(ECMAScriptVisitor):
 
     # Visit a parse tree produced by ECMAScriptParser#ForStatement.
     def visitForStatement(self, ctx):
-        raise Utils.UnimplementedVisitorException(ctx)
+        initialization = ctx.children[2].accept(self)
+        condIndex = 4
+        if initialization == ';':
+            condIndex -= 1
+        elif initialization == 'var':
+            condIndex += 1
+            ctx.children[3].accept(self)
 
+        condition = ctx.children[condIndex].accept(self)
+        incrementorIndex = condIndex + 2
+        if condition == ';':
+            incrementorIndex -= 1
+
+        incrementor = ctx.children[incrementorIndex].getText()
+        expressionIndex = incrementorIndex + 2
+        if incrementor == ';':
+            expressionIndex -= 1
+
+        while ctx.children[condIndex].accept(self):
+            try:
+                ctx.children[expressionIndex].accept(self)
+                ctx.children[incrementorIndex].accept(self)
+            except BreakException:
+                break
+            except ContinueException:
+                continue
 
     # Visit a parse tree produced by ECMAScriptParser#caseBlock.
     def visitCaseBlock(self, ctx):
@@ -370,7 +397,7 @@ class InterpreterVisitor(ECMAScriptVisitor):
 
     # Visit a parse tree produced by ECMAScriptParser#breakStatement.
     def visitBreakStatement(self, ctx):
-        raise Utils.UnimplementedVisitorException(ctx)
+        raise BreakException()
 
 
     # Visit a parse tree produced by ECMAScriptParser#ifStatement.
