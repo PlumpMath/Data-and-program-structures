@@ -129,7 +129,7 @@ class InterpreterVisitor(ECMAScriptVisitor):
 
     # Visit a parse tree produced by ECMAScriptParser#statementList.
     def visitStatementList(self, ctx):
-        raise Utils.UnimplementedVisitorException(ctx)
+        self.visitChildren(ctx)
 
 
     # Visit a parse tree produced by ECMAScriptParser#PropertyGetter.
@@ -139,7 +139,9 @@ class InterpreterVisitor(ECMAScriptVisitor):
 
     # Visit a parse tree produced by ECMAScriptParser#block.
     def visitBlock(self, ctx):
-        raise Utils.UnimplementedVisitorException(ctx)
+        # We don't have to define any environment since we don't have
+        # to implement the let keyword.
+        self.visitChildren(ctx)
 
 
     # Visit a parse tree produced by ECMAScriptParser#expressionStatement.
