@@ -226,16 +226,16 @@ class InterpreterVisitor(ECMAScriptVisitor):
 
     # Visit a parse tree produced by ECMAScriptParser#AssignmentOperatorExpression.
     def visitAssignmentOperatorExpression(self, ctx):
-        self.inspector(ctx)
         name = ctx.children[0].accept(self)
         operator = ctx.children[1].accept(self)
         rhs = ctx.children[2].accept(self)
 
-        if self.environment.exists(name):
+        if not self.environment.exists(name) and operator == '=':
             self.environment.defineGlobal(name)
 
-        result = self.assignment[operator](name, rhs)
-        self.environment.setVariable(name, result)
+        lhs = self.environment.value(name)
+        value = self.assignment[operator](lhs, rhs)
+        self.environment.setVariable(name, value)
 
 
     # Visit a parse tree produced by ECMAScriptParser#PostUnaryAssignmentExpression.
@@ -378,9 +378,11 @@ class InterpreterVisitor(ECMAScriptVisitor):
 
     # Visit a parse tree produced by ECMAScriptParser#variableDeclaration.
     def visitVariableDeclaration(self, ctx):
-        self.inspector(ctx)
         name = ctx.children[0].accept(self)
-        value = ctx.children[1].accept(self)
+        if len(ctx.children) >= 2:
+            value = ctx.children[1].accept(self)
+        else:
+            value = None
         self.environment.defineVariable(name, value)
 
 
