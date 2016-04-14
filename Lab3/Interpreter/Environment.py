@@ -14,7 +14,6 @@ class Environment:
         """
         self.parent = parent
         self.var_dictionary = {}
-        pass
 
 
 
@@ -22,11 +21,8 @@ class Environment:
         """
         Create a new variable with the name "name" and the initial value
         "init".
-        """        
-        self.var_dictionary[name] = init        
-        pass
-
-
+        """
+        self.var_dictionary[name] = init
 
 
     def setVariable(self, name, value):
@@ -53,10 +49,11 @@ class Environment:
         """
         if name in self.var_dictionary:
             return self.var_dictionary[name]
-        elif self.parent: 
+        elif self.parent:
             return self.parent.value(name)
         else:
             raise UnknownVariable(name)
+
 
     def exists (self, name):
         """
@@ -68,11 +65,12 @@ class Environment:
             return True
         elif self.parent:
             return self.parent.exists(name)
-        else
+        else:
             return False
 
 
-    
-
-
-
+    def defineGlobal(self, name):
+        if self.parent:
+            self.parent.defineGlobal(name)
+        else:
+            self.defineVariable(name)
