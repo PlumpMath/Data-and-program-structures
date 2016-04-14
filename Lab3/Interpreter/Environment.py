@@ -58,5 +58,21 @@ class Environment:
         else:
             raise UnknownVariable(name)
 
+    def exists (self, name):
+        """
+        Find if a variable is defined or not.
+
+        Returns True/False
+        """
+        if name in self.var_dictionary:
+            return True
+        elif self.parent:
+            return self.parent.exists(name)
+        else
+            return False
+
+
+    
+
 
 

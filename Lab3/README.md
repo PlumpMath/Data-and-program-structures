@@ -22,3 +22,9 @@ To run all tests:
 ```
 ./espytester.py ./es.py ./
 ```
+
+
+
+Current:
+
+./espytester.py ./es.py ./ 03_variables/01_definition
