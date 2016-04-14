@@ -32,9 +32,11 @@ class InterpreterVisitor(ECMAScriptVisitor):
                           '!==': lambda x, y: type(x) != type(y) or x != y,
                           '||': lambda x, y: x or y, '&&': lambda x, y: x and y }
         self.unaries = { '-': operator.neg, '+': operator.pos,
-                         '~': lambda x: float(~int(x)), '!': operator.not_ }
+                         '~': lambda x: float(~int(x)), '!': operator.not_,
+                         '++': lambda x: x.__add__(1), '--': lambda x: x.__add__(-1)}
         self.assignment = { '=': lambda x, y: y,
-                            '+=': operator.iadd, '-=': operator.isub}
+                            '+=': operator.iadd, '-=': operator.isub,
+                            '*=': operator.mul, '/=': operator.truediv}
 
     def inspector(self, ctx):
         print("‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾")
@@ -223,8 +225,7 @@ class InterpreterVisitor(ECMAScriptVisitor):
 
     # Visit a parse tree produced by ECMAScriptParser#incrementOperator.
     def visitIncrementOperator(self, ctx):
-        raise Utils.UnimplementedVisitorException(ctx)
-
+        return ctx.children[0].accept(self)
 
     # Visit a parse tree produced by ECMAScriptParser#AssignmentOperatorExpression.
     def visitAssignmentOperatorExpression(self, ctx):
@@ -242,7 +243,11 @@ class InterpreterVisitor(ECMAScriptVisitor):
 
     # Visit a parse tree produced by ECMAScriptParser#PostUnaryAssignmentExpression.
     def visitPostUnaryAssignmentExpression(self, ctx):
-        raise Utils.UnimplementedVisitorException(ctx)
+      name = ctx.children[0].accept(self)
+      operator = ctx.children[1].accept(self)
+      value = self.environment.value(name)
+      self.environment.setVariable(name, self.unaries[operator](value))
+      return value
 
 
     # Visit a parse tree produced by ECMAScriptParser#TernaryExpression.
@@ -440,4 +445,8 @@ class InterpreterVisitor(ECMAScriptVisitor):
 
     # Visit a parse tree produced by ECMAScriptParser#UnaryAssignmentExpression.
     def visitUnaryAssignmentExpression(self, ctx):
-        raise Utils.UnimplementedVisitorException(ctx)
+        operator = ctx.children[0].accept(self)
+        name = ctx.children[1].accept(self)
+        value = self.environment.value(name)
+        self.environment.setVariable(name, self.unaries[operator](value))
+        return self.environment.value(name)
