@@ -362,11 +362,18 @@ class InterpreterVisitor(ECMAScriptVisitor):
 
     # Visit a parse tree produced by ECMAScriptParser#FunctionExpression.
     def visitFunctionExpression(self, ctx):
-        name = ctx.children[1].accept(self)
-        arguments = ctx.children[3].accept(self)
-        body = ctx.children[6].accept(self)
-        function = Function(arguments, self.environment, body)
-        self.environment.defineVariable(name, function)
+        # If we are dealing with a lambda.
+        if ctx.children[1].getText() == '(':
+            arguments = ctx.children[2].accept(self)
+            body = ctx.children[5].accept(self)
+            return Function(arguments, self.environment, body)
+        else:
+            name = ctx.children[1].accept(self)
+            arguments = ctx.children[3].accept(self)
+            body = ctx.children[6].accept(self)
+            function = Function(arguments, self.environment, body)
+            self.environment.defineVariable(name, function)
+
 
 
     # Visit a parse tree produced by ECMAScriptParser#defaultClause.
@@ -466,7 +473,7 @@ class InterpreterVisitor(ECMAScriptVisitor):
     # Visit a parse tree produced by ECMAScriptParser#variableDeclaration.
     def visitVariableDeclaration(self, ctx):
         name = ctx.children[0].accept(self)
-        if len(ctx.children) >= 2:
+        if len(ctx.children) == 2:
             value = ctx.children[1].accept(self)
         else:
             value = None
