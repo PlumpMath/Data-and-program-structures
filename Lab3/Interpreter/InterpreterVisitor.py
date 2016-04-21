@@ -106,7 +106,7 @@ class InterpreterVisitor(ECMAScriptVisitor):
     def visitArgumentsExpression(self, ctx):
         func = ctx.children[0].accept(self)
         args = ctx.children[1].accept(self)
-        if(args == None): args = []
+        if(args == None or args == ')'): args = []
         return func(None, *args)
 
 
