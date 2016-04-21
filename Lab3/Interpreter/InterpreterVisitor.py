@@ -13,7 +13,7 @@ from Interpreter.Environment import Environment
 from Interpreter.Object import Object, ObjectModule
 from Interpreter.ControlExceptions import BreakException, ContinueException, ReturnException
 from Interpreter.ESException import ESException
-
+from Interpreter.Function import Function
 
 class InterpreterVisitor(ECMAScriptVisitor):
 
@@ -231,7 +231,7 @@ class InterpreterVisitor(ECMAScriptVisitor):
 
     # Visit a parse tree produced by ECMAScriptParser#formalParameterList.
     def visitFormalParameterList(self, ctx):
-        raise Utils.UnimplementedVisitorException(ctx)
+        return [item.accept(self) for item in ctx.children if not item.getText() == ',']
 
 
     # Visit a parse tree produced by ECMAScriptParser#incrementOperator.
@@ -361,7 +361,11 @@ class InterpreterVisitor(ECMAScriptVisitor):
 
     # Visit a parse tree produced by ECMAScriptParser#FunctionExpression.
     def visitFunctionExpression(self, ctx):
-        raise Utils.UnimplementedVisitorException(ctx)
+        name = ctx.children[1].accept(self)
+        arguments = ctx.children[3].accept(self)
+        body = ctx.children[6]
+        function = Function(arguments, self.environment, body)
+        self.environment.defineVariable(name, function)
 
 
     # Visit a parse tree produced by ECMAScriptParser#defaultClause.
@@ -513,7 +517,8 @@ class InterpreterVisitor(ECMAScriptVisitor):
 
     # Visit a parse tree produced by ECMAScriptParser#functionBody.
     def visitFunctionBody(self, ctx):
-        raise Utils.UnimplementedVisitorException(ctx)
+        self.visitChildren(ctx)
+        # TODO: Something here!
 
 
     # Visit a parse tree produced by ECMAScriptParser#eof.
