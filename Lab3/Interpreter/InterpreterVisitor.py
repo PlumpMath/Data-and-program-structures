@@ -167,7 +167,7 @@ class InterpreterVisitor(ECMAScriptVisitor):
 
     # Visit a parse tree produced by ECMAScriptParser#elementList.
     def visitElementList(self, ctx):
-        raise Utils.UnimplementedVisitorException(ctx)
+        return [item.accept(self) for item in ctx.children if not item.getText() == ',']
 
 
     # Visit a parse tree produced by ECMAScriptParser#numericLiteral.
@@ -207,7 +207,7 @@ class InterpreterVisitor(ECMAScriptVisitor):
 
     # Visit a parse tree produced by ECMAScriptParser#ArrayLiteralExpression.
     def visitArrayLiteralExpression(self, ctx):
-        raise Utils.UnimplementedVisitorException(ctx)
+        return ctx.children[0].accept(self)
 
 
     # Visit a parse tree produced by ECMAScriptParser#MemberDotExpression.
@@ -224,7 +224,9 @@ class InterpreterVisitor(ECMAScriptVisitor):
 
     # Visit a parse tree produced by ECMAScriptParser#MemberIndexExpression.
     def visitMemberIndexExpression(self, ctx):
-        raise Utils.UnimplementedVisitorException(ctx)
+        array = ctx.children[0].accept(self)
+        index = ctx.children[2].accept(self)
+        return array[int(index)]
 
 
     # Visit a parse tree produced by ECMAScriptParser#formalParameterList.
@@ -238,16 +240,23 @@ class InterpreterVisitor(ECMAScriptVisitor):
 
     # Visit a parse tree produced by ECMAScriptParser#AssignmentOperatorExpression.
     def visitAssignmentOperatorExpression(self, ctx):
-        name = ctx.children[0].accept(self)
-        operator = ctx.children[1].accept(self)
-        rhs = ctx.children[2].accept(self)
-
-        if not self.environment.exists(name) and operator == '=':
-            self.environment.defineGlobal(name)
-
-        lhs = self.environment.value(name)
-        value = self.assignment[operator](lhs, rhs)
-        self.environment.setVariable(name, value)
+        name = ctx.children[0].getText()
+        # We're doing arrays now.
+        if ctx.children[1].getText() == '[':
+            index = int(ctx.children[2].accept(self))
+            operator = ctx.children[4].accept(self)
+            rhs = ctx.children[5].accept(self)
+            lhs = self.environment.value(name)
+            lhs[index] = self.assignment[operator](lhs[index], rhs)
+            self.environment.setVariable(name, lhs)
+        else:
+            operator = ctx.children[1].accept(self)
+            rhs = ctx.children[2].accept(self)
+            lhs = self.environment.value(name)
+            if not self.environment.exists(name) and operator == '=':
+                self.environment.defineGlobal(name)
+            value = self.assignment[operator](lhs, rhs)
+            self.environment.setVariable(name, value)
 
 
     # Visit a parse tree produced by ECMAScriptParser#PostUnaryAssignmentExpression.
@@ -293,7 +302,7 @@ class InterpreterVisitor(ECMAScriptVisitor):
 
     # Visit a parse tree produced by ECMAScriptParser#arrayLiteral.
     def visitArrayLiteral(self, ctx):
-        raise Utils.UnimplementedVisitorException(ctx)
+        return ctx.children[1].accept(self)
 
 
     # Visit a parse tree produced by ECMAScriptParser#elision.
