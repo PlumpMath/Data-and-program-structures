@@ -58,7 +58,7 @@ class Function:
     * this is the pointer to the object (equivalent of self in python)
     * args is the list of arguments passed to the function
     '''
-    
+
     if that != None:
       self.environment.setVariable("that", that)
 
@@ -68,8 +68,6 @@ class Function:
     '''
     Call the function. With the this argument.
     '''
-
-    print(self.argNames, args)
     self.environment = Environment(self.parent)
     self.environment.defineVariable("this", this)
     numberofNone = 0 # Handle extra None-arguments
@@ -78,12 +76,12 @@ class Function:
       if (value == None):
         numberofNone += 1                 # ??
       elif (count > ((len(self.argNames) + numberofNone) -1 + strangeTHIS)):
-        pass  
+        pass
       else:
         if((this == self) and (strangeTHIS == 0)):
             self.environment.setVariable("this", value)
             strangeTHIS = -1
-        else:  
-            self.environment.setVariable(self.argNames[count - numberofNone], value) 
+        else:
+            self.environment.setVariable(self.argNames[count - numberofNone], value)
             #fails if variable isn't defined in init. It could probably also be done by defining the variable here(?)
     return self.body(self.environment)

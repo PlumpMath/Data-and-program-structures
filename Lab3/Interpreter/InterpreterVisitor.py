@@ -335,7 +335,8 @@ class InterpreterVisitor(ECMAScriptVisitor):
 
     # Visit a parse tree produced by ECMAScriptParser#returnStatement.
     def visitReturnStatement(self, ctx):
-        raise Utils.UnimplementedVisitorException(ctx)
+        returnValue = ctx.children[1].accept(self)
+        raise ReturnException(returnValue)
 
 
     # Visit a parse tree produced by ECMAScriptParser#switchStatement.
@@ -363,7 +364,7 @@ class InterpreterVisitor(ECMAScriptVisitor):
     def visitFunctionExpression(self, ctx):
         name = ctx.children[1].accept(self)
         arguments = ctx.children[3].accept(self)
-        body = ctx.children[6]
+        body = ctx.children[6].accept(self)
         function = Function(arguments, self.environment, body)
         self.environment.defineVariable(name, function)
 
@@ -517,9 +518,14 @@ class InterpreterVisitor(ECMAScriptVisitor):
 
     # Visit a parse tree produced by ECMAScriptParser#functionBody.
     def visitFunctionBody(self, ctx):
-        self.visitChildren(ctx)
-        # TODO: Something here!
-
+        def runFunction(environment):
+            self.environment = environment
+            for c in ctx.children:
+                try:
+                    c.accept(self)
+                except ReturnException as re:
+                    return re.value
+        return runFunction
 
     # Visit a parse tree produced by ECMAScriptParser#eof.
     def visitEof(self, ctx):
