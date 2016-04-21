@@ -15,6 +15,11 @@ from Interpreter.ControlExceptions import BreakException, ContinueException, Ret
 from Interpreter.ESException import ESException
 from Interpreter.Function import Function
 
+
+class Container(object):
+    pass
+
+
 class InterpreterVisitor(ECMAScriptVisitor):
 
     def __init__(self, environment = Environment(), input=None):
@@ -75,7 +80,8 @@ class InterpreterVisitor(ECMAScriptVisitor):
 
     # Visit a parse tree produced by ECMAScriptParser#PropertyExpressionAssignment.
     def visitPropertyExpressionAssignment(self, ctx):
-        raise Utils.UnimplementedVisitorException(ctx)
+        return (ctx.children[0].accept(self), ctx.children[2].accept(self))
+
 
 
     # Visit a parse tree produced by ECMAScriptParser#assignmentOperator.
@@ -230,7 +236,10 @@ class InterpreterVisitor(ECMAScriptVisitor):
     def visitMemberIndexExpression(self, ctx):
         array = ctx.children[0].accept(self)
         index = ctx.children[2].accept(self)
-        return array[int(index)]
+        if type(array) == Container:
+            return array.__dict__[index]
+        else:
+            return array[int(index)]
 
 
     # Visit a parse tree produced by ECMAScriptParser#formalParameterList.
@@ -301,7 +310,7 @@ class InterpreterVisitor(ECMAScriptVisitor):
 
     # Visit a parse tree produced by ECMAScriptParser#ObjectLiteralExpression.
     def visitObjectLiteralExpression(self, ctx):
-        raise Utils.UnimplementedVisitorException(ctx)
+        return ctx.children[0].accept(self)
 
 
     # Visit a parse tree produced by ECMAScriptParser#arrayLiteral.
@@ -457,7 +466,12 @@ class InterpreterVisitor(ECMAScriptVisitor):
 
     # Visit a parse tree produced by ECMAScriptParser#objectLiteral.
     def visitObjectLiteral(self, ctx):
-        raise Utils.UnimplementedVisitorException(ctx)
+        obj = Container()
+        obj.__dict__ = dict((key, value) for key, value in
+                            [item.accept(self) for item in ctx.children[1:-1]
+                             if not item.getText() == ','])
+        return obj
+
 
 
     # Visit a parse tree produced by ECMAScriptParser#throwStatement.
@@ -506,7 +520,7 @@ class InterpreterVisitor(ECMAScriptVisitor):
 
     # Visit a parse tree produced by ECMAScriptParser#propertyName.
     def visitPropertyName(self, ctx):
-        raise Utils.UnimplementedVisitorException(ctx)
+        return ctx.children[0].accept(self)
 
 
     # Visit a parse tree produced by ECMAScriptParser#catchProduction.
