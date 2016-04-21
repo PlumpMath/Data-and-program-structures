@@ -16,10 +16,6 @@ from Interpreter.ESException import ESException
 from Interpreter.Function import Function
 
 
-class Container(object):
-    pass
-
-
 class InterpreterVisitor(ECMAScriptVisitor):
 
     def __init__(self, environment = Environment(), input=None):
@@ -236,7 +232,7 @@ class InterpreterVisitor(ECMAScriptVisitor):
     def visitMemberIndexExpression(self, ctx):
         array = ctx.children[0].accept(self)
         index = ctx.children[2].accept(self)
-        if type(array) == Container:
+        if type(array) == Object:
             return array.__dict__[index]
         else:
             return array[int(index)]
@@ -466,7 +462,7 @@ class InterpreterVisitor(ECMAScriptVisitor):
 
     # Visit a parse tree produced by ECMAScriptParser#objectLiteral.
     def visitObjectLiteral(self, ctx):
-        obj = Container()
+        obj = Object()
         obj.__dict__ = dict((key, value) for key, value in
                             [item.accept(self) for item in ctx.children[1:-1]
                              if not item.getText() == ','])
