@@ -1,5 +1,6 @@
 import inspect
 import operator
+import collections
 
 import antlr4
 import Utils
@@ -11,6 +12,8 @@ from Interpreter.Math import MathModule
 from Interpreter.Environment import Environment
 from Interpreter.Object import Object, ObjectModule
 from Interpreter.ControlExceptions import BreakException, ContinueException, ReturnException
+from Interpreter.ESException import ESException
+
 
 class InterpreterVisitor(ECMAScriptVisitor):
 
@@ -47,7 +50,8 @@ class InterpreterVisitor(ECMAScriptVisitor):
         i = 0
         for child in ctx.children:
             try:
-                val = child.accept(self)
+                #val = child.accept(self)
+                val = child.getText()
             except:
                 pass
             print(i, str(type(val)) + ": " + str(val))
@@ -262,8 +266,13 @@ class InterpreterVisitor(ECMAScriptVisitor):
 
     # Visit a parse tree produced by ECMAScriptParser#tryStatement.
     def visitTryStatement(self, ctx):
-        raise Utils.UnimplementedVisitorException(ctx)
-
+        try:
+            ctx.children[1].accept(self)
+        except ESException as e:
+            ctx.children[2].exceptionValue = e.value
+            ctx.children[2].accept(self)
+        if len(ctx.children) == 4:
+            ctx.children[3].accept(self)
 
     # Visit a parse tree produced by ECMAScriptParser#debuggerStatement.
     def visitDebuggerStatement(self, ctx):
@@ -322,7 +331,8 @@ class InterpreterVisitor(ECMAScriptVisitor):
 
     # Visit a parse tree produced by ECMAScriptParser#switchStatement.
     def visitSwitchStatement(self, ctx):
-        raise Utils.UnimplementedVisitorException(ctx)
+        ctx.children[4].chosenValue = ctx.children[2].accept(self)
+        ctx.children[4].accept(self)
 
 
     # Visit a parse tree produced by ECMAScriptParser#expressionSequence.
@@ -347,7 +357,7 @@ class InterpreterVisitor(ECMAScriptVisitor):
 
     # Visit a parse tree produced by ECMAScriptParser#defaultClause.
     def visitDefaultClause(self, ctx):
-        raise Utils.UnimplementedVisitorException(ctx)
+        return (ctx.children[0].accept(self), ctx.children[2])
 
 
     # Visit a parse tree produced by ECMAScriptParser#statement.
@@ -385,7 +395,23 @@ class InterpreterVisitor(ECMAScriptVisitor):
 
     # Visit a parse tree produced by ECMAScriptParser#caseBlock.
     def visitCaseBlock(self, ctx):
-        raise Utils.UnimplementedVisitorException(ctx)
+        keyBodyPairs = collections.OrderedDict()
+        for child in ctx.children[1:-1]:
+            (key, body) = child.accept(self)
+            keyBodyPairs[key] = body
+
+        keys = list(keyBodyPairs)
+        if ctx.chosenValue in keys:
+            startIndex = keys.index(ctx.chosenValue)
+        elif "default" in keys:
+            startIndex = keys.index("default")
+
+        bodies = list(keyBodyPairs.values())
+        for body in bodies[startIndex:]:
+            try:
+                body.accept(self)
+            except BreakException:
+                break
 
 
     # Visit a parse tree produced by ECMAScriptParser#ParenthesizedExpression.
@@ -401,7 +427,7 @@ class InterpreterVisitor(ECMAScriptVisitor):
 
     # Visit a parse tree produced by ECMAScriptParser#throwStatement.
     def visitThrowStatement(self, ctx):
-        raise Utils.UnimplementedVisitorException(ctx)
+        raise ESException(ctx.children[1].accept(self))
 
 
     # Visit a parse tree produced by ECMAScriptParser#breakStatement.
@@ -435,7 +461,7 @@ class InterpreterVisitor(ECMAScriptVisitor):
 
     # Visit a parse tree produced by ECMAScriptParser#finallyProduction.
     def visitFinallyProduction(self, ctx):
-        raise Utils.UnimplementedVisitorException(ctx)
+        ctx.children[1].accept(self)
 
 
     # Visit a parse tree produced by ECMAScriptParser#IdentifierExpression.
@@ -450,7 +476,10 @@ class InterpreterVisitor(ECMAScriptVisitor):
 
     # Visit a parse tree produced by ECMAScriptParser#catchProduction.
     def visitCatchProduction(self, ctx):
-        raise Utils.UnimplementedVisitorException(ctx)
+        exceptionName = ctx.children[2].accept(self)
+        self.environment.defineVariable(exceptionName, ctx.exceptionValue)
+        ctx.children[4].accept(self)
+        self.environment.removeVariable(exceptionName)
 
 
     # Visit a parse tree produced by ECMAScriptParser#continueStatement.
@@ -460,7 +489,7 @@ class InterpreterVisitor(ECMAScriptVisitor):
 
     # Visit a parse tree produced by ECMAScriptParser#caseClause.
     def visitCaseClause(self, ctx):
-        raise Utils.UnimplementedVisitorException(ctx)
+        return (ctx.children[1].accept(self), ctx.children[3])
 
 
     # Visit a parse tree produced by ECMAScriptParser#arguments.

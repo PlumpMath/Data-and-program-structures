@@ -13,7 +13,7 @@ class Environment:
         where value for variables can be looked up recursively.
         """
         self.parent = parent
-        self.var_dictionary = {}
+        self.variableDictionary = {}
 
 
 
@@ -22,7 +22,7 @@ class Environment:
         Create a new variable with the name "name" and the initial value
         "init".
         """
-        self.var_dictionary[name] = init
+        self.variableDictionary[name] = init
 
 
     def setVariable(self, name, value):
@@ -32,8 +32,8 @@ class Environment:
         If it is not found in the root environment, it should raise the
         exception Utils.UnknownVariable.
         """
-        if name in self.var_dictionary:
-            self.var_dictionary[name] = value
+        if name in self.variableDictionary:
+            self.variableDictionary[name] = value
         elif self.parent:
             self.parent.setVariable(name, value)
         else:
@@ -47,8 +47,8 @@ class Environment:
         If it is not found in the root environment, it should raise the
         exception Utils.UnknownVariable.
         """
-        if name in self.var_dictionary:
-            return self.var_dictionary[name]
+        if name in self.variableDictionary:
+            return self.variableDictionary[name]
         elif self.parent:
             return self.parent.value(name)
         else:
@@ -61,7 +61,7 @@ class Environment:
 
         Returns True/False
         """
-        if name in self.var_dictionary:
+        if name in self.variableDictionary:
             return True
         elif self.parent:
             return self.parent.exists(name)
@@ -78,3 +78,13 @@ class Environment:
             self.parent.defineGlobal(name)
         else:
             self.defineVariable(name)
+
+
+    def removeVariable(self, name):
+        """Removes a variable from the current environment"""
+        if name in self.variableDictionary:
+            self.variableDictionary.pop(name)
+        elif self.parent:
+            self.parent.removeVariable(name)
+        else:
+            raise UnknownVariable(name)
