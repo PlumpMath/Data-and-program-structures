@@ -124,6 +124,10 @@ class InterpreterVisitor(ECMAScriptVisitor):
     def visitBinaryExpression(self, ctx):
         arg1 = ctx.children[0].accept(self)
         operator = ctx.children[1].accept(self)
+        if operator == "&&":
+            return arg1 and ctx.children[2].accept(self)
+        elif operator == "||":
+            return arg1 or ctx.children[2].accept(self)
         arg2 = ctx.children[2].accept(self)
         return self.binaries[operator](arg1, arg2)
 
