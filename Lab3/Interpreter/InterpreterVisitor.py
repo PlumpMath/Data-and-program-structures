@@ -173,7 +173,7 @@ class InterpreterVisitor(ECMAScriptVisitor):
 
     # Visit a parse tree produced by ECMAScriptParser#elementList.
     def visitElementList(self, ctx):
-        return [item.accept(self) for item in ctx.children if not item.getText() == ',']
+        return self.childrenToList(ctx.children)
 
 
     # Visit a parse tree produced by ECMAScriptParser#numericLiteral.
@@ -232,7 +232,7 @@ class InterpreterVisitor(ECMAScriptVisitor):
     def visitMemberIndexExpression(self, ctx):
         array = ctx.children[0].accept(self)
         index = ctx.children[2].accept(self)
-        if type(array) == Object:
+        if type(array) == ObjectModule:
             return array.__dict__[index]
         else:
             return array[int(index)]
@@ -240,7 +240,7 @@ class InterpreterVisitor(ECMAScriptVisitor):
 
     # Visit a parse tree produced by ECMAScriptParser#formalParameterList.
     def visitFormalParameterList(self, ctx):
-        return [item.accept(self) for item in ctx.children if not item.getText() == ',']
+        return self.childrenToList(ctx.children)
 
 
     # Visit a parse tree produced by ECMAScriptParser#incrementOperator.
@@ -462,10 +462,9 @@ class InterpreterVisitor(ECMAScriptVisitor):
 
     # Visit a parse tree produced by ECMAScriptParser#objectLiteral.
     def visitObjectLiteral(self, ctx):
-        obj = Object()
+        obj = ObjectModule()
         obj.__dict__ = dict((key, value) for key, value in
-                            [item.accept(self) for item in ctx.children[1:-1]
-                             if not item.getText() == ','])
+                            self.childrenToList(ctx.children[1:-1]))
         return obj
 
 
@@ -570,3 +569,7 @@ class InterpreterVisitor(ECMAScriptVisitor):
         value = self.environment.value(name)
         self.environment.setVariable(name, self.unaries[operator](value))
         return self.environment.value(name)
+
+
+    def childrenToList(self, items):
+        return [item.accept(self) for item in items if not item.getText() == ',']
