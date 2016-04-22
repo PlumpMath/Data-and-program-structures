@@ -106,10 +106,12 @@ class InterpreterVisitor(ECMAScriptVisitor):
 
     # Visit a parse tree produced by ECMAScriptParser#ArgumentsExpression.
     def visitArgumentsExpression(self, ctx):
+        this = self.environment.value(ctx.children[0].getText().split('.')[0])
         func = ctx.children[0].accept(self)
         args = ctx.children[1].accept(self)
-        if(args == None or args == ')'): args = []
-        return func(None, *args)
+        if(args == None or args == ')'):
+            args = []
+        return func(this, *args)
 
 
     # Visit a parse tree produced by ECMAScriptParser#ThisExpression.
@@ -262,13 +264,12 @@ class InterpreterVisitor(ECMAScriptVisitor):
                 lhs[int(index)] = self.assignment[operator](lhs[int(index)], rhs)
             self.environment.setVariable(name, lhs)
         elif ctx.children[1].getText() == '.':
-            self.inspector(ctx)
             key = ctx.children[2].accept(self)
             operator = ctx.children[3].accept(self)
             rhs = ctx.children[4].accept(self)
             lhs = self.environment.value(name)
-            print("lhs:", name, lhs)
-            print("environment:", self.environment.variableDictionary)
+            if key not in lhs.__dict__:
+                lhs.__dict__[key] = None
             lhs.__dict__[key] = self.assignment[operator](lhs.__dict__[key], rhs)
             self.environment.setVariable(name, lhs)
         else:
