@@ -262,10 +262,13 @@ class InterpreterVisitor(ECMAScriptVisitor):
                 lhs[int(index)] = self.assignment[operator](lhs[int(index)], rhs)
             self.environment.setVariable(name, lhs)
         elif ctx.children[1].getText() == '.':
+            self.inspector(ctx)
             key = ctx.children[2].accept(self)
             operator = ctx.children[3].accept(self)
             rhs = ctx.children[4].accept(self)
             lhs = self.environment.value(name)
+            print("lhs:", name, lhs)
+            print("environment:", self.environment.variableDictionary)
             lhs.__dict__[key] = self.assignment[operator](lhs.__dict__[key], rhs)
             self.environment.setVariable(name, lhs)
         else:

@@ -54,8 +54,7 @@ class Function:
     '''
     if that != None:
       self.environment.setVariable("that", that)
-
-    self.__call__( this, *args)
+    self.__call__(this, *args)
 
 
   def __call__(self, this, *args):

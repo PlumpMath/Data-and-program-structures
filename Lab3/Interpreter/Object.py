@@ -23,7 +23,7 @@ class ObjectModule:
     return obj
 
   def defineProperty(self, this, obj, name, param):
-    prop = Property(obj)
+    prop = Property(self)
     if(hasattr(param, 'get')):
       prop.getter = list(param.get)[1]
     if(hasattr(param, 'set')):
