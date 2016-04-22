@@ -7,7 +7,7 @@ class Object:
 class ObjectModule:
   def __init__(self):
     self.prototype = Object()
-  
+
   def __call__(self, this, *args):
     pass
   def create(self, this, prototype):
@@ -21,8 +21,8 @@ class ObjectModule:
           val = (val[0], val[1])
         setattr(obj, attr, val)
     return obj
-  
-  def defineProperty(self, this, obj, name, param):
+
+  def defineProperty(self, obj, name, param):
     prop = Property(obj)
     if(hasattr(param, 'get')):
       prop.getter = list(param.get)[1]

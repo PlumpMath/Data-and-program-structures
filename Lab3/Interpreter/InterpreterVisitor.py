@@ -233,7 +233,7 @@ class InterpreterVisitor(ECMAScriptVisitor):
         array = ctx.children[0].accept(self)
         index = ctx.children[2].accept(self)
         if type(array) == ObjectModule:
-            return array.__dict__[index]
+            return array.__dict__[str(index)]
         else:
             return array[int(index)]
 
@@ -252,11 +252,21 @@ class InterpreterVisitor(ECMAScriptVisitor):
         name = ctx.children[0].getText()
         # We're doing arrays now.
         if ctx.children[1].getText() == '[':
-            index = int(ctx.children[2].accept(self))
+            index = ctx.children[2].accept(self)
             operator = ctx.children[4].accept(self)
             rhs = ctx.children[5].accept(self)
             lhs = self.environment.value(name)
-            lhs[index] = self.assignment[operator](lhs[index], rhs)
+            if type(lhs) == ObjectModule:
+                lhs.__dict__[index] = self.assignment[operator](lhs.__dict__[index], rhs)
+            else:
+                lhs[int(index)] = self.assignment[operator](lhs[int(index)], rhs)
+            self.environment.setVariable(name, lhs)
+        elif ctx.children[1].getText() == '.':
+            key = ctx.children[2].accept(self)
+            operator = ctx.children[3].accept(self)
+            rhs = ctx.children[4].accept(self)
+            lhs = self.environment.value(name)
+            lhs.__dict__[key] = self.assignment[operator](lhs.__dict__[key], rhs)
             self.environment.setVariable(name, lhs)
         else:
             operator = ctx.children[1].accept(self)
@@ -463,8 +473,8 @@ class InterpreterVisitor(ECMAScriptVisitor):
     # Visit a parse tree produced by ECMAScriptParser#objectLiteral.
     def visitObjectLiteral(self, ctx):
         obj = ObjectModule()
-        obj.__dict__ = dict((key, value) for key, value in
-                            self.childrenToList(ctx.children[1:-1]))
+        for key, value in self.childrenToList(ctx.children[1:-1]):
+            setattr(obj, str(key), value)
         return obj
 
 
