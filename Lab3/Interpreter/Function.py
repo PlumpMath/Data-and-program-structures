@@ -71,7 +71,8 @@ class Function:
     return function-body(function-arguments) == return f(x)
     '''
     localEnvironment = Environment(self.parent)
-    localEnvironment.defineVariable("this", this)
+    if this:
+      localEnvironment.defineVariable("this", this)
     argValuePairs = zip(self.argNames, args)
     for name, value in argValuePairs:
       localEnvironment.defineVariable(name, value)

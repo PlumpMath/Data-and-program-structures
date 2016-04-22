@@ -205,12 +205,22 @@ class InterpreterVisitor(ECMAScriptVisitor):
 
     # Visit a parse tree produced by ECMAScriptParser#NewExpression.
     def visitNewExpression(self, ctx):
-        return ctx.children[1].accept(self)
+
+        self.inspector(ctx)
+        func = ctx.children[1].accept(self)
+        print("Func:", func)
+        args = ctx.children[2].accept(self)
+        if(args == None or args == ')'):
+            args = []
+        theNewObject = ObjectModule()
+        func(theNewObject, *args)
+        print(dir(theNewObject))
+        return theNewObject
 
 
     # Visit a parse tree produced by ECMAScriptParser#LiteralExpression.
     def visitLiteralExpression(self, ctx):
-      return self.visitChildren(ctx)
+        return self.visitChildren(ctx)
 
 
     # Visit a parse tree produced by ECMAScriptParser#ArrayLiteralExpression.
@@ -220,9 +230,11 @@ class InterpreterVisitor(ECMAScriptVisitor):
 
     # Visit a parse tree produced by ECMAScriptParser#MemberDotExpression.
     def visitMemberDotExpression(self, ctx):
-      obj    = ctx.children[0].accept(self)
-      member = ctx.children[2].accept(self)
-      return getattr(obj, member)
+        self.inspector(ctx)
+        print("Environment:", self.environment.variableDictionary)
+        obj    = ctx.children[0].accept(self)
+        member = ctx.children[2].accept(self)
+        return getattr(obj, member)
 
 
     # Visit a parse tree produced by ECMAScriptParser#withStatement.
@@ -509,11 +521,13 @@ class InterpreterVisitor(ECMAScriptVisitor):
 
     # Visit a parse tree produced by ECMAScriptParser#variableDeclaration.
     def visitVariableDeclaration(self, ctx):
+        self.inspector(ctx)
         name = ctx.children[0].accept(self)
         if len(ctx.children) == 2:
             value = ctx.children[1].accept(self)
         else:
             value = None
+        print("Declare:", name, "to be", dir(value))
         self.environment.defineVariable(name, value)
 
 
@@ -563,7 +577,7 @@ class InterpreterVisitor(ECMAScriptVisitor):
     # Visit a parse tree produced by ECMAScriptParser#functionBody.
     def visitFunctionBody(self, ctx):
         def runFunction(environment):
-            self.environment = environment
+            self.environment = Environment(environment)
             for c in ctx.children:
                 try:
                     c.accept(self)
