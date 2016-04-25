@@ -45,17 +45,18 @@ class InterpreterVisitor(ECMAScriptVisitor):
     def inspector(self, ctx):
         print("‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾")
         print("In function: ", inspect.stack()[1].function)
+        print("Environment:", self.environment.variableDictionary)
         print("_______________________")
         print("")
         print("Begin child list, there are", len(ctx.children), "children.")
         i = 0
         for child in ctx.children:
             try:
-                #val = child.accept(self)
-                val = child.getText()
+                val = child.accept(self)
+                #val = child.getText()
+                print(i, str(type(val)) + ": " + str(val))
             except:
                 pass
-            print(i, str(type(val)) + ": " + str(val))
             i += 1
         print("End child list of", inspect.stack()[1].function, "\t.!.")
         print("")
@@ -116,7 +117,7 @@ class InterpreterVisitor(ECMAScriptVisitor):
 
     # Visit a parse tree produced by ECMAScriptParser#ThisExpression.
     def visitThisExpression(self, ctx):
-        raise Utils.UnimplementedVisitorException(ctx)
+        return self.environment.value(ctx.children[0].accept(self))
 
 
     # Visit a parse tree produced by ECMAScriptParser#identifierName.
@@ -205,16 +206,14 @@ class InterpreterVisitor(ECMAScriptVisitor):
 
     # Visit a parse tree produced by ECMAScriptParser#NewExpression.
     def visitNewExpression(self, ctx):
-
-        self.inspector(ctx)
         func = ctx.children[1].accept(self)
-        print("Func:", func)
         args = ctx.children[2].accept(self)
         if(args == None or args == ')'):
             args = []
         theNewObject = ObjectModule()
+        self.environment = Environment(self.environment)
         func(theNewObject, *args)
-        print(dir(theNewObject))
+        self.environment = self.environment.parent
         return theNewObject
 
 
@@ -230,8 +229,6 @@ class InterpreterVisitor(ECMAScriptVisitor):
 
     # Visit a parse tree produced by ECMAScriptParser#MemberDotExpression.
     def visitMemberDotExpression(self, ctx):
-        self.inspector(ctx)
-        print("Environment:", self.environment.variableDictionary)
         obj    = ctx.children[0].accept(self)
         member = ctx.children[2].accept(self)
         return getattr(obj, member)
@@ -521,13 +518,11 @@ class InterpreterVisitor(ECMAScriptVisitor):
 
     # Visit a parse tree produced by ECMAScriptParser#variableDeclaration.
     def visitVariableDeclaration(self, ctx):
-        self.inspector(ctx)
         name = ctx.children[0].accept(self)
         if len(ctx.children) == 2:
             value = ctx.children[1].accept(self)
         else:
             value = None
-        print("Declare:", name, "to be", dir(value))
         self.environment.defineVariable(name, value)
 
 
@@ -583,6 +578,8 @@ class InterpreterVisitor(ECMAScriptVisitor):
                     c.accept(self)
                 except ReturnException as re:
                     return re.value
+                finally:
+                    self.environment = self.environment.parent
         return runFunction
 
     # Visit a parse tree produced by ECMAScriptParser#eof.
