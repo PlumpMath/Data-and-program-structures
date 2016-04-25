@@ -52,11 +52,11 @@ class InterpreterVisitor(ECMAScriptVisitor):
         i = 0
         for child in ctx.children:
             try:
-                val = child.accept(self)
-                #val = child.getText()
-                print(i, str(type(val)) + ": " + str(val))
+                typ = type(child.accept(self))
             except:
-                pass
+                typ = "<Unacceptable>"
+            val = child.getText()
+            print(i, str(typ) + ": " + str(val))
             i += 1
         print("End child list of", inspect.stack()[1].function, "\t.!.")
         print("")
@@ -210,9 +210,13 @@ class InterpreterVisitor(ECMAScriptVisitor):
         args = ctx.children[2].accept(self)
         if(args == None or args == ')'):
             args = []
-        theNewObject = ObjectModule()
+        if type(func.prototype) == ObjectModule:
+            theNewObject = func.prototype.create(None, func.prototype)
+        else:
+            theNewObject = Object()
         self.environment = Environment(self.environment)
         func(theNewObject, *args)
+
         self.environment = self.environment.parent
         return theNewObject
 
@@ -276,11 +280,18 @@ class InterpreterVisitor(ECMAScriptVisitor):
             key = ctx.children[2].accept(self)
             operator = ctx.children[3].accept(self)
             rhs = ctx.children[4].accept(self)
-            lhs = self.environment.value(name)
+            lhs = ctx.children[0].accept(self)
             if key not in lhs.__dict__:
                 lhs.__dict__[key] = None
             lhs.__dict__[key] = self.assignment[operator](lhs.__dict__[key], rhs)
-            self.environment.setVariable(name, lhs)
+            # If there are nestled objects
+            if '.' in name:
+                rootName = name.split('.')[0]
+                rootObject = self.environment.value(rootName)
+                rootObject.__dict__[name.split('.')[1]] = lhs
+                self.environment.defineVariable(rootName, rootObject)
+            else:
+                self.environment.setVariable(name, lhs)
         else:
             operator = ctx.children[1].accept(self)
             rhs = ctx.children[2].accept(self)

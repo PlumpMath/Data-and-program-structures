@@ -1,4 +1,6 @@
 from Interpreter.Environment import Environment
+from Interpreter.Object import ObjectModule
+
 
 class Function:
   '''
@@ -26,6 +28,7 @@ class Function:
     self.parent = environment
     self.argNames = args; # argNames contain a list of the names of the arguments
     self.body = body
+    self.prototype = ObjectModule()
 
 
   def call(self, that, this, *args):
