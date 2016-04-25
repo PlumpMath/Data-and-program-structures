@@ -14,7 +14,7 @@ class ObjectModule:
     obj = Object()
     for attr in dir(prototype):
       val = getattr(prototype, attr)
-      if(not callable(val) and not attr.startswith("__")):
+      if not attr.startswith("__"):
         if(isinstance(val, tuple)):
           val = list(val)
           val[0] = obj

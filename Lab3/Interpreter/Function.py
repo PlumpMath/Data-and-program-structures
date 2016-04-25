@@ -56,13 +56,10 @@ class Function:
     * args is the list of arguments passed to the function
     '''
 
-    if that != None:
-      self.environment.setVariable("that", that)
-
-    self.__call__(this, *args)
+    self.__call__(this, *args, thatVar=that)
 
 
-  def __call__(self, this, *args):
+  def __call__(self, this, *args, thatVar=None):
     '''
     Call the function. With the this argument.
 
@@ -76,6 +73,9 @@ class Function:
     localEnvironment = Environment(self.parent)
     if this:
       localEnvironment.defineVariable("this", this)
+    if thatVar:
+      print("Kalle ankas jul", thatVar)
+      localEnvironment.defineVariable("that", thatVar)
     argValuePairs = zip(self.argNames, args)
     for name, value in argValuePairs:
       localEnvironment.defineVariable(name, value)

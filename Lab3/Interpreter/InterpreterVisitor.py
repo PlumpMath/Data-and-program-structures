@@ -52,7 +52,7 @@ class InterpreterVisitor(ECMAScriptVisitor):
         i = 0
         for child in ctx.children:
             try:
-                typ = type(child.accept(self))
+                typ = type(child.getText())
             except:
                 typ = "<Unacceptable>"
             val = child.getText()
@@ -144,6 +144,7 @@ class InterpreterVisitor(ECMAScriptVisitor):
 
     # Visit a parse tree produced by ECMAScriptParser#initialiser.
     def visitInitialiser(self, ctx):
+        print("initialiser:", self.environment)
         return ctx.children[1].accept(self)
 
 
@@ -206,6 +207,7 @@ class InterpreterVisitor(ECMAScriptVisitor):
 
     # Visit a parse tree produced by ECMAScriptParser#NewExpression.
     def visitNewExpression(self, ctx):
+        print(ctx.children[1].getText())
         func = ctx.children[1].accept(self)
         args = ctx.children[2].accept(self)
         if(args == None or args == ')'):
@@ -213,10 +215,15 @@ class InterpreterVisitor(ECMAScriptVisitor):
         if type(func.prototype) == ObjectModule:
             theNewObject = func.prototype.create(None, func.prototype)
         else:
-            theNewObject = Object()
+            theNewObject = ObjectModule()
+        self.environment.blaha = 5
+        print("New shiny:", dir(self.environment))
         self.environment = Environment(self.environment)
+        print("New shiny2:", self.environment.parent)
+        # TODO: This is wicked, this is mad, this is cricket, this is sad.
         func(theNewObject, *args)
-
+        print("New shiny3:", self.environment.parent)
+        print("New shiny4:", dir(self.environment))
         self.environment = self.environment.parent
         return theNewObject
 
@@ -529,11 +536,15 @@ class InterpreterVisitor(ECMAScriptVisitor):
 
     # Visit a parse tree produced by ECMAScriptParser#variableDeclaration.
     def visitVariableDeclaration(self, ctx):
+        self.inspector(ctx)
+        print("VariableDeclaration:", self.environment)
         name = ctx.children[0].accept(self)
+        print("VariableDeclaration:", self.environment)
         if len(ctx.children) == 2:
             value = ctx.children[1].accept(self)
         else:
             value = None
+        print("VariableDeclaration:", self.environment)
         self.environment.defineVariable(name, value)
 
 
@@ -544,7 +555,7 @@ class InterpreterVisitor(ECMAScriptVisitor):
 
     # Visit a parse tree produced by ECMAScriptParser#IdentifierExpression.
     def visitIdentifierExpression(self, ctx):
-      return self.environment.value(ctx.children[0].accept(self))
+        return self.environment.value(ctx.children[0].accept(self))
 
 
     # Visit a parse tree produced by ECMAScriptParser#propertyName.
@@ -577,6 +588,7 @@ class InterpreterVisitor(ECMAScriptVisitor):
 
     # Visit a parse tree produced by ECMAScriptParser#variableDeclarationList.
     def visitVariableDeclarationList(self, ctx):
+        print("VariableDeclarationList:", self.environment)
         self.visitChildren(ctx)
 
 
