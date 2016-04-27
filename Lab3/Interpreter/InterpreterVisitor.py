@@ -206,29 +206,18 @@ class InterpreterVisitor(ECMAScriptVisitor):
 
     # Visit a parse tree produced by ECMAScriptParser#NewExpression.
     def visitNewExpression(self, ctx):
-        #print(ctx.children[1].getText())
         func = ctx.children[1].accept(self)
         args = ctx.children[2].accept(self)
-
-        temp = self.environment
-
         if(args == None or args == ')'):
             args = []
         if hasattr(func, "prototype") and hasattr(func.prototype, "create"):
             theNewObject = func.prototype.create(None, func.prototype)
         else:
             theNewObject = ObjectModule()
-
-
         self.environment = Environment(self.environment)
-
-        # TODO: This is wicked, this is mad, this is cricket, this is sad.
-
-        func(theNewObject, *args)
-        
+        func(theNewObject, *args)        
         if self.environment.parent:
             self.environment = self.environment.parent
-
         return theNewObject
 
 
