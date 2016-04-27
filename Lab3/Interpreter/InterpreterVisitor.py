@@ -15,6 +15,9 @@ from Interpreter.ControlExceptions import BreakException, ContinueException, Ret
 from Interpreter.ESException import ESException
 from Interpreter.Function import Function
 from Interpreter.Property import Property
+from Interpreter.Lista import Lista
+
+
 
 class InterpreterVisitor(ECMAScriptVisitor):
 
@@ -52,7 +55,7 @@ class InterpreterVisitor(ECMAScriptVisitor):
         i = 0
         for child in ctx.children:
             try:
-                typ = type(child.getText())
+                typ = type(child.accept(self))
             except:
                 typ = "<Unacceptable>"
             val = child.getText()
@@ -77,8 +80,8 @@ class InterpreterVisitor(ECMAScriptVisitor):
 
     # Visit a parse tree produced by ECMAScriptParser#PropertyExpressionAssignment.
     def visitPropertyExpressionAssignment(self, ctx):
+        self.inspector(ctx)
         return (ctx.children[0].accept(self), ctx.children[2].accept(self))
-
 
 
     # Visit a parse tree produced by ECMAScriptParser#assignmentOperator.
@@ -107,11 +110,14 @@ class InterpreterVisitor(ECMAScriptVisitor):
 
     # Visit a parse tree produced by ECMAScriptParser#ArgumentsExpression.
     def visitArgumentsExpression(self, ctx):
+        self.inspector(ctx)
         this = self.environment.value(ctx.children[0].getText().split('.')[0])
+        print("ArgumentsExpression this:", this)
         func = ctx.children[0].accept(self)
         args = ctx.children[1].accept(self)
         if(args == None or args == ')'):
             args = []
+        print("ArgumentsExpression args:", args)
         return func(this, *args)
 
 
@@ -154,12 +160,13 @@ class InterpreterVisitor(ECMAScriptVisitor):
 
     # Visit a parse tree produced by ECMAScriptParser#PropertyGetter.
     def visitPropertyGetter(self, ctx):
+        self.inspector(ctx)
         name = ctx.children[1].accept(self)
-        if self.environment.exists(name):
-            prop = self.environment.exists(name)
-        else:
-            prop = Property(self.environment.value("this"))
-        raise Utils.UnimplementedVisitorException(ctx)
+        body = ctx.children[5].accept(self)
+        param = Object()
+        param.getter = Function([], self.environment, body)
+        print("propertyGetter", param)
+        return (name, param)
 
 
     # Visit a parse tree produced by ECMAScriptParser#block.
@@ -206,7 +213,11 @@ class InterpreterVisitor(ECMAScriptVisitor):
 
     # Visit a parse tree produced by ECMAScriptParser#PropertySetter.
     def visitPropertySetter(self, ctx):
-        raise Utils.UnimplementedVisitorException(ctx)
+        self.inspector(ctx)
+        name = ctx.children[1].accept(self)
+        argName = ctx.children[3].accept(self)
+        body = ctx.children[6].accept(self)
+        return (name, body)
 
 
     # Visit a parse tree produced by ECMAScriptParser#NewExpression.
@@ -233,14 +244,30 @@ class InterpreterVisitor(ECMAScriptVisitor):
 
     # Visit a parse tree produced by ECMAScriptParser#ArrayLiteralExpression.
     def visitArrayLiteralExpression(self, ctx):
-        return ctx.children[0].accept(self)
+        return Lista(ctx.children[0].accept(self))
 
 
     # Visit a parse tree produced by ECMAScriptParser#MemberDotExpression.
     def visitMemberDotExpression(self, ctx):
+        self.inspector(ctx)
         obj    = ctx.children[0].accept(self)
+        print("MemberDotExpression obj:", dir(obj))
         member = ctx.children[2].accept(self)
-        return getattr(obj, member)
+        print("MemberDotExpression member:", member)
+        retval =  getattr(obj, member)
+        print("MemberDotExpression retval:", retval)
+        print("MemberDotExpression retval:", dir(retval))
+        if type(retval) == Property:
+            print("MemberDotExpression retval this:", retval.this)
+            print("MemberDotExpression retval this:", dir(retval.this))
+            print("MemberDotExpression retval get:", retval.get)
+            if hasattr(retval, "getter"):
+                print("MemberDotExpression retval getter:", retval.getter)
+                print("MemberDotExpression return get():", retval.get())
+            # TODO: We were here!
+            return retval.get()()
+        else:
+            return retval
 
 
     # Visit a parse tree produced by ECMAScriptParser#withStatement.
@@ -501,11 +528,14 @@ class InterpreterVisitor(ECMAScriptVisitor):
 
     # Visit a parse tree produced by ECMAScriptParser#objectLiteral.
     def visitObjectLiteral(self, ctx):
+        self.inspector(ctx)
         obj = ObjectModule()
         for key, value in self.childrenToList(ctx.children[1:-1]):
-            setattr(obj, str(key), value)
+            if hasattr(value, "getter") or hasattr(value, "setter"):
+                obj.defineProperty(obj, obj, str(key), value)
+            else:
+                setattr(obj, str(key), value)
         return obj
-
 
 
     # Visit a parse tree produced by ECMAScriptParser#throwStatement.

@@ -24,8 +24,9 @@ class ObjectModule:
 
   def defineProperty(self, this, obj, name, param):
     prop = Property(self)
-    if(hasattr(param, 'get')):
-      prop.getter = list(param.get)[1]
-    if(hasattr(param, 'set')):
-      prop.setter = list(param.set)[1]
+    if(hasattr(param, 'getter')):
+      print("ATTENTION!", param.getter)
+      prop.getter = param.getter
+    if(hasattr(param, 'setter')):
+      prop.setter = param.setter
     setattr(obj, name, prop)

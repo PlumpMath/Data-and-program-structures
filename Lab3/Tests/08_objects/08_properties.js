@@ -1,7 +1,7 @@
 var pile = {
   elements: ["eggshell", "orange peel", "worm"],
   get height() {
-    return this.elements.length
+    return this.elements.length;
   },
   set value(value) {
     this.elements.append(value)
