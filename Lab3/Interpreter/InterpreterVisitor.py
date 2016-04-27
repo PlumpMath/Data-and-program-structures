@@ -67,7 +67,7 @@ class InterpreterVisitor(ECMAScriptVisitor):
             return True
         elif node.symbol.text == "false":
             return False
-        elif node.symbol.text[0] == '"':
+        elif node.symbol.text[0] == '"' or node.symbol.text[0] == "'" :
             return node.symbol.text[1:-1]
         elif node.symbol.text[0:2] == "0x":
             return float.fromhex(node.symbol.text)
@@ -144,7 +144,6 @@ class InterpreterVisitor(ECMAScriptVisitor):
 
     # Visit a parse tree produced by ECMAScriptParser#initialiser.
     def visitInitialiser(self, ctx):
-        print("initialiser:", self.environment)
         return ctx.children[1].accept(self)
 
 
@@ -207,24 +206,29 @@ class InterpreterVisitor(ECMAScriptVisitor):
 
     # Visit a parse tree produced by ECMAScriptParser#NewExpression.
     def visitNewExpression(self, ctx):
-        print(ctx.children[1].getText())
+        #print(ctx.children[1].getText())
         func = ctx.children[1].accept(self)
         args = ctx.children[2].accept(self)
+
+        temp = self.environment
+
         if(args == None or args == ')'):
             args = []
-        if type(func.prototype) == ObjectModule:
+        if hasattr(func, "prototype") and hasattr(func.prototype, "create"):
             theNewObject = func.prototype.create(None, func.prototype)
         else:
             theNewObject = ObjectModule()
-        self.environment.blaha = 5
-        print("New shiny:", dir(self.environment))
+
+
         self.environment = Environment(self.environment)
-        print("New shiny2:", self.environment.parent)
+
         # TODO: This is wicked, this is mad, this is cricket, this is sad.
+
         func(theNewObject, *args)
-        print("New shiny3:", self.environment.parent)
-        print("New shiny4:", dir(self.environment))
-        self.environment = self.environment.parent
+        
+        if self.environment.parent:
+            self.environment = self.environment.parent
+
         return theNewObject
 
 
@@ -533,18 +537,13 @@ class InterpreterVisitor(ECMAScriptVisitor):
     def visitReservedWord(self, ctx):
         raise Utils.UnimplementedVisitorException(ctx)
 
-
     # Visit a parse tree produced by ECMAScriptParser#variableDeclaration.
     def visitVariableDeclaration(self, ctx):
-        self.inspector(ctx)
-        print("VariableDeclaration:", self.environment)
         name = ctx.children[0].accept(self)
-        print("VariableDeclaration:", self.environment)
         if len(ctx.children) == 2:
             value = ctx.children[1].accept(self)
         else:
             value = None
-        print("VariableDeclaration:", self.environment)
         self.environment.defineVariable(name, value)
 
 
@@ -588,7 +587,6 @@ class InterpreterVisitor(ECMAScriptVisitor):
 
     # Visit a parse tree produced by ECMAScriptParser#variableDeclarationList.
     def visitVariableDeclarationList(self, ctx):
-        print("VariableDeclarationList:", self.environment)
         self.visitChildren(ctx)
 
 

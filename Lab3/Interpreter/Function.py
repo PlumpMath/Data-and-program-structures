@@ -24,7 +24,6 @@ class Function:
     This creates a new function with a set of args (which is an array of string with the name of the variables used as arguments), the global environment
     used when defining the function and a lambda function defining the body to be called (should take one single argument, which is the environment)
     '''
-
     self.parent = environment
     self.argNames = args; # argNames contain a list of the names of the arguments
     self.body = body
@@ -70,11 +69,11 @@ class Function:
     set all environment variables with its values
     return function-body(function-arguments) == return f(x)
     '''
+
     localEnvironment = Environment(self.parent)
     if this:
       localEnvironment.defineVariable("this", this)
     if thatVar:
-      print("Kalle ankas jul", thatVar)
       localEnvironment.defineVariable("that", thatVar)
     argValuePairs = zip(self.argNames, args)
     for name, value in argValuePairs:
