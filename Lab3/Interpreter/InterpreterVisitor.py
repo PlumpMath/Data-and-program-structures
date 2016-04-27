@@ -14,7 +14,7 @@ from Interpreter.Object import Object, ObjectModule
 from Interpreter.ControlExceptions import BreakException, ContinueException, ReturnException
 from Interpreter.ESException import ESException
 from Interpreter.Function import Function
-
+from Interpreter.Property import Property
 
 class InterpreterVisitor(ECMAScriptVisitor):
 
@@ -154,6 +154,11 @@ class InterpreterVisitor(ECMAScriptVisitor):
 
     # Visit a parse tree produced by ECMAScriptParser#PropertyGetter.
     def visitPropertyGetter(self, ctx):
+        name = ctx.children[1].accept(self)
+        if self.environment.exists(name):
+            prop = self.environment.exists(name)
+        else:
+            prop = Property(self.environment.value("this"))
         raise Utils.UnimplementedVisitorException(ctx)
 
 
@@ -215,7 +220,7 @@ class InterpreterVisitor(ECMAScriptVisitor):
         else:
             theNewObject = ObjectModule()
         self.environment = Environment(self.environment)
-        func(theNewObject, *args)        
+        func(theNewObject, *args)
         if self.environment.parent:
             self.environment = self.environment.parent
         return theNewObject

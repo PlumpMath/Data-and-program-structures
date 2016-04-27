@@ -174,7 +174,10 @@ class ParserRuleContext(RuleContext):
         return contexts
 
     def getChildCount(self):
-        return len(self.children)
+        if self.children:
+            return len(self.children)
+        else:
+            return 0
 
     def getSourceInterval(self):
         if self.start is None or self.stop is None:

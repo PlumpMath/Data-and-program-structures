@@ -55,7 +55,7 @@ class Environment:
             raise UnknownVariable(name)
 
 
-    def exists (self, name):
+    def exists(self, name):
         """
         Find if a variable is defined or not.
 
