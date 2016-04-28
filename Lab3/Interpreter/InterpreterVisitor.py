@@ -15,7 +15,7 @@ from Interpreter.ControlExceptions import BreakException, ContinueException, Ret
 from Interpreter.ESException import ESException
 from Interpreter.Function import Function
 from Interpreter.Property import Property
-from Interpreter.Lista import Lista
+from Interpreter.JSList import JSList
 
 
 
@@ -80,7 +80,6 @@ class InterpreterVisitor(ECMAScriptVisitor):
 
     # Visit a parse tree produced by ECMAScriptParser#PropertyExpressionAssignment.
     def visitPropertyExpressionAssignment(self, ctx):
-        self.inspector(ctx)
         return (ctx.children[0].accept(self), ctx.children[2].accept(self))
 
 
@@ -110,14 +109,11 @@ class InterpreterVisitor(ECMAScriptVisitor):
 
     # Visit a parse tree produced by ECMAScriptParser#ArgumentsExpression.
     def visitArgumentsExpression(self, ctx):
-        self.inspector(ctx)
         this = self.environment.value(ctx.children[0].getText().split('.')[0])
-        print("ArgumentsExpression this:", this)
         func = ctx.children[0].accept(self)
         args = ctx.children[1].accept(self)
         if(args == None or args == ')'):
             args = []
-        print("ArgumentsExpression args:", args)
         return func(this, *args)
 
 
@@ -160,12 +156,10 @@ class InterpreterVisitor(ECMAScriptVisitor):
 
     # Visit a parse tree produced by ECMAScriptParser#PropertyGetter.
     def visitPropertyGetter(self, ctx):
-        self.inspector(ctx)
         name = ctx.children[1].accept(self)
         body = ctx.children[5].accept(self)
         param = Object()
         param.getter = Function([], self.environment, body)
-        print("propertyGetter", param)
         return (name, param)
 
 
@@ -213,11 +207,12 @@ class InterpreterVisitor(ECMAScriptVisitor):
 
     # Visit a parse tree produced by ECMAScriptParser#PropertySetter.
     def visitPropertySetter(self, ctx):
-        self.inspector(ctx)
         name = ctx.children[1].accept(self)
         argName = ctx.children[3].accept(self)
         body = ctx.children[6].accept(self)
-        return (name, body)
+        param = Object()
+        param.setter = Function([argName], self.environment, body)
+        return (name, param)
 
 
     # Visit a parse tree produced by ECMAScriptParser#NewExpression.
@@ -244,27 +239,15 @@ class InterpreterVisitor(ECMAScriptVisitor):
 
     # Visit a parse tree produced by ECMAScriptParser#ArrayLiteralExpression.
     def visitArrayLiteralExpression(self, ctx):
-        return Lista(ctx.children[0].accept(self))
+        return JSList(ctx.children[0].accept(self))
 
 
     # Visit a parse tree produced by ECMAScriptParser#MemberDotExpression.
     def visitMemberDotExpression(self, ctx):
-        self.inspector(ctx)
         obj    = ctx.children[0].accept(self)
-        print("MemberDotExpression obj:", dir(obj))
         member = ctx.children[2].accept(self)
-        print("MemberDotExpression member:", member)
-        retval =  getattr(obj, member)
-        print("MemberDotExpression retval:", retval)
-        print("MemberDotExpression retval:", dir(retval))
+        retval = getattr(obj, member)
         if type(retval) == Property:
-            print("MemberDotExpression retval this:", retval.this)
-            print("MemberDotExpression retval this:", dir(retval.this))
-            print("MemberDotExpression retval get:", retval.get)
-            if hasattr(retval, "getter"):
-                print("MemberDotExpression retval getter:", retval.getter)
-                print("MemberDotExpression return get():", retval.get())
-            # TODO: We were here!
             return retval.get()()
         else:
             return retval
@@ -305,8 +288,10 @@ class InterpreterVisitor(ECMAScriptVisitor):
             lhs = self.environment.value(name)
             if type(lhs) == ObjectModule:
                 lhs.__dict__[index] = self.assignment[operator](lhs.__dict__[index], rhs)
+                value = lhs.__dict__[index]
             else:
                 lhs[int(index)] = self.assignment[operator](lhs[int(index)], rhs)
+                value = lhs[int(index)]
             self.environment.setVariable(name, lhs)
         elif ctx.children[1].getText() == '.':
             key = ctx.children[2].accept(self)
@@ -315,15 +300,21 @@ class InterpreterVisitor(ECMAScriptVisitor):
             lhs = ctx.children[0].accept(self)
             if key not in lhs.__dict__:
                 lhs.__dict__[key] = None
-            lhs.__dict__[key] = self.assignment[operator](lhs.__dict__[key], rhs)
-            # If there are nestled objects
-            if '.' in name:
-                rootName = name.split('.')[0]
-                rootObject = self.environment.value(rootName)
-                rootObject.__dict__[name.split('.')[1]] = lhs
-                self.environment.defineVariable(rootName, rootObject)
+            # Is there a setter there?
+            if type(lhs.__dict__[key]) == Property:
+                lhs.__dict__[key].set(rhs)
+                value = rhs
             else:
-                self.environment.setVariable(name, lhs)
+                lhs.__dict__[key] = self.assignment[operator](lhs.__dict__[key], rhs)
+                value = lhs.__dict__[key]
+                # If there are nestled objects
+                if '.' in name:
+                    rootName = name.split('.')[0]
+                    rootObject = self.environment.value(rootName)
+                    rootObject.__dict__[name.split('.')[1]] = lhs
+                    self.environment.defineVariable(rootName, rootObject)
+                else:
+                    self.environment.setVariable(name, lhs)
         else:
             operator = ctx.children[1].accept(self)
             rhs = ctx.children[2].accept(self)
@@ -333,14 +324,15 @@ class InterpreterVisitor(ECMAScriptVisitor):
             value = self.assignment[operator](lhs, rhs)
             self.environment.setVariable(name, value)
 
+        return value
 
     # Visit a parse tree produced by ECMAScriptParser#PostUnaryAssignmentExpression.
     def visitPostUnaryAssignmentExpression(self, ctx):
-      name = ctx.children[0].accept(self)
-      operator = ctx.children[1].accept(self)
-      value = self.environment.value(name)
-      self.environment.setVariable(name, self.unaries[operator](value))
-      return value
+        name = ctx.children[0].accept(self)
+        operator = ctx.children[1].accept(self)
+        value = self.environment.value(name)
+        self.environment.setVariable(name, self.unaries[operator](value))
+        return value
 
 
     # Visit a parse tree produced by ECMAScriptParser#TernaryExpression.
@@ -528,7 +520,6 @@ class InterpreterVisitor(ECMAScriptVisitor):
 
     # Visit a parse tree produced by ECMAScriptParser#objectLiteral.
     def visitObjectLiteral(self, ctx):
-        self.inspector(ctx)
         obj = ObjectModule()
         for key, value in self.childrenToList(ctx.children[1:-1]):
             if hasattr(value, "getter") or hasattr(value, "setter"):

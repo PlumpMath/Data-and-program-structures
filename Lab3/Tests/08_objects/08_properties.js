@@ -4,7 +4,7 @@ var pile = {
     return this.elements.length;
   },
   set value(value) {
-    this.elements.append(value)
+    this.elements.push(value)
   }
 }
 
