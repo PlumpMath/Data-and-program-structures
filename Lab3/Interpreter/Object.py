@@ -10,6 +10,7 @@ class ObjectModule:
 
   def __call__(self, this, *args):
     pass
+
   def create(self, this, prototype):
     obj = Object()
     for attr in dir(prototype):
@@ -23,9 +24,9 @@ class ObjectModule:
     return obj
 
   def defineProperty(self, this, obj, name, param):
-    prop = Property(self)
-    if(hasattr(param, 'getter')):
-      prop.getter = param.getter
-    if(hasattr(param, 'setter')):
-      prop.setter = param.setter
+    prop = Property(this)
+    if(hasattr(param, 'get')):
+      prop.getter = param.get
+    if(hasattr(param, 'set')):
+      prop.setter = param.set
     setattr(obj, name, prop)

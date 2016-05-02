@@ -48,7 +48,9 @@ class InterpreterVisitor(ECMAScriptVisitor):
     def inspector(self, ctx):
         print("‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾")
         print("In function: ", inspect.stack()[1].function)
-        print("Environment:", self.environment.variableDictionary)
+        print("Frame:", self.environment.variableDictionary)
+        if self.environment.parent:
+            print("ParentFrame:", self.environment.parent.variableDictionary)
         print("_______________________")
         print("")
         print("Begin child list, there are", len(ctx.children), "children.")
@@ -114,7 +116,10 @@ class InterpreterVisitor(ECMAScriptVisitor):
         args = ctx.children[1].accept(self)
         if(args == None or args == ')'):
             args = []
-        return func(this, *args)
+        if func.__func__ == ObjectModule.defineProperty:
+            return func(args[0], *args)
+        else:
+            return func(this, *args)
 
 
     # Visit a parse tree produced by ECMAScriptParser#ThisExpression.
@@ -159,7 +164,7 @@ class InterpreterVisitor(ECMAScriptVisitor):
         name = ctx.children[1].accept(self)
         body = ctx.children[5].accept(self)
         param = Object()
-        param.getter = Function([], self.environment, body)
+        param.get = Function([], self.environment, body)
         return (name, param)
 
 
@@ -211,7 +216,7 @@ class InterpreterVisitor(ECMAScriptVisitor):
         argName = ctx.children[3].accept(self)
         body = ctx.children[6].accept(self)
         param = Object()
-        param.setter = Function([argName], self.environment, body)
+        param.set = Function([argName], self.environment, body)
         return (name, param)
 
 
@@ -522,7 +527,7 @@ class InterpreterVisitor(ECMAScriptVisitor):
     def visitObjectLiteral(self, ctx):
         obj = ObjectModule()
         for key, value in self.childrenToList(ctx.children[1:-1]):
-            if hasattr(value, "getter") or hasattr(value, "setter"):
+            if hasattr(value, "get") or hasattr(value, "set"):
                 obj.defineProperty(obj, obj, str(key), value)
             else:
                 setattr(obj, str(key), value)
