@@ -1,3 +1,4 @@
+import types
 import inspect
 import operator
 import collections
@@ -45,12 +46,18 @@ class InterpreterVisitor(ECMAScriptVisitor):
                             '+=': operator.iadd, '-=': operator.isub,
                             '*=': operator.mul, '/=': operator.truediv}
 
+    def print_env_chain(self, env):
+        if not env.parent:
+            print("GlobalFrame:", env.variableDictionary)
+        else:
+            print("Frame:", env.variableDictionary)
+            self.print_env_chain(env.parent)
+
+
     def inspector(self, ctx):
         print("‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾")
         print("In function: ", inspect.stack()[1].function)
-        print("Frame:", self.environment.variableDictionary)
-        if self.environment.parent:
-            print("ParentFrame:", self.environment.parent.variableDictionary)
+        self.print_env_chain(self.environment)
         print("_______________________")
         print("")
         print("Begin child list, there are", len(ctx.children), "children.")
@@ -116,7 +123,7 @@ class InterpreterVisitor(ECMAScriptVisitor):
         args = ctx.children[1].accept(self)
         if(args == None or args == ')'):
             args = []
-        if func.__func__ == ObjectModule.defineProperty:
+        if isinstance(func, types.MethodType) and func.__func__ == ObjectModule.defineProperty:
             return func(args[0], *args)
         else:
             return func(this, *args)
@@ -232,6 +239,7 @@ class InterpreterVisitor(ECMAScriptVisitor):
             theNewObject = ObjectModule()
         self.environment = Environment(self.environment)
         func(theNewObject, *args)
+        self.environment.defineVariable('this', theNewObject)
         if self.environment.parent:
             self.environment = self.environment.parent
         return theNewObject
@@ -253,7 +261,9 @@ class InterpreterVisitor(ECMAScriptVisitor):
         member = ctx.children[2].accept(self)
         retval = getattr(obj, member)
         if type(retval) == Property:
-            return retval.get()()
+            if isinstance(retval.get(), types.MethodType):
+                return retval.get()()
+            return retval.get()
         else:
             return retval
 

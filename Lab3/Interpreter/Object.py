@@ -14,12 +14,15 @@ class ObjectModule:
   def create(self, this, prototype):
     obj = Object()
     for attr in dir(prototype):
-      val = getattr(prototype, attr)
       if not attr.startswith("__"):
-        if(isinstance(val, tuple)):
+        val = getattr(prototype, attr)
+        if isinstance(val, tuple):
           val = list(val)
           val[0] = obj
           val = (val[0], val[1])
+        if isinstance(val, Property):
+          val = val.clone()
+          val.this = obj
         setattr(obj, attr, val)
     return obj
 

@@ -24,8 +24,8 @@ class Property:
   def __init__(self):
     pass
 
-  def __init__(self, object):
-    self.this = object
+  def __init__(self, obj):
+    self.this = obj
 
   def get(self):
     '''
