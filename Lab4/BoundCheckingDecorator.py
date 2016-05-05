@@ -14,12 +14,12 @@ from functools import wraps
 def bound_checking_decorator(*dec_args):
   if len(dec_args) % 2 != 0:
     raise Exception("Uneven number of detorator arguments given.")
-  def make_detorator(func):
+  def make_decorator(func):
     @wraps(func)
-    def detorator(*args):
+    def decorator(*args):
       for i in range(len(args)):
         if args[i] < dec_args[i * 2] or args[i] > dec_args[i * 2 + 1]:
           raise Exception("Out of bounds.")
-        return func(*args)
-      return decorator
-    return make_decorator
+      return func(*args)
+    return decorator
+  return make_decorator
