@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
 
+import os
+import sys
+current_dir = os.path.dirname(__file__)
+sys.path.append(os.path.join(current_dir, '../'))
+
 import time
 import unittest
 from LogTimingDecorator import Logger, logtiming
@@ -34,7 +39,7 @@ class TestLogTimingDecorator(unittest.TestCase):
       before  = logger.function_calls[i-1]
       current = logger.function_calls[i]
       after   = logger.function_calls[i+1]
-      
+
       self.assertEqual(current.func_name, "fib")
       self.assertTrue(before.end < current.end)
       self.assertTrue(current.start < current.end)
@@ -42,16 +47,16 @@ class TestLogTimingDecorator(unittest.TestCase):
 
       (current_arg,) = current.func_args
       self.assertEqual(fib_nl(current_arg), current.func_result)
-      
+
       (before_arg,) = before.func_args
       if(before_arg < current_arg and before_arg > 1 and current_arg > 1):
         self.assertTrue(before.end - before.start <= current.end - current.start)
-      
+
     func3(2, 1, 2)
     self.assertEqual(len(logger.function_calls), 178)
     last = logger.function_calls[177]
     self.assertEqual(last.func_args, (2,1,2,))
     self.assertEqual(last.func_result, 5)
-    
+
 if __name__ == '__main__':
   unittest.main()
