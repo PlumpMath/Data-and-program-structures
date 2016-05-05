@@ -1,7 +1,12 @@
 #!/usr/bin/env python3
+import os
+import sys
+current_dir = os.path.dirname(__file__)
+sys.path.append(os.path.join(current_dir, '../'))
 
 import unittest
 from BoundCheckingDecorator import bound_checking_decorator
+
 
 @bound_checking_decorator(0, float('inf'))
 def fib(n):
