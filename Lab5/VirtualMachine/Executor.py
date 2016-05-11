@@ -89,10 +89,10 @@ class Executor:
   def execute_NOP(self):
     pass
 
-  def execute_PUSH(self):
+  def execute_PUSH(self, value):
     self.stack.push(value)
 
-  def execute_POP(self):
+  def execute_POP(self, count):
     for x in range(0, count):
       self.stack.pop()
 
@@ -100,7 +100,7 @@ class Executor:
     self.stack.dup()
 
   def execute_SWAP(self):
-    pass
+    self.stack.swap()
 
     # Environment and objects manipulation
   def execute_LOAD(self):
