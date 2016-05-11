@@ -1,0 +1,2676 @@
+
+Envtest.py,29
+env = Environment()env2,48
+
+antlr4/CommonTokenFactory.py,399
+class TokenFactory(object):TokenFactory38,1693
+class CommonTokenFactory(TokenFactory):CommonTokenFactory42,1732
+    DEFAULT = NoneDEFAULT50,1952
+    def __init__(self, copyText:bool=False):__init__52,1972
+    def create(self, source, type:int, text:str, channel:int, start:int, stop:int, line:int, column:int):create69,2882
+    def createThin(self, type:int, text:str):createThin79,3274
+
+antlr4/FileStream.py,233
+class FileStream(InputStream):FileStream42,1767
+    def __init__(self, fileName: str, encoding='utf-8'):__init__44,1799
+class TestFileStream(unittest.TestCase):TestFileStream53,2121
+    def testStream(self):testStream55,2163
+
+antlr4/Recognizer.py,1203
+RecognitionException = NoneRecognitionException36,1739
+class Recognizer(object):Recognizer38,1768
+    tokenTypeMapCache = dict()tokenTypeMapCache40,1795
+    ruleIndexMapCache = dict()ruleIndexMapCache41,1826
+    def __init__(self):__init__43,1858
+    def extractVersion(self, version):extractVersion48,2002
+    def checkVersion(self, toolVersion):checkVersion60,2337
+    def addErrorListener(self, listener):addErrorListener67,2690
+    def getTokenTypeMap(self):getTokenTypeMap70,2774
+    def getRuleIndexMap(self):getRuleIndexMap86,3456
+    def getTokenType(self, tokenName:str):getTokenType97,3973
+    def getErrorHeader(self, e:RecognitionException):getErrorHeader106,4264
+    def getTokenErrorDisplay(self, t:Token):getTokenErrorDisplay125,5194
+    def getErrorListenerDispatch(self):getErrorListenerDispatch139,5590
+    def sempred(self, localctx:RuleContext, ruleIndex:int, actionIndex:int):sempred144,5797
+    def precpred(self, localctx:RuleContext , precedence:int):precpred147,5895
+    def state(self):state151,5993
+    def state(self, atnState:int):state162,6437
+class Test(unittest.TestCase):Test168,6552
+    def testVersion(self):testVersion170,6584
+
+antlr4/dfa/DFA.py,661
+class DFA(object):DFA37,1748
+    def __init__(self, atnStartState:DecisionState, decision:int=0):__init__39,1768
+    def getPrecedenceStartState(self, precedence:int):getPrecedenceStartState62,2764
+    def setPrecedenceStartState(self, precedence:int, startState:DFAState):setPrecedenceStartState80,3453
+    def setPrecedenceDfa(self, precedenceDfa:bool):setPrecedenceDfa111,4868
+    def states(self):states125,5401
+    def sortedStates(self):sortedStates129,5524
+    def __str__(self):__str__132,5633
+    def toString(self, literalNames:list=None, symbolicNames:list=None):toString135,5692
+    def toLexerString(self):toLexerString142,5974
+
+antlr4/dfa/DFAState.py,474
+class PredPrediction(object):PredPrediction38,1737
+    def __init__(self, pred:SemanticContext, alt:int):__init__39,1767
+    def __str__(self):__str__43,1871
+class DFAState(object):DFAState70,3345
+    def __init__(self, stateNumber:int=-1, configs:ATNConfigSet=ATNConfigSet()):__init__72,3370
+    def getAltSet(self):getAltSet106,5182
+    def __hash__(self):__hash__116,5420
+    def __eq__(self, other):__eq__130,6117
+    def __str__(self):__str__139,6396
+
+antlr4/dfa/__init__.py,43
+__author__ = 'ericvergnaud'__author__1,0
+
+antlr4/dfa/DFASerializer.py,484
+class DFASerializer(object):DFASerializer39,1751
+    def __init__(self, dfa:DFA, literalNames:list=None, symbolicNames:list=None):__init__41,1781
+    def __str__(self):__str__46,1971
+    def getEdgeLabel(self, i:int):getEdgeLabel70,2845
+    def getStateString(self, s:DFAState):getStateString80,3198
+class LexerDFASerializer(DFASerializer):LexerDFASerializer91,3645
+    def __init__(self, dfa:DFA):__init__93,3687
+    def getEdgeLabel(self, i:int):getEdgeLabel96,3757
+
+antlr4/InputStream.py,724
+class InputStream (object):InputStream40,1711
+    def __init__(self, data: str):__init__42,1744
+    def _loadString(self):    _loadString47,1865
+    def index(self):index53,2022
+    def size(self):size57,2085
+    def reset(self):reset64,2281
+    def consume(self):consume67,2327
+    def LA(self, offset: int):LA73,2507
+    def LT(self, offset: int):LT83,2829
+    def mark(self):mark87,2945
+    def release(self, marker: int):release90,2984
+    def seek(self, _index: int):seek96,3177
+    def getText(self, start :int, stop: int):getText103,3415
+    def __str__(self):__str__111,3643
+class TestInputStream(unittest.TestCase):TestInputStream115,3696
+    def testStream(self):testStream117,3743
+
+antlr4/Lexer.py,1850
+class TokenSource(object):TokenSource44,2149
+class Lexer(Recognizer, TokenSource):Lexer49,2188
+    DEFAULT_MODE = 0DEFAULT_MODE51,2227
+    MORE = -2MORE52,2248
+    SKIP = -3SKIP53,2262
+    DEFAULT_TOKEN_CHANNEL = Token.DEFAULT_CHANNELDEFAULT_TOKEN_CHANNEL55,2277
+    HIDDEN = Token.HIDDEN_CHANNELHIDDEN56,2327
+    MIN_CHAR_VALUE = '\u0000'MIN_CHAR_VALUE57,2361
+    MAX_CHAR_VALUE = '\uFFFE'MAX_CHAR_VALUE58,2391
+    def __init__(self, input:InputStream):__init__60,2422
+    def reset(self):reset107,4254
+    def nextToken(self):nextToken127,4863
+    def skip(self):skip179,7116
+    def more(self):more182,7168
+    def mode(self, m:int):mode185,7220
+    def pushMode(self, m:int):pushMode188,7271
+    def popMode(self):popMode194,7438
+    def inputStream(self):inputStream204,7763
+    def inputStream(self, input:InputStream):inputStream208,7842
+    def sourceName(self):sourceName216,8097
+    def emitToken(self, token:Token):emitToken224,8460
+    def emit(self):emit233,8872
+    def emitEOF(self):emitEOF239,9167
+    def type(self):type248,9496
+    def type(self, type:int):type252,9560
+    def line(self):line256,9631
+    def line(self, line:int):line260,9702
+    def column(self):column264,9780
+    def column(self, column:int):column268,9857
+    def getCharIndex(self):getCharIndex272,9994
+    def text(self):text278,10158
+    def text(self, txt:str):text287,10421
+    def getAllTokens(self):getAllTokens293,10608
+    def notifyListeners(self, e:LexerNoViableAltException):notifyListeners301,10803
+    def getErrorDisplay(self, s:str):getErrorDisplay309,11214
+    def getErrorDisplayForChar(self, c:str):getErrorDisplayForChar315,11401
+    def getCharErrorDisplay(self, c:str):getCharErrorDisplay327,11683
+    def recover(self, re:RecognitionException):recover335,12083
+
+antlr4/error/ErrorStrategy.py,2686
+Parser = NoneParser40,1871
+class ErrorStrategy(object):ErrorStrategy42,1886
+    def reset(self, recognizer:Parser):reset44,1916
+    def recoverInline(self, recognizer:Parser):recoverInline47,1970
+    def recover(self, recognizer:Parser, e:RecognitionException):recover50,2032
+    def sync(self, recognizer:Parser):sync53,2112
+    def inErrorRecoveryMode(self, recognizer:Parser):inErrorRecoveryMode56,2165
+    def reportError(self, recognizer:Parser, e:RecognitionException):reportError59,2233
+class DefaultErrorStrategy(ErrorStrategy):DefaultErrorStrategy66,2445
+    def __init__(self):__init__68,2489
+    def reset(self, recognizer:Parser):reset89,3449
+    def beginErrorCondition(self, recognizer:Parser):beginErrorCondition98,3700
+    def inErrorRecoveryMode(self, recognizer:Parser):inErrorRecoveryMode101,3793
+    def endErrorCondition(self, recognizer:Parser):endErrorCondition110,4038
+    def reportMatch(self, recognizer:Parser):reportMatch120,4318
+    def reportError(self, recognizer:Parser, e:RecognitionException):reportError142,5186
+    def recover(self, recognizer:Parser, e:RecognitionException):recover165,6257
+    def sync(self, recognizer:Parser):sync227,9201
+    def reportNoViableAlternative(self, recognizer:Parser, e:NoViableAltException):reportNoViableAlternative268,10843
+    def reportInputMismatch(self, recognizer:Parser, e:InputMismatchException):reportInputMismatch289,11610
+    def reportFailedPredicate(self, recognizer, e):reportFailedPredicate303,12195
+    def reportUnwantedToken(self, recognizer:Parser):reportUnwantedToken325,13288
+    def reportMissingToken(self, recognizer:Parser):reportMissingToken353,14601
+    def recoverInline(self, recognizer:Parser):recoverInline410,17162
+    def singleTokenInsertion(self, recognizer:Parser):singleTokenInsertion443,18670
+    def singleTokenDeletion(self, recognizer:Parser):singleTokenDeletion476,20335
+    def getMissingSymbol(self, recognizer:Parser):getMissingSymbol512,22272
+    def getExpectedTokens(self, recognizer:Parser):getExpectedTokens533,23305
+    def getTokenErrorDisplay(self, t:Token):getTokenErrorDisplay544,23890
+    def escapeWSAndQuote(self, s:str):escapeWSAndQuote555,24195
+    def getErrorRecoverySet(self, recognizer:Parser):getErrorRecoverySet653,28264
+    def consumeUntil(self, recognizer:Parser, set_:set):consumeUntil668,28884
+class BailErrorStrategy(DefaultErrorStrategy):BailErrorStrategy703,30381
+    def recover(self, recognizer:Parser, e:RecognitionException):recover709,30703
+    def recoverInline(self, recognizer:Parser):recoverInline719,31088
+    def sync(self, recognizer:Parser):sync723,31278
+
+antlr4/error/ErrorListener.py,1376
+class ErrorListener(object):ErrorListener38,1740
+    def syntaxError(self, recognizer, offendingSymbol, line, column, msg, e):syntaxError40,1770
+    def reportAmbiguity(self, recognizer, dfa, startIndex, stopIndex, exact, ambigAlts, configs):reportAmbiguity43,1862
+    def reportAttemptingFullContext(self, recognizer, dfa, startIndex, stopIndex, conflictingAlts, configs):reportAttemptingFullContext46,1974
+    def reportContextSensitivity(self, recognizer, dfa, startIndex, stopIndex, prediction, configs):reportContextSensitivity49,2097
+class ConsoleErrorListener(ErrorListener):ConsoleErrorListener52,2212
+    INSTANCE = NoneINSTANCE56,2334
+    def syntaxError(self, recognizer, offendingSymbol, line, column, msg, e):syntaxError70,2691
+class ProxyErrorListener(ErrorListener):ProxyErrorListener75,2910
+    def __init__(self, delegates):__init__77,2952
+    def syntaxError(self, recognizer, offendingSymbol, line, column, msg, e):syntaxError83,3126
+    def reportAmbiguity(self, recognizer, dfa, startIndex, stopIndex, exact, ambigAlts, configs):reportAmbiguity87,3329
+    def reportAttemptingFullContext(self, recognizer, dfa, startIndex, stopIndex, conflictingAlts, configs):reportAttemptingFullContext91,3572
+    def reportContextSensitivity(self, recognizer, dfa, startIndex, stopIndex, prediction, configs):reportContextSensitivity95,3837
+
+antlr4/error/__init__.py,43
+__author__ = 'ericvergnaud'__author__1,0
+
+antlr4/error/DiagnosticErrorListener.py,675
+class DiagnosticErrorListener(ErrorListener):DiagnosticErrorListener57,2641
+    def __init__(self, exactOnly:bool=True):__init__59,2688
+    def reportAmbiguity(self, recognizer:Parser, dfa:DFA, startIndex:int,reportAmbiguity63,2843
+    def reportAttemptingFullContext(self, recognizer:Parser, dfa:DFA, startIndex:int,reportAttemptingFullContext79,3532
+    def reportContextSensitivity(self, recognizer:Parser, dfa:DFA, startIndex:int,reportContextSensitivity89,4066
+    def getDecisionDescription(self, recognizer:Parser, dfa:DFA):getDecisionDescription99,4589
+    def getConflictingAlts(self, reportedAlts:set, configs:ATNConfigSet):getConflictingAlts124,5553
+
+antlr4/error/Errors.py,1920
+Token = NoneToken32,1584
+Lexer = NoneLexer33,1597
+Parser = NoneParser34,1610
+TokenStream = NoneTokenStream35,1624
+ATNConfigSet = NoneATNConfigSet36,1643
+ParserRulecontext = NoneParserRulecontext37,1663
+PredicateTransition = NonePredicateTransition38,1688
+BufferedTokenStream = NoneBufferedTokenStream39,1715
+class UnsupportedOperationException(Exception):UnsupportedOperationException41,1743
+    def __init__(self, msg:str):__init__43,1792
+class IllegalStateException(Exception):IllegalStateException46,1856
+    def __init__(self, msg:str):__init__48,1897
+class CancellationException(IllegalStateException):CancellationException51,1961
+    def __init__(self, msg:str):__init__53,2014
+class RecognitionException(Exception):RecognitionException66,2541
+    def __init__(self, message:str=None, recognizer:Recognizer=None, input:InputStream=None, ctx:ParserRulecontext=None):__init__69,2582
+    def getExpectedTokens(self):getExpectedTokens100,4036
+class LexerNoViableAltException(RecognitionException):LexerNoViableAltException107,4237
+    def __init__(self, lexer:Lexer, input:InputStream, startIndex:int, deadEndConfigs:ATNConfigSet):__init__109,4293
+    def __str__(self):__str__114,4557
+class NoViableAltException(RecognitionException):NoViableAltException126,5156
+    def __init__(self, recognizer:Parser, input:TokenStream=None, startToken:Token=None,__init__128,5207
+class InputMismatchException(RecognitionException):InputMismatchException151,6429
+    def __init__(self, recognizer:Parser):__init__153,6482
+class FailedPredicateException(RecognitionException):FailedPredicateException163,6935
+    def __init__(self, recognizer:Parser, predicate:str=None, message:str=None):__init__165,6990
+    def formatMessage(self, predicate:str, message:str):formatMessage180,7724
+class ParseCancellationException(CancellationException):ParseCancellationException186,7915
+
+antlr4/ListTokenSource.py,353
+class ListTokenSource(TokenSource):ListTokenSource14,464
+    def __init__(self, tokens:list, sourceName:str=None):__init__28,1086
+    def column(self):column47,1816
+    def nextToken(self):nextToken70,2711
+    def line(self):line92,3533
+    def getInputStream(self):getInputStream118,4443
+    def getSourceName(self):getSourceName132,4892
+
+antlr4/LL1Analyzer.py,408
+class LL1Analyzer (object):LL1Analyzer41,2040
+    HIT_PRED = Token.INVALID_TYPEHIT_PRED46,2220
+    def __init__(self, atn:ATN):__init__48,2255
+    def getDecisionLookahead(self, s:ATNState):getDecisionLookahead61,2811
+    def LOOK(self, s:ATNState, stopState:ATNState=None, ctx:RuleContext=None):LOOK97,4326
+                     calledRuleStack:set, seeThruPreds:bool, addEOF:bool):_LOOK135,6435
+
+antlr4/Token.py,912
+class Token (object):Token37,1729
+    INVALID_TYPE = 0INVALID_TYPE39,1752
+    EPSILON = -2EPSILON43,1906
+    MIN_USER_TOKEN_TYPE = 1MIN_USER_TOKEN_TYPE45,1924
+    EOF = -1EOF47,1953
+    DEFAULT_CHANNEL = 0DEFAULT_CHANNEL53,2192
+    HIDDEN_CHANNEL = 1HIDDEN_CHANNEL58,2306
+    def __init__(self):__init__60,2330
+    def text(self):text72,2934
+    def text(self, text:str):text84,3368
+    def getTokenSource(self):getTokenSource88,3426
+    def getInputStream(self):getInputStream91,3487
+class CommonToken(Token):CommonToken94,3548
+    EMPTY_SOURCE = (None, None)EMPTY_SOURCE99,3702
+    def __init__(self, source:tuple = EMPTY_SOURCE, type:int = None, channel:int=Token.DEFAULT_CHANNEL, start:int=-1, stop:int=-1):__init__101,3735
+    def clone(self):clone127,4799
+    def text(self):text136,5061
+    def text(self, text:str):text149,5417
+    def __str__(self):__str__152,5474
+
+antlr4/ParserRuleContext.py,1366
+ParserRuleContext = NoneParserRuleContext59,2868
+class ParserRuleContext(RuleContext):ParserRuleContext61,2894
+    def __init__(self, parent:ParserRuleContext = None, invokingStateNumber:int = None ):__init__63,2933
+    def copyFrom(self, ctx:ParserRuleContext):copyFrom79,3728
+    def enterRule(self, listener:ParseTreeListener):enterRule88,4022
+    def exitRule(self, listener:ParseTreeListener):exitRule91,4089
+    def addChild(self, child:ParseTree):addChild95,4216
+    def removeLastChild(self):removeLastChild105,4566
+    def addTokenNode(self, token:Token):addTokenNode109,4688
+    def addErrorNode(self, badToken:Token):addErrorNode115,4847
+    def getChild(self, i:int, type:type = None):getChild121,5009
+    def getChildren(self):getChildren133,5396
+    def getToken(self, ttype:int, i:int):getToken139,5542
+    def getTokens(self, ttype:int ):getTokens150,5860
+    def getTypedRuleContext(self, ctxType:type, i:int):getTypedRuleContext162,6220
+    def getTypedRuleContexts(self, ctxType:type):getTypedRuleContexts165,6318
+    def getChildCount(self):getChildCount176,6642
+    def getSourceInterval(self):getSourceInterval179,6706
+class InterpreterRuleContext(ParserRuleContext):InterpreterRuleContext188,6949
+    def __init__(self, parent:ParserRuleContext, invokingStateNumber:int, ruleIndex:int):__init__190,6999
+
+antlr4/__init__.py,0
+
+antlr4/PredictionContext.py,3238
+class PredictionContext(object):PredictionContext37,1699
+    EMPTY = NoneEMPTY42,1839
+    EMPTY_RETURN_STATE = 0x7FFFFFFFEMPTY_RETURN_STATE48,2045
+    globalNodeCount = 1globalNodeCount50,2082
+    id = globalNodeCountid51,2106
+    def __init__(self, cachedHashCode:int):__init__74,2974
+    def isEmpty(self):isEmpty78,3124
+    def hasEmptyPath(self):hasEmptyPath81,3182
+    def __hash__(self):__hash__84,3288
+def calculateHashCode(parent:PredictionContext, returnState:int):calculateHashCode88,3349
+def calculateEmptyHashCode():calculateEmptyHashCode91,3465
+class PredictionContextCache(object):PredictionContextCache99,3705
+    def __init__(self):__init__101,3744
+    def add(self, ctx:PredictionContext):add108,4012
+    def get(self, ctx:PredictionContext):get117,4294
+    def __len__(self):__len__120,4378
+class SingletonPredictionContext(PredictionContext):SingletonPredictionContext124,4434
+    def create(parent:PredictionContext , returnState:int ):create127,4506
+    def __init__(self, parent:PredictionContext, returnState:int):__init__134,4855
+    def __len__(self):__len__141,5197
+    def getParent(self, index:int):getParent144,5238
+    def getReturnState(self, index:int):getReturnState148,5331
+    def __eq__(self, other):__eq__152,5431
+    def __hash__(self):__hash__164,5862
+    def __str__(self):__str__167,5922
+class EmptyPredictionContext(SingletonPredictionContext):EmptyPredictionContext178,6253
+    def __init__(self):__init__180,6312
+    def isEmpty(self):isEmpty183,6393
+    def getParent(self, index:int):getParent186,6437
+    def getReturnState(self, index:int):getReturnState189,6494
+    def __eq__(self, other):__eq__192,6568
+    def __str__(self):__str__195,6627
+class ArrayPredictionContext(PredictionContext):ArrayPredictionContext201,6723
+    def __init__(self, parents:list, returnStates:list):__init__206,6983
+    def isEmpty(self):isEmpty213,7298
+    def __len__(self):__len__218,7516
+    def getParent(self, index:int):getParent221,7578
+    def getReturnState(self, index:int):getReturnState224,7650
+    def __eq__(self, other):__eq__227,7732
+    def __str__(self):__str__237,8102
+def PredictionContextFromRuleContext(atn:ATN, outerContext:RuleContext=None):PredictionContextFromRuleContext261,8949
+def calculateListsHashCode(parents:[], returnStates:int ):calculateListsHashCode277,9674
+def merge(a:PredictionContext, b:PredictionContext, rootIsWildcard:bool, mergeCache:dict):merge286,9938
+def mergeSingletons(a:SingletonPredictionContext, b:SingletonPredictionContext, rootIsWildcard:bool, mergeCache:dict):mergeSingletons339,12117
+def mergeRoot(a:SingletonPredictionContext, b:SingletonPredictionContext, rootIsWildcard:bool):mergeRoot438,16220
+def mergeArrays(a:ArrayPredictionContext, b:ArrayPredictionContext, rootIsWildcard:bool, mergeCache:dict):mergeArrays477,17916
+def combineCommonParents(parents:list):combineCommonParents568,21472
+def getCachedPredictionContext(context:PredictionContext, contextCache:PredictionContextCache, visited:dict):getCachedPredictionContext579,21786
+def getAllContextNodes(context:PredictionContext, nodes:list=None, visited:dict=None):getAllContextNodes642,24059
+
+antlr4/xpath/__init__.py,43
+__author__ = 'ericvergnaud'__author__1,0
+
+antlr4/xpath/XPath.py,2940
+class XPathLexer(Lexer):XPathLexer60,1752
+        "\7)\2\2\63\22\3\2\2\2\6\2 \'/"_serializedATN79,3155
+    _ATN = ATNSimulator.deserialize(_serializedATN)_ATN81,3196
+    _decisionToDFA = [ DFA(s) for s in _ATN.decisionToState ]_decisionToDFA83,3249
+    _sharedContextCache = PredictionContextCache()_sharedContextCache85,3312
+    TOKEN_REF=1TOKEN_REF87,3364
+    RULE_REF=2RULE_REF88,3380
+    ANYWHERE=3ANYWHERE89,3395
+    ROOT=4ROOT90,3410
+    WILDCARD=5WILDCARD91,3421
+    BANG=6BANG92,3436
+    ID=7ID93,3447
+    STRING=8STRING94,3456
+    modeNames = [ "DEFAULT_MODE" ]modeNames96,3470
+    tokenNames = ["<INVALID>", "TOKEN_REF", "RULE_REF", "'//'", "'/'", "'*'", "'!'", "ID", "STRING" ]tokenNames98,3506
+    ruleNames = [ "ANYWHERE", "ROOT", "WILDCARD", "BANG", "ID", "NameChar", "NameStartChar", "STRING" ]ruleNames100,3609
+    def __init__(self, input:InputStream):__init__102,3714
+    def action(self, localctx:RuleContext, ruleIndex:int, actionIndex:int):action108,3943
+    def ID_action(self, localctx:RuleContext, actionIndex:int):ID_action112,4095
+class XPath(object):XPath120,4359
+    WILDCARD = "*" # word not operator/separatorWILDCARD122,4381
+    NOT = "!" # word for invert operatorNOT123,4430
+    def __init__(self, parser:Parser, path:str):__init__125,4472
+    def split(self, path:str):split130,4617
+        def recover(self, e):recover133,4716
+    def getXPathElement(self, wordToken:Token, anywhere:bool):getXPathElement183,6495
+    def findAll(self, tree:ParseTree, xpath:str, parser:Parser):findAll207,7544
+    def evaluate(self, t:ParseTree):evaluate216,7857
+class XPathElement(object):XPathElement237,8539
+    def __init__(self, nodeName:str):__init__239,8568
+    def __str__(self):__str__243,8668
+class XPathRuleAnywhereElement(XPathElement):XPathRuleAnywhereElement251,8867
+    def __init__(self, ruleName:str, ruleIndex:int):__init__253,8914
+    def evaluate(self, t:ParseTree):evaluate257,9038
+class XPathRuleElement(XPathElement):XPathRuleElement261,9134
+    def __init__(self, ruleName:str, ruleIndex:int):__init__263,9173
+    def evaluate(self, t:ParseTree):evaluate267,9297
+class XPathTokenAnywhereElement(XPathElement):XPathTokenAnywhereElement276,9629
+    def __init__(self, ruleName:str, tokenType:int):__init__278,9677
+    def evaluate(self, t:ParseTree):evaluate282,9801
+class XPathTokenElement(XPathElement):XPathTokenElement286,9898
+    def __init__(self, ruleName:str, tokenType:int):__init__288,9938
+    def evaluate(self, t:ParseTree):evaluate292,10062
+class XPathWildcardAnywhereElement(XPathElement):XPathWildcardAnywhereElement301,10390
+    def __init__(self):__init__303,10441
+    def evaluate(self, t:ParseTree):evaluate306,10507
+class XPathWildcardElement(XPathElement):XPathWildcardElement313,10682
+    def __init__(self):__init__315,10725
+    def evaluate(self, t:ParseTree):evaluate319,10792
+
+antlr4/IntervalSet.py,1506
+IntervalSet = NoneIntervalSet5,72
+class IntervalSet(object):IntervalSet7,92
+    def __init__(self):__init__9,120
+    def __iter__(self):__iter__13,205
+    def __getitem__(self, item):__getitem__19,362
+    def addOne(self, v:int):addOne28,557
+    def addRange(self, v:range):addRange31,624
+    def addSet(self, other:IntervalSet):addSet56,1536
+    def reduce(self, k:int):reduce62,1709
+    def complement(self, start, stop):complement75,2169
+    def __contains__(self, item):__contains__82,2374
+    def __len__(self):__len__91,2607
+    def removeRange(self, v):removeRange97,2728
+    def removeOne(self, v):removeOne124,3831
+    def toString(self, literalNames:list, symbolicNames:list):toString152,4801
+    def elementName(self, literalNames:list, symbolicNames:list, a:int):elementName169,5389
+class TestIntervalSet(unittest.TestCase):TestIntervalSet182,5775
+    def testEmpty(self):testEmpty184,5818
+    def testOne(self):testOne189,5943
+    def testTwo(self):testTwo196,6115
+    def testRange(self):testRange204,6307
+    def testDistinct1(self):testDistinct1211,6491
+    def testDistinct2(self):testDistinct2220,6759
+    def testContiguous1(self):testContiguous1229,7027
+    def testContiguous2(self):testContiguous2238,7296
+    def testOverlapping1(self):testOverlapping1246,7532
+    def testOverlapping2(self):testOverlapping2254,7769
+    def testOverlapping3(self):testOverlapping3262,8006
+    def testComplement(self):testComplement272,8309
+
+antlr4/ParserInterpreter.py,549
+class ParserInterpreter(Parser):ParserInterpreter58,2704
+    def __init__(self, grammarFileName:str, tokenNames:list, ruleNames:list, atn:ATN, input:TokenStream):__init__60,2738
+    def parse(self, startRuleIndex:int):parse80,3754
+    def enterRecursionRule(self, localctx:ParserRuleContext, state:int, ruleIndex:int, precedence:int):enterRecursionRule111,5204
+    def getATNState(self):getATNState115,5461
+    def visitState(self, p:ATNState):visitState118,5532
+    def visitRuleStopState(self, p:ATNState):visitRuleStopState179,7835
+
+antlr4/Utils.py,109
+def str_list(val):str_list33,1556
+def escapeWhitespace(s:str, escapeSpaces:bool):escapeWhitespace45,1843
+
+antlr4/atn/ATNDeserializationOptions.py,334
+ATNDeserializationOptions = NoneATNDeserializationOptions31,1558
+class ATNDeserializationOptions(object):ATNDeserializationOptions33,1592
+    defaultOptions = NonedefaultOptions35,1634
+    def __init__(self, copyFrom:ATNDeserializationOptions = None):__init__37,1661
+    def __setattr__(self, key, value):__setattr__42,1948
+
+antlr4/atn/LexerActionExecutor.py,564
+Lexer = NoneLexer44,2055
+LexerActionExecutor = NoneLexerActionExecutor45,2068
+class LexerActionExecutor(object):LexerActionExecutor47,2096
+    def __init__(self, lexerActions:list=list()):__init__49,2132
+    def append(lexerActionExecutor:LexerActionExecutor , lexerAction:LexerAction ):append70,3175
+    def fixOffsetBeforeMatch(self, offset:int):fixOffsetBeforeMatch105,5042
+    def execute(self, lexer:Lexer, input:InputStream, startIndex:int):execute137,6620
+    def __hash__(self):__hash__155,7373
+    def __eq__(self, other):__eq__158,7427
+
+antlr4/atn/PredictionMode.py,1421
+PredictionMode = NonePredictionMode44,1975
+class PredictionMode(Enum):PredictionMode46,1998
+    SLL = 0SLL68,3140
+    LL = 1LL87,3981
+    LL_EXACT_AMBIG_DETECTION = 2LL_EXACT_AMBIG_DETECTION105,4794
+    def hasSLLConflictTerminatingPrediction(cls, mode:PredictionMode, configs:ATNConfigSet):hasSLLConflictTerminatingPrediction201,9434
+    def hasConfigInRuleStopState(cls, configs:ATNConfigSet):hasConfigInRuleStopState237,11197
+    def allConfigsInRuleStopStates(cls, configs:ATNConfigSet):allConfigsInRuleStopStates252,11826
+    def resolvesToJustOneViableAlt(cls, altsets:list):resolvesToJustOneViableAlt400,19422
+    def allSubsetsConflict(cls, altsets:list):allSubsetsConflict412,19874
+    def hasNonConflictingAltSet(cls, altsets:list):hasNonConflictingAltSet424,20328
+    def hasConflictingAltSet(cls, altsets:list):hasConflictingAltSet439,20845
+    def allSubsetsEqual(cls, altsets:list):allSubsetsEqual453,21288
+    def getUniqueAlt(cls, altsets:list):getUniqueAlt470,21806
+    def getAlts(cls, altsets:list):getAlts485,22326
+    def getConflictingAltSubsets(cls, configs:ATNConfigSet):getConflictingAltSubsets501,22761
+    def getStateToAltMap(cls, configs:ATNConfigSet):getStateToAltMap521,23410
+    def hasStateAssociatedWithOneAlt(cls, configs:ATNConfigSet):hasStateAssociatedWithOneAlt532,23703
+    def getSingleViableAlt(cls, altsets:list):getSingleViableAlt540,23938
+
+antlr4/atn/LexerAction.py,3410
+Lexer = NoneLexer35,1615
+class LexerActionType(IntEnum):LexerActionType38,1630
+    CHANNEL = 0     #The type of a {@link LexerChannelAction} action.CHANNEL40,1663
+    CUSTOM = 1      #The type of a {@link LexerCustomAction} action.CUSTOM41,1733
+    MODE = 2        #The type of a {@link LexerModeAction} action.MODE42,1802
+    MORE = 3        #The type of a {@link LexerMoreAction} action.MORE43,1869
+    POP_MODE = 4    #The type of a {@link LexerPopModeAction} action.POP_MODE44,1936
+    PUSH_MODE = 5   #The type of a {@link LexerPushModeAction} action.PUSH_MODE45,2006
+    SKIP = 6        #The type of a {@link LexerSkipAction} action.SKIP46,2077
+    TYPE = 7        #The type of a {@link LexerTypeAction} action.TYPE47,2144
+class LexerAction(object):LexerAction49,2212
+    def __init__(self, action:LexerActionType):__init__51,2240
+    def __hash__(self):__hash__55,2363
+    def __eq__(self, other):__eq__58,2430
+class LexerSkipAction(LexerAction ):LexerSkipAction67,2718
+    INSTANCE = NoneINSTANCE70,2828
+    def __init__(self):__init__72,2849
+    def execute(self, lexer:Lexer):execute75,2921
+    def __str__(self):__str__78,2979
+class LexerTypeAction(LexerAction):LexerTypeAction85,3174
+    def __init__(self, type:int):__init__87,3211
+    def execute(self, lexer:Lexer):execute91,3318
+    def __hash__(self):__hash__94,3386
+    def __eq__(self, other):__eq__97,3470
+    def __str__(self):__str__105,3685
+class LexerPushModeAction(LexerAction):LexerPushModeAction111,3863
+    def __init__(self, mode:int):__init__113,3904
+    def execute(self, lexer:Lexer):execute119,4141
+    def __hash__(self):__hash__122,4212
+    def __eq__(self, other):__eq__125,4296
+    def __str__(self):__str__133,4515
+class LexerPopModeAction(LexerAction):LexerPopModeAction141,4825
+    INSTANCE = NoneINSTANCE143,4865
+    def __init__(self):__init__145,4886
+    def execute(self, lexer:Lexer):execute149,5036
+    def __str__(self):__str__152,5097
+class LexerMoreAction(LexerAction):LexerMoreAction161,5424
+    INSTANCE = NoneINSTANCE163,5461
+    def __init__(self):__init__165,5482
+    def execute(self, lexer:Lexer):execute169,5628
+    def __str__(self):__str__172,5686
+class LexerModeAction(LexerAction):LexerModeAction179,5877
+    def __init__(self, mode:int):__init__181,5914
+    def execute(self, lexer:Lexer):execute187,6142
+    def __hash__(self):__hash__190,6209
+    def __eq__(self, other):__eq__193,6293
+    def __str__(self):__str__201,6508
+class LexerCustomAction(LexerAction):LexerCustomAction213,7115
+    def __init__(self, ruleIndex:int, actionIndex:int):__init__223,7442
+    def execute(self, lexer:Lexer):execute231,7790
+    def __hash__(self):__hash__234,7888
+    def __eq__(self, other):__eq__237,8001
+class LexerChannelAction(LexerAction):LexerChannelAction247,8381
+    def __init__(self, channel:int):__init__251,8577
+    def execute(self, lexer:Lexer):execute257,8826
+    def __hash__(self):__hash__260,8901
+    def __eq__(self, other):__eq__263,8988
+    def __str__(self):__str__271,9212
+class LexerIndexedCustomAction(LexerAction):LexerIndexedCustomAction282,9789
+    def __init__(self, offset:int, action:LexerAction):__init__295,10382
+    def execute(self, lexer:Lexer):execute303,10705
+    def __hash__(self):__hash__307,10857
+    def __eq__(self, other):__eq__310,10962
+
+antlr4/atn/ATNType.py,151
+class ATNType(IntEnum):ATNType35,1639
+    LEXER = 0LEXER37,1664
+    PARSER = 1PARSER38,1678
+    def fromOrdinal(cls, i:int):fromOrdinal41,1711
+
+antlr4/atn/ATNConfig.py,816
+ATNConfig = NoneATNConfig46,2169
+class ATNConfig(object):ATNConfig48,2187
+    def __init__(self, state:ATNState=None, alt:int=None, context:PredictionContext=None, semantic:SemanticContext=None, config:ATNConfig=None):__init__50,2213
+    def __eq__(self, other):__eq__91,4191
+    def __hash__(self):__hash__103,4709
+    def __str__(self):__str__109,4918
+LexerATNConfig = NoneLexerATNConfig129,5676
+class LexerATNConfig(ATNConfig):LexerATNConfig131,5699
+    def __init__(self, state:ATNState, alt:int=None, context:PredictionContext=None, semantic:SemanticContext=SemanticContext.NONE,__init__133,5733
+    def __hash__(self):__hash__143,6442
+    def __eq__(self, other):__eq__148,6703
+    def checkNonGreedyDecision(self, source:LexerATNConfig, target:ATNState):checkNonGreedyDecision159,7105
+
+antlr4/atn/LexerATNSimulator.py,2684
+class SimState(object):SimState61,3134
+    def __init__(self):__init__63,3159
+    def reset(self):reset66,3205
+Lexer = NoneLexer73,3354
+LexerATNSimulator = NoneLexerATNSimulator74,3367
+class LexerATNSimulator(ATNSimulator):LexerATNSimulator76,3393
+    debug = Falsedebug78,3437
+    dfa_debug = Falsedfa_debug79,3455
+    MIN_DFA_EDGE = 0MIN_DFA_EDGE81,3478
+    MAX_DFA_EDGE = 127 # forces unicode to stay in ATNMAX_DFA_EDGE82,3499
+    ERROR = NoneERROR84,3555
+    match_calls = 0match_calls86,3573
+    def __init__(self, recog:Lexer, atn:ATN, decisionToDFA:list, sharedContextCache:PredictionContextCache):__init__88,3594
+    def copyState(self, simulator:LexerATNSimulator ):copyState107,4502
+    def match(self, input:InputStream , mode:int):match113,4714
+    def reset(self):reset128,5176
+    def matchATN(self, input:InputStream):matchATN135,5344
+    def execATN(self, input:InputStream, ds0:DFAState):execATN157,6059
+    def getExistingTargetState(self, s:DFAState, t:int):getExistingTargetState226,9310
+    def computeTargetState(self, input:InputStream, s:DFAState, t:int):computeTargetState246,10101
+    def failOrAccept(self, prevAccept:SimState , input:InputStream, reach:ATNConfigSet, t:int):failOrAccept265,10872
+    def getReachableConfigSet(self, input:InputStream, closure:ATNConfigSet, reach:ATNConfigSet, t:int):getReachableConfigSet279,11694
+    def accept(self, input:InputStream, lexerActionExecutor:LexerActionExecutor, startIndex:int, index:int, line:int, charPos:int):accept305,13231
+    def getReachableTarget(self, trans:Transition, t:int):getReachableTarget317,13709
+    def computeStartState(self, input:InputStream, p:ATNState):computeStartState323,13879
+    def closure(self, input:InputStream, config:LexerATNConfig, configs:ATNConfigSet, currentAltReachedAcceptState:bool,closure340,14736
+    def getEpsilonTarget(self, input:InputStream, config:LexerATNConfig, t:Transition, configs:ATNConfigSet,getEpsilonTarget384,17098
+    def evaluatePredicate(self, input:InputStream, ruleIndex:int, predIndex:int, speculative:bool):evaluatePredicate471,22029
+    def captureSimState(self, settings:SimState, input:InputStream, dfaState:DFAState):captureSimState492,22719
+    def addDFAEdge(self, from_:DFAState, tk:int, to:DFAState=None, cfgs:ATNConfigSet=None) -> DFAState:addDFAEdge498,22954
+    def addDFAState(self, configs:ATNConfigSet) -> DFAState:addDFAState541,24785
+    def getDFA(self, mode:int):getDFA571,25942
+    def getText(self, input:InputStream):getText575,26072
+    def consume(self, input:InputStream):consume579,26232
+    def getTokenName(self, t:int):getTokenName588,26458
+
+antlr4/atn/Transition.py,3880
+ATNState = NoneATNState50,2313
+RuleStartState = NoneRuleStartState51,2329
+class Transition (object):Transition53,2352
+    EPSILON			= 1EPSILON55,2413
+    RANGE			= 2RANGE56,2431
+    RULE			= 3RULE57,2447
+    PREDICATE		= 4 # e.g., {isType(input.LT(1))}?PREDICATE58,2462
+    ATOM			= 5ATOM59,2512
+    ACTION			= 6ACTION60,2527
+    SET				= 7 # ~(A|B) or ~atom, wildcard, which convert to next 2SET61,2544
+    NOT_SET			= 8NOT_SET62,2612
+    WILDCARD		= 9WILDCARD63,2630
+    PRECEDENCE		= 10PRECEDENCE64,2648
+    serializationNames = [serializationNames66,2670
+    serializationTypes = dict()serializationTypes80,2953
+    def __init__(self, target:ATNState):__init__82,2986
+class AtomTransition(Transition):AtomTransition93,3343
+    def __init__(self, target:ATNState, label:int):__init__95,3378
+    def makeLabel(self):makeLabel101,3639
+    def matches( self, symbol:int, minVocabSymbol:int,  maxVocabSymbol:int):matches106,3738
+    def __str__(self):__str__109,3853
+class RuleTransition(Transition):RuleTransition112,3909
+    def __init__(self, ruleStart:RuleStartState, ruleIndex:int, precedence:int, followState:ATNState):__init__114,3944
+    def matches( self, symbol:int, minVocabSymbol:int,  maxVocabSymbol:int):matches122,4378
+class EpsilonTransition(Transition):EpsilonTransition126,4478
+    def __init__(self, target, outermostPrecedenceReturn=-1):__init__128,4516
+    def matches( self, symbol:int, minVocabSymbol:int,  maxVocabSymbol:int):matches134,4778
+    def __str__(self):__str__137,4877
+class RangeTransition(Transition):RangeTransition140,4926
+    def __init__(self, target:ATNState, start:int, stop:int):__init__142,4962
+    def makeLabel(self):makeLabel149,5192
+    def matches( self, symbol:int, minVocabSymbol:int,  maxVocabSymbol:int):matches154,5314
+    def __str__(self):__str__157,5452
+class AbstractPredicateTransition(Transition):AbstractPredicateTransition160,5545
+    def __init__(self, target:ATNState):__init__162,5593
+class PredicateTransition(AbstractPredicateTransition):PredicateTransition166,5669
+    def __init__(self, target:ATNState, ruleIndex:int, predIndex:int, isCtxDependent:bool):__init__168,5726
+    def matches( self, symbol:int, minVocabSymbol:int,  maxVocabSymbol:int):matches176,6068
+    def getPredicate(self):getPredicate179,6167
+    def __str__(self):__str__182,6274
+class ActionTransition(Transition):ActionTransition185,6371
+    def __init__(self, target:ATNState, ruleIndex:int, actionIndex:int=-1, isCtxDependent:bool=False):__init__187,6408
+    def matches( self, symbol:int, minVocabSymbol:int,  maxVocabSymbol:int):matches195,6762
+    def __str__(self):__str__198,6861
+class SetTransition(Transition):SetTransition202,6989
+    def __init__(self, target:ATNState, set:IntervalSet):__init__204,7023
+    def matches( self, symbol:int, minVocabSymbol:int,  maxVocabSymbol:int):matches213,7350
+    def __str__(self):__str__216,7464
+class NotSetTransition(SetTransition):NotSetTransition219,7519
+    def __init__(self, target:ATNState, set:IntervalSet):__init__221,7559
+    def matches( self, symbol:int, minVocabSymbol:int,  maxVocabSymbol:int):matches225,7702
+    def __str__(self):__str__230,7957
+class WildcardTransition(Transition):WildcardTransition234,8037
+    def __init__(self, target:ATNState):__init__236,8076
+    def matches( self, symbol:int, minVocabSymbol:int,  maxVocabSymbol:int):matches240,8198
+    def __str__(self):__str__243,8345
+class PrecedencePredicateTransition(AbstractPredicateTransition):PrecedencePredicateTransition247,8389
+    def __init__(self, target:ATNState, precedence:int):__init__249,8456
+    def matches( self, symbol:int, minVocabSymbol:int,  maxVocabSymbol:int):matches255,8663
+    def getPredicate(self):getPredicate259,8763
+    def __str__(self):__str__262,8844
+
+antlr4/atn/ATN.py,784
+class ATN(object):ATN39,1772
+    INVALID_ALT_NUMBER = 0INVALID_ALT_NUMBER41,1792
+    def __init__(self, grammarType:ATNType , maxTokenType:int ):__init__44,1882
+    def nextTokensInContext(self, s:ATNState, ctx:RuleContext):nextTokensInContext74,3542
+    def nextTokensNoContext(self, s:ATNState):nextTokensNoContext82,3898
+    def nextTokens(self, s:ATNState, ctx:RuleContext = None):nextTokens89,4182
+    def addState(self, state:ATNState):addState95,4380
+    def removeState(self, state:ATNState):removeState101,4563
+    def defineDecisionState(self, s:DecisionState):defineDecisionState104,4697
+    def getDecisionState(self, decision:int):getDecisionState109,4864
+    def getExpectedTokens(self, stateNumber:int, ctx:RuleContext ):getExpectedTokens133,6018
+
+antlr4/atn/__init__.py,43
+__author__ = 'ericvergnaud'__author__1,0
+
+antlr4/atn/ATNConfigSet.py,1170
+ATNSimulator = NoneATNSimulator44,2078
+class ATNConfigSet(object):ATNConfigSet46,2099
+    def __init__(self, fullCtx:bool=True):__init__54,2538
+    def __iter__(self):__iter__83,4009
+    def add(self, config:ATNConfig, mergeCache=None):add95,4502
+    def getOrAdd(self, config:ATNConfig):getOrAdd120,5788
+    def getStates(self):getStates127,5978
+    def getPredicates(self):getPredicates133,6112
+    def get(self, i:int):get140,6321
+    def optimizeConfigs(self, interpreter:ATNSimulator):optimizeConfigs143,6379
+    def addAll(self, coll:list):addAll151,6694
+    def __eq__(self, other):__eq__156,6796
+    def __hash__(self):__hash__172,7367
+    def hashConfigs(self):hashConfigs179,7590
+    def __len__(self):__len__185,7763
+    def isEmpty(self):isEmpty188,7820
+    def __contains__(self, item):__contains__191,7880
+    def containsFast(self, obj:ATNConfig):containsFast196,8095
+    def clear(self):clear202,8330
+    def setReadonly(self, readonly:bool):setReadonly209,8538
+    def __str__(self):__str__213,8685
+class OrderedATNConfigSet(ATNConfigSet):OrderedATNConfigSet230,9357
+    def __init__(self):__init__232,9399
+
+antlr4/atn/ATNSimulator.py,277
+class ATNSimulator(object):ATNSimulator37,1788
+    ERROR = DFAState(ATNConfigSet())ERROR40,1894
+    def __init__(self, atn:ATN, sharedContextCache:PredictionContextCache):__init__63,3202
+    def getCachedContext(self, context:PredictionContext):getCachedContext67,3355
+
+antlr4/atn/ParserATNSimulator.py,4972
+class ParserATNSimulator(ATNSimulator):ParserATNSimulator282,13596
+    debug = Falsedebug284,13637
+    debug_list_atn_decisions = Falsedebug_list_atn_decisions285,13655
+    dfa_debug = Falsedfa_debug286,13692
+    retry_debug = Falseretry_debug287,13714
+    def __init__(self, parser:Parser, atn:ATN, decisionToDFA:list, sharedContextCache:PredictionContextCache):__init__290,13740
+    def reset(self):reset312,14857
+    def adaptivePredict(self, input:TokenStream, decision:int, outerContext:ParserRuleContext):adaptivePredict315,14892
+    def execATN(self, dfa:DFA, s0:DFAState, input:TokenStream, startIndex:int, outerContext:ParserRuleContext ):execATN415,19716
+    def getExistingTargetState(self, previousD:DFAState, t:int):getExistingTargetState512,24282
+    def computeTargetState(self, dfa:DFA, previousD:DFAState, t:int):computeTargetState531,24954
+    def predicateDFAState(self, dfaState:DFAState, decisionState:DecisionState):predicateDFAState571,26815
+    def execATNWithFullContext(self, dfa:DFA, D:DFAState, # how far we got before failing overexecATNWithFullContext589,27885
+    def computeReachSet(self, closure:ATNConfigSet, t:int, fullCtx:bool):computeReachSet692,32928
+    def removeAllConfigsNotInRuleStopState(self, configs:ATNConfigSet, lookToEndOfRule:bool):removeAllConfigsNotInRuleStopState823,39300
+    def computeStartState(self, p:ATNState, ctx:RuleContext, fullCtx:bool):computeStartState838,40083
+    def applyPrecedenceFilter(self, configs:ATNConfigSet):applyPrecedenceFilter906,43118
+    def getReachableTarget(self, trans:Transition, ttype:int):getReachableTarget943,44563
+    def getPredsForAmbigAlts(self, ambigAlts:set, configs:ATNConfigSet, nalts:int):getPredsForAmbigAlts949,44756
+    def getPredicatePredictions(self, ambigAlts:set, altToPred:list):getPredicatePredictions981,46226
+    def getSynValidOrSemInvalidAltThatFinishedDecisionEntryRule(self, configs:ATNConfigSet, outerContext:ParserRuleContext):getSynValidOrSemInvalidAltThatFinishedDecisionEntryRule1044,49198
+    def getAltThatFinishedDecisionEntryRule(self, configs:ATNConfigSet):getAltThatFinishedDecisionEntryRule1056,49938
+    def splitAccordingToSemanticValidity(self, configs:ATNConfigSet, outerContext:ParserRuleContext):splitAccordingToSemanticValidity1075,50750
+    def evalSemanticContext(self, predPredictions:list, outerContext:ParserRuleContext, complete:bool):evalSemanticContext1095,51702
+    def closure(self, config:ATNConfig, configs:ATNConfigSet, closureBusy:set, collectPredicates:bool, fullCtx:bool, treatEofAsEpsilon:bool):closure1123,52872
+    def closureCheckingStopState(self, config:ATNConfig, configs:ATNConfigSet, closureBusy:set, collectPredicates:bool, fullCtx:bool, depth:int, treatEofAsEpsilon:bool):closureCheckingStopState1130,53266
+    def closure_(self, config:ATNConfig, configs:ATNConfigSet, closureBusy:set, collectPredicates:bool, fullCtx:bool, depth:int, treatEofAsEpsilon:bool):closure_1172,55889
+    def getRuleName(self, index:int):getRuleName1219,58485
+    def getEpsilonTarget(self, config:ATNConfig, t:Transition, collectPredicates:bool, inContext:bool, fullCtx:bool, treatEofAsEpsilon:bool):getEpsilonTarget1225,58682
+    def actionTransition(self, config:ATNConfig, t:ActionTransition):actionTransition1248,59791
+    def precedenceTransition(self, config:ATNConfig, pt:PrecedencePredicateTransition,  collectPredicates:bool, inContext:bool, fullCtx:bool):precedenceTransition1253,60021
+    def predTransition(self, config:ATNConfig, pt:PredicateTransition, collectPredicates:bool, inContext:bool, fullCtx:bool):predTransition1283,61554
+    def ruleTransition(self, config:ATNConfig, t:RuleTransition):ruleTransition1313,63163
+    def getConflictingAlts(self, configs:ATNConfigSet):getConflictingAlts1320,63566
+    def getConflictingAltsOrUniqueAlt(self, configs:ATNConfigSet):getConflictingAltsOrUniqueAlt1360,65803
+    def getTokenName(self, t:int):getTokenName1369,66143
+    def getLookaheadName(self, input:TokenStream):getLookaheadName1380,66629
+    def dumpDeadEndConfigs(self, nvae:NoViableAltException):dumpDeadEndConfigs1387,66902
+    def noViableAlt(self, input:TokenStream, outerContext:ParserRuleContext, configs:ATNConfigSet, startIndex:int):noViableAlt1400,67531
+    def getUniqueAlt(self, configs:ATNConfigSet):getUniqueAlt1403,67763
+    def addDFAEdge(self, dfa:DFA, from_:DFAState, t:int, to:DFAState):addDFAEdge1432,68969
+    def addDFAState(self, dfa:DFA, D:DFAState):addDFAState1468,70359
+    def reportAttemptingFullContext(self, dfa:DFA, conflictingAlts:set, configs:ATNConfigSet, startIndex:int, stopIndex:int):reportAttemptingFullContext1486,70842
+    def reportContextSensitivity(self, dfa:DFA, prediction:int, configs:ATNConfigSet, startIndex:int, stopIndex:int):reportContextSensitivity1494,71443
+    def reportAmbiguity(self, dfa:DFA, D:DFAState, startIndex:int, stopIndex:int,reportAmbiguity1503,72098
+
+antlr4/atn/SemanticContext.py,2208
+class SemanticContext(object):SemanticContext44,2027
+    NONE = NoneNONE49,2196
+    def eval(self, parser:Recognizer , outerContext:RuleContext ):eval64,2958
+    def evalPrecedence(self, parser:Recognizer, outerContext:RuleContext):evalPrecedence85,3912
+AND = NoneAND89,4035
+def andContext(a:SemanticContext, b:SemanticContext):andContext91,4047
+OR = NoneOR103,4374
+def orContext(a:SemanticContext, b:SemanticContext):orContext105,4385
+def filterPrecedencePredicates(collection:list):filterPrecedencePredicates118,4724
+class Predicate(SemanticContext):Predicate128,4987
+    def __init__(self, ruleIndex:int=-1, predIndex:int=-1, isCtxDependent:bool=False):__init__130,5022
+    def eval(self, parser:Recognizer , outerContext:RuleContext ):eval135,5248
+    def __hash__(self):__hash__139,5453
+    def __eq__(self, other):__eq__148,5740
+    def __str__(self):__str__157,6061
+class PrecedencePredicate(SemanticContext):PrecedencePredicate161,6162
+    def __init__(self, precedence:int=0):__init__163,6207
+    def eval(self, parser:Recognizer , outerContext:RuleContext ):eval166,6287
+    def evalPrecedence(self, parser:Recognizer, outerContext:RuleContext):evalPrecedence169,6417
+    def __cmp__(self, other):__cmp__175,6630
+    def __hash__(self):__hash__178,6711
+    def __eq__(self, other):__eq__181,6754
+class AND(SemanticContext):AND192,7074
+    def __init__(self, a:SemanticContext, b:SemanticContext):__init__194,7103
+    def __eq__(self, other):__eq__215,7772
+    def __hash__(self):__hash__223,7977
+    def eval(self, parser:Recognizer , outerContext:RuleContext ):eval233,8192
+    def evalPrecedence(self, parser:Recognizer, outerContext:RuleContext):evalPrecedence239,8393
+    def __str__(self):__str__265,9282
+class OR (SemanticContext):OR279,9659
+    def __init__(self, a:SemanticContext, b:SemanticContext):__init__281,9688
+    def __eq__(self, other):__eq__303,10387
+    def __hash__(self):__hash__311,10591
+    def eval(self, parser:Recognizer, outerContext:RuleContext):eval318,10772
+    def evalPrecedence(self, parser:Recognizer, outerContext:RuleContext):evalPrecedence324,10967
+    def __str__(self):__str__350,11853
+
+antlr4/atn/ATNState.py,2613
+INITIAL_NUM_TRANSITIONS = 4INITIAL_NUM_TRANSITIONS94,3351
+class ATNState(object):ATNState96,3380
+    INVALID_TYPE = 0INVALID_TYPE99,3439
+    BASIC = 1BASIC100,3460
+    RULE_START = 2RULE_START101,3474
+    BLOCK_START = 3BLOCK_START102,3493
+    PLUS_BLOCK_START = 4PLUS_BLOCK_START103,3513
+    STAR_BLOCK_START = 5STAR_BLOCK_START104,3538
+    TOKEN_START = 6TOKEN_START105,3563
+    RULE_STOP = 7RULE_STOP106,3583
+    BLOCK_END = 8BLOCK_END107,3601
+    STAR_LOOP_BACK = 9STAR_LOOP_BACK108,3619
+    STAR_LOOP_ENTRY = 10STAR_LOOP_ENTRY109,3642
+    PLUS_LOOP_BACK = 11PLUS_LOOP_BACK110,3667
+    LOOP_END = 12LOOP_END111,3691
+    serializationNames = [serializationNames113,3710
+    INVALID_STATE_NUMBER = -1INVALID_STATE_NUMBER128,4092
+    def __init__(self):__init__130,4123
+    def __hash__(self):__hash__142,4614
+    def __eq__(self, other):__eq__145,4671
+    def onlyHasEpsilonTransitions(self):onlyHasEpsilonTransitions151,4835
+    def isNonGreedyExitState(self):isNonGreedyExitState154,4920
+    def __str__(self):__str__157,4978
+    def addTransition(self, trans:Transition, index:int=-1):addTransition160,5039
+class BasicState(ATNState):BasicState171,5570
+    def __init__(self):__init__173,5599
+class DecisionState(ATNState):DecisionState178,5688
+    def __init__(self):__init__180,5720
+class BlockStartState(DecisionState):BlockStartState186,5877
+    def __init__(self):__init__188,5916
+class BasicBlockStartState(BlockStartState):BasicBlockStartState192,5997
+    def __init__(self):__init__194,6043
+class BlockEndState(ATNState):BlockEndState199,6188
+    def __init__(self):__init__201,6220
+class RuleStopState(ATNState):RuleStopState211,6580
+    def __init__(self):__init__213,6612
+class RuleStartState(ATNState):RuleStartState217,6704
+    def __init__(self):__init__219,6737
+class PlusLoopbackState(DecisionState):PlusLoopbackState228,7040
+    def __init__(self):__init__230,7081
+class PlusBlockStartState(BlockStartState):PlusBlockStartState239,7450
+    def __init__(self):__init__241,7495
+class StarBlockStartState(BlockStartState):StarBlockStartState247,7668
+    def __init__(self):__init__249,7713
+class StarLoopbackState(ATNState):StarLoopbackState253,7812
+    def __init__(self):__init__255,7848
+class StarLoopEntryState(DecisionState):StarLoopEntryState260,7946
+    def __init__(self):__init__262,7988
+class LoopEndState(ATNState):LoopEndState270,8297
+    def __init__(self):__init__272,8328
+class TokensStartState(DecisionState):TokensStartState278,8525
+    def __init__(self):__init__280,8565
+
+antlr4/atn/ATNDeserializer.py,2182
+BASE_SERIALIZED_UUID = UUID("AADB8D7E-AEEF-4415-AD2B-8204D6CF042E")BASE_SERIALIZED_UUID41,1936
+SUPPORTED_UUIDS = [ BASE_SERIALIZED_UUID ]SUPPORTED_UUIDS45,2125
+SERIALIZED_VERSION = 3SERIALIZED_VERSION47,2169
+SERIALIZED_UUID = BASE_SERIALIZED_UUIDSERIALIZED_UUID50,2232
+class ATNDeserializer (object):ATNDeserializer52,2272
+    def __init__(self, options : ATNDeserializationOptions = None):__init__54,2305
+    def isFeatureSupported(self, feature : UUID , actualUuid : UUID ):isFeatureSupported74,3267
+    def deserialize(self, data : str):deserialize81,3506
+    def reset(self, data:str):reset102,4215
+        def adjust(c):adjust103,4246
+    def checkVersion(self):checkVersion112,4522
+    def checkUUID(self):checkUUID117,4761
+    def readATN(self):readATN124,5080
+    def readStates(self, atn:ATN):readStates130,5264
+    def readRules(self, atn:ATN):        readRules171,6838
+    def readModes(self, atn:ATN):readModes195,7710
+    def readSets(self, atn:ATN):readSets201,7898
+    def readEdges(self, atn:ATN, sets:list):readEdges217,8413
+    def readDecisions(self, atn:ATN):readDecisions264,10657
+    def readLexerActions(self, atn:ATN):readLexerActions272,10922
+    def generateRuleBypassTransitions(self, atn:ATN):generateRuleBypassTransitions287,11516
+    def generateRuleBypassTransition(self, atn:ATN, idx:int):generateRuleBypassTransition297,11843
+    def stateIsEndStateFor(self, state:ATNState, idx:int):stateIsEndStateFor355,14002
+    def markPrecedenceDecisions(self, atn:ATN):markPrecedenceDecisions379,14790
+    def verifyATN(self, atn:ATN):verifyATN395,15630
+    def checkCondition(self, condition:bool, message=None):checkCondition442,17749
+    def readInt(self):readInt448,17946
+    def readInt32(self):readInt32453,18041
+    def readLong(self):readLong458,18160
+    def readUUID(self):readUUID463,18305
+    def edgeFactory(self, atn:ATN, type:int, src:int, trg:int, arg1:int, arg2:int, arg3:int, sets:list):edgeFactory469,18484
+    def stateFactory(self, type:int, ruleIndex:int):stateFactory501,20633
+    def lexerActionFactory(self, type:int, data1:int, data2:int):lexerActionFactory527,21967
+
+antlr4/RuleContext.py,981
+RuleContext = NoneRuleContext57,2646
+Parser = NoneParser58,2665
+class RuleContext(RuleNode):RuleContext60,2680
+    EMPTY = NoneEMPTY62,2710
+    def __init__(self, parent:RuleContext=None, invokingState:int=-1):__init__64,2728
+    def depth(self):depth74,3130
+    def isEmpty(self):isEmpty84,3376
+    def getSourceInterval(self):getSourceInterval89,3492
+    def getRuleContext(self):getRuleContext92,3558
+    def getPayload(self):getPayload95,3609
+    def getText(self):getText105,3974
+    def getRuleIndex(self):getRuleIndex113,4224
+    def getChild(self, i:int):getChild116,4271
+    def getChildCount(self):getChildCount119,4323
+    def getChildren(self):getChildren122,4370
+    def accept(self, visitor:ParseTreeVisitor):accept126,4439
+    def toStringTree(self, ruleNames:list=None, recog:Parser=None):toStringTree184,6763
+    def __str__(self):__str__193,7035
+    def toString(self, ruleNames:list, stop:RuleContext)->str:toString216,7905
+
+antlr4/Parser.py,3582
+Parser = NoneParser45,2320
+class TraceListener(ParseTreeListener):TraceListener47,2335
+    def enterEveryRule(self, parser:Parser, ctx:ParserRuleContext):enterEveryRule49,2380
+    def visitTerminal(self, parser:Parser, node:TerminalNode):visitTerminal52,2549
+    def visitErrorNode(self, parser:Parser, node:ErrorNode):visitErrorNode55,2706
+    def exitEveryRule(self, parser:Parser, ctx:ParserRuleContext):exitEveryRule58,2781
+class Parser (Recognizer):Parser63,3039
+    bypassAltsAtnCache = dict()bypassAltsAtnCache70,3267
+    def __init__(self, input:TokenStream):__init__72,3300
+    def __setattr__(self, key, value):__setattr__101,4787
+    def reset(self):reset105,4904
+    def match(self, ttype:int):match134,6132
+    def matchWildcard(self):matchWildcard163,7469
+    def getParseListeners(self):getParseListeners177,7953
+    def addParseListener(self, listener:ParseTreeListener):addParseListener208,9465
+    def removeParseListener(self, listener:ParseTreeListener):removeParseListener222,9976
+    def removeParseListeners(self):removeParseListeners229,10262
+    def triggerEnterRuleEvent(self):triggerEnterRuleEvent233,10392
+    def triggerExitRuleEvent(self):triggerExitRuleEvent244,10725
+    def getTokenFactory(self):getTokenFactory252,11009
+    def setTokenFactory(self, factory:TokenFactory):setTokenFactory256,11171
+    def getATNWithBypassAlts(self):getATNWithBypassAlts265,11511
+    def compileParseTreePattern(self, pattern:str, patternRuleIndex:int, lexer:Lexer = None):compileParseTreePattern287,12479
+    def getInputStream(self):getInputStream300,13021
+    def setInputStream(self, input:InputStream):setInputStream303,13089
+    def getTokenStream(self):getTokenStream306,13174
+    def setTokenStream(self, input:TokenStream):setTokenStream310,13282
+    def getCurrentToken(self):getCurrentToken318,13547
+    def notifyErrorListeners(self, msg:str, offendingToken:Token = None, e:RecognitionException = None):notifyErrorListeners321,13612
+    def consume(self):consume351,14856
+    def addContextToParseTree(self):addContextToParseTree366,15449
+    def enterRule(self, localctx:ParserRuleContext , state:int , ruleIndexint ):enterRule374,15770
+    def exitRule(self):exitRule383,16113
+    def enterOuterAlt(self, localctx:ParserRuleContext, altNum:int):enterOuterAlt391,16413
+    def getPrecedence(self):getPrecedence405,17064
+    def enterRecursionRule(self, localctx:ParserRuleContext, state:int, ruleIndex:int, precedence:int):enterRecursionRule411,17217
+    def pushNewRecursionContext(self, localctx:ParserRuleContext, state:int, ruleIndex:int):pushNewRecursionContext422,17672
+    def unrollRecursionContexts(self, parentCtx:ParserRuleContext):unrollRecursionContexts436,18195
+    def getInvokingContext(self, ruleIndex:int):getInvokingContext455,18923
+    def precpred(self, localctx:RuleContext , precedence:int):precpred464,19151
+    def inContext(self, context:str):inContext467,19270
+    def isExpectedToken(self, symbol:int):isExpectedToken485,19903
+    def getExpectedTokens(self):getExpectedTokens514,20910
+    def getExpectedTokensWithinCurrentRule(self):getExpectedTokensWithinCurrentRule517,21017
+    def getRuleIndex(self, ruleName:str):getRuleIndex523,21249
+    def getRuleInvocationStack(self, p:RuleContext=None):getRuleInvocationStack537,21761
+    def getDFAStrings(self):getDFAStrings552,22239
+    def dumpDFA(self):dumpDFA556,22375
+    def getSourceName(self):getSourceName568,22797
+    def setTrace(self, trace:bool):setTrace574,23031
+
+antlr4/BufferedTokenStream.py,1555
+Lexer = NoneLexer46,2192
+class TokenStream(object):TokenStream49,2266
+class BufferedTokenStream(TokenStream):BufferedTokenStream54,2305
+    def __init__(self, tokenSource:Lexer):__init__56,2346
+    def mark(self):mark89,3973
+    def release(self, marker:int):release92,4015
+    def reset(self):reset96,4102
+    def seek(self, index:int):seek99,4145
+    def get(self, index:int):get103,4250
+    def consume(self):consume107,4339
+    def sync(self, i:int):sync133,5302
+    def fetch(self, n:int):fetch145,5648
+    def getTokens(self, start:int, stop:int, types:set=None):getTokens159,6051
+    def LA(self, i:int):LA174,6515
+    def LB(self, k:int):LB177,6572
+    def LT(self, k:int):LT182,6694
+    def adjustSeekIndex(self, i:int):adjustSeekIndex207,7630
+    def lazyInit(self):lazyInit210,7686
+    def setup(self):setup214,7765
+    def setTokenSource(self, tokenSource:Lexer):setTokenSource219,7914
+    def nextTokenOnChannel(self, i:int, channel:int):nextTokenOnChannel230,8253
+    def previousTokenOnChannel(self, i:int, channel:int):previousTokenOnChannel246,8810
+    def getHiddenTokensToRight(self, tokenIndex:int, channel:int=-1):getHiddenTokensToRight254,9166
+    def getHiddenTokensToLeft(self, tokenIndex:int, channel:int=-1):getHiddenTokensToLeft269,9978
+    def filterForChannel(self, left:int, right:int, channel:int):filterForChannel283,10603
+    def getSourceName(self):getSourceName297,11079
+    def getText(self, interval:tuple=None):getText301,11208
+    def fill(self):fill326,12020
+
+antlr4/tree/ParseTreeMatch.py,350
+class ParseTreeMatch(object):ParseTreeMatch41,1742
+    def __init__(self, tree:ParseTree, pattern:ParseTreePattern, labels:dict, mismatchedNode:ParseTree):__init__58,2499
+    def get(self, label:str):get86,3715
+    def getAll(self, label:str):getAll116,5007
+    def succeeded(self):succeeded130,5358
+    def __str__(self):__str__136,5459
+
+antlr4/tree/Chunk.py,298
+class Chunk(object):Chunk1,0
+class TagChunk(Chunk):TagChunk4,31
+    def __init__(self, tag:str, label:str=None):__init__6,55
+    def __str__(self):__str__10,155
+class TextChunk(Chunk):TextChunk16,299
+    def __init__(self, text:str):__init__18,324
+    def __str__(self):__str__21,384
+
+antlr4/tree/Trees.py,787
+Parser  = NoneParser40,1830
+class Trees(object):Trees42,1846
+    def toStringTree(cls, t:Tree, ruleNames:list=None, recog:Parser=None):toStringTree48,2076
+    def getNodeText(cls, t:Tree, ruleNames:list=None, recog:Parser=None):getNodeText66,2715
+    def getChildren(cls, t:Tree):getChildren86,3451
+    def getAncestors(cls, t:Tree):getAncestors93,3714
+    def findAllTokenNodes(cls, t:ParseTree, ttype:int):findAllTokenNodes102,3953
+    def findAllRuleNodes(cls, t:ParseTree, ruleIndex:int):findAllRuleNodes106,4075
+    def findAllNodes(cls, t:ParseTree, index:int, findTokens:bool):findAllNodes110,4205
+    def _findAllNodes(cls, t:ParseTree, index:int, findTokens:bool, nodes:list):_findAllNodes116,4386
+    def descendants(cls, t:ParseTree):descendants130,4992
+
+antlr4/tree/ParseTreePatternMatcher.py,1362
+Parser = NoneParser101,5077
+ParseTreePattern = NoneParseTreePattern102,5091
+class CannotInvokeStartRule(Exception):CannotInvokeStartRule104,5116
+    def __init__(self, e:Exception):__init__106,5157
+class StartRuleDoesNotConsumeFullPattern(Exception):StartRuleDoesNotConsumeFullPattern109,5223
+class ParseTreePatternMatcher(object):ParseTreePatternMatcher114,5288
+    def __init__(self, lexer:Lexer, parser:Parser):__init__120,5610
+    def setDelimiters(self, start:str, stop:str, escapeLeft:str):setDelimiters137,6312
+    def matchesRuleIndex(self, tree:ParseTree, pattern:str, patternRuleIndex:int):matchesRuleIndex147,6758
+    def matchesPattern(self, tree:ParseTree, pattern:ParseTreePattern):matchesPattern154,7108
+    def matchRuleIndex(self, tree:ParseTree, pattern:str, patternRuleIndex:int):matchRuleIndex163,7528
+    def matchPattern(self, tree:ParseTree, pattern:ParseTreePattern):matchPattern173,8003
+    def compileTreePattern(self, pattern:str, patternRuleIndex:int):compileTreePattern183,8424
+    def matchImpl(self, tree:ParseTree, patternTree:ParseTree, labels:dict):matchImpl217,9994
+    def map(self, labels, label, tree):map281,12769
+    def getRuleTagToken(self, tree:ParseTree):getRuleTagToken289,12995
+    def tokenize(self, pattern:str):tokenize297,13322
+    def split(self, pattern:str):split328,14982
+
+antlr4/tree/TokenTagToken.py,216
+class TokenTagToken(CommonToken):TokenTagToken40,1779
+    def __init__(self, tokenName:str, type:int, label:str=None):__init__50,2123
+    def getText(self):getText62,2498
+    def __str__(self):__str__71,2801
+
+antlr4/tree/RuleTagToken.py,179
+class RuleTagToken(Token):RuleTagToken40,1776
+    def __init__(self, ruleName:str, bypassTokenType:int, label:str=None):__init__53,2301
+    def getText(self):getText70,3145
+
+antlr4/tree/__init__.py,0
+
+antlr4/tree/ParseTreePattern.py,362
+class ParseTreePattern(object):ParseTreePattern41,1820
+    def __init__(self, matcher:ParseTreePatternMatcher, pattern:str, patternRuleIndex:int , patternTree:ParseTree):__init__52,2261
+    def match(self, tree:ParseTree):match66,2892
+    def matches(self, tree:ParseTree):matches76,3250
+    def findAll(self, tree:ParseTree, xpath:str):findAll89,3792
+
+antlr4/tree/Tree.py,2350
+INVALID_INTERVAL = (-1, -2)INVALID_INTERVAL37,1741
+class Tree(object):Tree39,1770
+class SyntaxTree(Tree):SyntaxTree42,1800
+class ParseTree(SyntaxTree):ParseTree45,1834
+class RuleNode(ParseTree):RuleNode48,1873
+class TerminalNode(ParseTree):TerminalNode51,1910
+class ErrorNode(TerminalNode):ErrorNode54,1951
+class ParseTreeVisitor(object):ParseTreeVisitor57,1992
+    def visit(self, tree):visit58,2024
+    def visitChildren(self, node):visitChildren61,2085
+    def visitTerminal(self, node):visitTerminal74,2463
+    def visitErrorNode(self, node):visitErrorNode77,2535
+    def defaultResult(self):defaultResult80,2608
+    def aggregateResult(self, aggregate, nextResult):aggregateResult83,2658
+    def shouldVisitNextChild(self, node, currentResult):shouldVisitNextChild86,2739
+ParserRuleContext = NoneParserRuleContext89,2817
+class ParseTreeListener(object):ParseTreeListener91,2843
+    def visitTerminal(self, node:TerminalNode):visitTerminal93,2877
+    def visitErrorNode(self, node:ErrorNode):visitErrorNode96,2939
+    def enterEveryRule(self, ctx:ParserRuleContext):enterEveryRule99,2999
+    def exitEveryRule(self, ctx:ParserRuleContext):exitEveryRule102,3066
+class TerminalNodeImpl(TerminalNode):TerminalNodeImpl107,3155
+    def __init__(self, symbol:Token):__init__109,3194
+    def __setattr__(self, key, value):__setattr__112,3291
+    def getChild(self, i:int):getChild115,3371
+    def getSymbol(self):getSymbol118,3423
+    def getParent(self):getParent121,3476
+    def getPayload(self):getPayload124,3532
+    def getSourceInterval(self):getSourceInterval127,3586
+    def getChildCount(self):getChildCount133,3772
+    def accept(self, visitor:ParseTreeVisitor):accept136,3819
+    def getText(self):getText139,3911
+    def __str__(self):__str__142,3967
+class ErrorNodeImpl(TerminalNodeImpl,ErrorNode):ErrorNodeImpl154,4414
+    def __init__(self, token:Token):__init__156,4464
+    def accept(self, visitor:ParseTreeVisitor):accept159,4534
+class ParseTreeWalker(object):ParseTreeWalker163,4628
+    DEFAULT = NoneDEFAULT165,4660
+    def walk(self, listener:ParseTreeListener, t:ParseTree):walk167,4680
+    def enterRule(self, listener:ParseTreeListener, r:RuleNode):enterRule185,5384
+    def exitRule(self, listener:ParseTreeListener, r:RuleNode):exitRule190,5552
+
+antlr4/CommonTokenStream.py,373
+class CommonTokenStream(BufferedTokenStream):CommonTokenStream62,2639
+    def __init__(self, lexer:Lexer, channel:int=Token.DEFAULT_CHANNEL):__init__64,2686
+    def adjustSeekIndex(self, i:int):adjustSeekIndex68,2822
+    def LB(self, k:int):LB71,2917
+    def LT(self, k:int):LT85,3304
+    def getNumberOfOnChannelTokens(self):getNumberOfOnChannelTokens102,3819
+
+FuncTest.py,112
+f = Function(["arg1", "arg2"], Environment(), lambda env: print(env.value("arg1") + env.value("arg2")))f6,115
+
+Utils/UnknownVariable.py,100
+class UnknownVariable(Exception):UnknownVariable1,0
+  def __init__(self, variable):__init__2,34
+
+Utils/PrintVisitor.py,5518
+class PrintVisitor(ECMAScriptVisitor):PrintVisitor8,238
+  indenting = ""indenting10,278
+  def visitContext(self, ctx):visitContext12,298
+  def visitTerminal(self, node):visitTerminal19,511
+  def visitPropertyExpressionAssignment(self, ctx):visitPropertyExpressionAssignment24,672
+  def visitGetter(self, ctx):visitGetter29,813
+  def visitAssignmentOperator(self, ctx):visitAssignmentOperator34,944
+  def visitEos(self, ctx):visitEos39,1072
+  def visitSourceElements(self, ctx):visitSourceElements44,1196
+  def visitProgram(self, ctx):visitProgram49,1324
+  def visitMemberDotAssignmentExpression(self, ctx):visitMemberDotAssignmentExpression54,1467
+  def visitArgumentList(self, ctx):visitArgumentList59,1615
+  def visitArgumentsExpression(self, ctx):visitArgumentsExpression64,1753
+  def visitThisExpression(self, ctx):visitThisExpression69,1893
+  def visitIdentifierName(self, ctx):visitIdentifierName74,2028
+  def visitBinaryExpression(self, ctx):visitBinaryExpression79,2165
+  def visitFutureReservedWord(self, ctx):visitFutureReservedWord84,2306
+  def visitInitialiser(self, ctx):visitInitialiser89,2442
+  def visitStatementList(self, ctx):visitStatementList94,2573
+  def visitPropertyGetter(self, ctx):visitPropertyGetter99,2707
+  def visitBlock(self, ctx):visitBlock104,2833
+  def visitExpressionStatement(self, ctx):visitExpressionStatement109,2964
+  def visitKeyword(self, ctx):visitKeyword114,3097
+  def visitElementList(self, ctx):visitElementList119,3222
+  def visitNumericLiteral(self, ctx):visitNumericLiteral124,3354
+  def visitForInStatement(self, ctx):visitForInStatement129,3489
+  def visitEmptyStatement(self, ctx):visitEmptyStatement134,3624
+  def visitLabelledStatement(self, ctx):visitLabelledStatement139,3762
+  def visitPropertySetter(self, ctx):visitPropertySetter144,3900
+  def visitNewExpression(self, ctx):visitNewExpression149,4034
+  def visitLiteralExpression(self, ctx):visitLiteralExpression154,4171
+  def visitArrayLiteralExpression(self, ctx):visitArrayLiteralExpression159,4317
+  def visitMemberDotExpression(self, ctx):visitMemberDotExpression164,4465
+  def visitWithStatement(self, ctx):visitWithStatement169,4604
+  def visitMemberIndexExpression(self, ctx):visitMemberIndexExpression174,4745
+  def visitFormalParameterList(self, ctx):visitFormalParameterList179,4892
+  def visitPropertySetParameterList(self, ctx):visitPropertySetParameterList184,5042
+  def visitAssignmentOperatorExpression(self, ctx):visitAssignmentOperatorExpression189,5201
+  def visitTernaryExpression(self, ctx):visitTernaryExpression194,5353
+  def visitTryStatement(self, ctx):visitTryStatement199,5489
+  def visitDebuggerStatement(self, ctx):visitDebuggerStatement204,5625
+  def visitDoStatement(self, ctx):visitDoStatement209,5760
+  def visitObjectLiteralExpression(self, ctx):visitObjectLiteralExpression214,5901
+  def visitArrayLiteral(self, ctx):visitArrayLiteral219,6043
+  def visitElision(self, ctx):visitElision224,6169
+  def visitUnaryExpression(self, ctx):visitUnaryExpression229,6298
+  def visitWhileStatement(self, ctx):visitWhileStatement234,6434
+  def visitReturnStatement(self, ctx):visitReturnStatement239,6570
+  def visitSwitchStatement(self, ctx):visitSwitchStatement244,6707
+  def visitExpressionSequence(self, ctx):visitExpressionSequence249,6847
+  def visitLiteral(self, ctx):visitLiteral254,6979
+  def visitVariableStatement(self, ctx):visitVariableStatement259,7110
+  def visitFunctionExpression(self, ctx):visitFunctionExpression264,7252
+  def visitDefaultClause(self, ctx):visitDefaultClause269,7390
+  def visitAssignmentExpression(self, ctx):visitAssignmentExpression274,7530
+  def visitStatement(self, ctx):visitStatement279,7666
+  def visitForStatement(self, ctx):visitForStatement284,7794
+  def visitCaseBlock(self, ctx):visitCaseBlock289,7922
+  def visitParenthesizedExpression(self, ctx):visitParenthesizedExpression294,8061
+  def visitPropertyNameAndValueList(self, ctx):visitPropertyNameAndValueList299,8215
+  def visitObjectLiteral(self, ctx):visitObjectLiteral304,8359
+  def visitThrowStatement(self, ctx):visitThrowStatement309,8493
+  def visitSourceElement(self, ctx):visitSourceElement314,8627
+  def visitBreakStatement(self, ctx):visitBreakStatement319,8761
+  def visitIfStatement(self, ctx):visitIfStatement324,8893
+  def visitReservedWord(self, ctx):visitReservedWord329,9023
+  def visitVariableDeclaration(self, ctx):visitVariableDeclaration334,9161
+  def visitFinallyProduction(self, ctx):visitFinallyProduction339,9304
+  def visitIdentifierExpression(self, ctx):visitIdentifierExpression344,9448
+  def visitPostUnaryExpression(self, ctx):visitPostUnaryExpression349,9594
+  def visitPropertyName(self, ctx):visitPropertyName354,9732
+  def visitMemberIndexAssignmentExpression(self, ctx):visitMemberIndexAssignmentExpression359,9882
+  def visitCatchProduction(self, ctx):visitCatchProduction364,10035
+  def visitContinueStatement(self, ctx):visitContinueStatement369,10174
+  def visitCaseClause(self, ctx):visitCaseClause374,10308
+  def visitArguments(self, ctx):visitArguments379,10434
+  def visitVariableDeclarationList(self, ctx):visitVariableDeclarationList384,10573
+  def visitFunctionBody(self, ctx):visitFunctionBody389,10715
+  def visitSetter(self, ctx):visitSetter394,10840
+  def visitFunctionDeclaration(self, ctx):visitFunctionDeclaration399,10972
+  def visitEof(self, ctx):visitEof404,11101
+
+Utils/PrettyPrint.py,182
+def prettyprintstr(obj, indenting = ""):prettyprintstr3,16
+def prettyprint(obj, indenting = ""):prettyprint12,277
+def prettyprintall(objs, indenting = ""):prettyprintall15,356
+
+Utils/InvalidNumberOfArguments.py,113
+class InvalidNumberOfArguments(BaseException):InvalidNumberOfArguments3,14
+  def __init__(self):__init__4,61
+
+Utils/__init__.py,0
+
+Utils/UnknownOperator.py,94
+class UnknownOperator(Exception):UnknownOperator1,0
+  def __init__(self, op):__init__2,34
+
+Utils/UnimplementedVisitorException.py,128
+class UnimplementedVisitorException(BaseException):UnimplementedVisitorException3,14
+  def __init__(self, ctx):__init__4,66
+
+Utils/UnsignedShiftRight.py,53
+def unsignedShiftRight(v, s):unsignedShiftRight1,0
+
+ECMAScriptParser/generate.sh,0
+
+ECMAScriptParser/Lexer.py,372
+class Lexer(ECMAScriptLexer):Lexer4,76
+  def __init__(self, input=None):__init__6,107
+  strictMode = True;strictMode12,344
+  lastToken = None;lastToken15,404
+  def getStrictMode(self):getStrictMode22,566
+  def setStrictMode(self, strictMode):setStrictMode31,790
+  def nextToken(self):    nextToken41,1155
+  def isRegexPossible(self):isRegexPossible55,1634
+
+ECMAScriptParser/ECMAScriptVisitor.py,4991
+class ECMAScriptVisitor(ParseTreeVisitor):ECMAScriptVisitor6,160
+    def visitPropertyExpressionAssignment(self, ctx):visitPropertyExpressionAssignment9,288
+    def visitAssignmentOperator(self, ctx):visitAssignmentOperator14,431
+    def visitEos(self, ctx):visitEos19,549
+    def visitProgram(self, ctx):visitProgram24,656
+    def visitArgumentList(self, ctx):visitArgumentList29,772
+    def visitArgumentsExpression(self, ctx):visitArgumentsExpression34,900
+    def visitThisExpression(self, ctx):visitThisExpression39,1030
+    def visitIdentifierName(self, ctx):visitIdentifierName44,1155
+    def visitBinaryExpression(self, ctx):visitBinaryExpression49,1282
+    def visitFutureReservedWord(self, ctx):visitFutureReservedWord54,1413
+    def visitInitialiser(self, ctx):visitInitialiser59,1539
+    def visitStatementList(self, ctx):visitStatementList64,1660
+    def visitPropertyGetter(self, ctx):visitPropertyGetter69,1784
+    def visitBlock(self, ctx):visitBlock74,1900
+    def visitExpressionStatement(self, ctx):visitExpressionStatement79,2021
+    def visitKeyword(self, ctx):visitKeyword84,2144
+    def visitElementList(self, ctx):visitElementList89,2259
+    def visitNumericLiteral(self, ctx):visitNumericLiteral94,2381
+    def visitForInStatement(self, ctx):visitForInStatement99,2506
+    def visitEmptyStatement(self, ctx):visitEmptyStatement104,2631
+    def visitLabelledStatement(self, ctx):visitLabelledStatement109,2759
+    def visitPropertySetter(self, ctx):visitPropertySetter114,2887
+    def visitNewExpression(self, ctx):visitNewExpression119,3011
+    def visitLiteralExpression(self, ctx):visitLiteralExpression124,3138
+    def visitArrayLiteralExpression(self, ctx):visitArrayLiteralExpression129,3274
+    def visitMemberDotExpression(self, ctx):visitMemberDotExpression134,3412
+    def visitWithStatement(self, ctx):visitWithStatement139,3541
+    def visitMemberIndexExpression(self, ctx):visitMemberIndexExpression144,3672
+    def visitFormalParameterList(self, ctx):visitFormalParameterList149,3809
+    def visitIncrementOperator(self, ctx):visitIncrementOperator154,3942
+    def visitAssignmentOperatorExpression(self, ctx):visitAssignmentOperatorExpression159,4084
+    def visitPostUnaryAssignmentExpression(self, ctx):visitPostUnaryAssignmentExpression164,4238
+    def visitTernaryExpression(self, ctx):visitTernaryExpression169,4381
+    def visitTryStatement(self, ctx):visitTryStatement174,4507
+    def visitDebuggerStatement(self, ctx):visitDebuggerStatement179,4633
+    def visitDoStatement(self, ctx):visitDoStatement184,4758
+    def visitObjectLiteralExpression(self, ctx):visitObjectLiteralExpression189,4889
+    def visitArrayLiteral(self, ctx):visitArrayLiteral194,5021
+    def visitElision(self, ctx):visitElision199,5137
+    def visitStatements(self, ctx):visitStatements204,5251
+    def visitUnaryExpression(self, ctx):visitUnaryExpression209,5373
+    def visitWhileStatement(self, ctx):visitWhileStatement214,5499
+    def visitReturnStatement(self, ctx):visitReturnStatement219,5625
+    def visitSwitchStatement(self, ctx):visitSwitchStatement224,5752
+    def visitExpressionSequence(self, ctx):visitExpressionSequence229,5882
+    def visitLiteral(self, ctx):visitLiteral234,6004
+    def visitVariableStatement(self, ctx):visitVariableStatement239,6125
+    def visitFunctionExpression(self, ctx):visitFunctionExpression244,6257
+    def visitDefaultClause(self, ctx):visitDefaultClause249,6385
+    def visitStatement(self, ctx):visitStatement254,6504
+    def visitForStatement(self, ctx):visitForStatement259,6622
+    def visitCaseBlock(self, ctx):visitCaseBlock264,6740
+    def visitParenthesizedExpression(self, ctx):visitParenthesizedExpression269,6869
+    def visitObjectLiteral(self, ctx):visitObjectLiteral274,7002
+    def visitThrowStatement(self, ctx):visitThrowStatement279,7126
+    def visitBreakStatement(self, ctx):visitBreakStatement284,7251
+    def visitIfStatement(self, ctx):visitIfStatement289,7373
+    def visitReservedWord(self, ctx):visitReservedWord294,7493
+    def visitVariableDeclaration(self, ctx):visitVariableDeclaration299,7621
+    def visitFinallyProduction(self, ctx):visitFinallyProduction304,7754
+    def visitIdentifierExpression(self, ctx):visitIdentifierExpression309,7888
+    def visitPropertyName(self, ctx):visitPropertyName314,8017
+    def visitCatchProduction(self, ctx):visitCatchProduction319,8141
+    def visitContinueStatement(self, ctx):visitContinueStatement324,8270
+    def visitCaseClause(self, ctx):visitCaseClause329,8394
+    def visitArguments(self, ctx):visitArguments334,8510
+    def visitVariableDeclarationList(self, ctx):visitVariableDeclarationList339,8639
+    def visitFunctionBody(self, ctx):visitFunctionBody344,8771
+    def visitEof(self, ctx):visitEof349,8883
+    def visitUnaryAssignmentExpression(self, ctx):visitUnaryAssignmentExpression354,9008
+
+ECMAScriptParser/ECMAScriptParser.py,55945
+package = globals().get("__package__", None)package4,87
+ischild = len(package)>0 if package is not None else Falseischild5,132
+def serializedATN():serializedATN13,424
+class ECMAScriptParser ( Parser ):ECMAScriptParser302,22169
+    grammarFileName = "java-escape"grammarFileName304,22205
+    atn = ATNDeserializer().deserialize(serializedATN())atn306,22242
+    decisionsToDFA = [ DFA(ds, i) for i, ds in enumerate(atn.decisionToState) ]decisionsToDFA308,22300
+    sharedContextCache = PredictionContextCache()sharedContextCache310,22381
+    EOF = Token.EOFEOF312,22432
+    RegularExpressionLiteral=1RegularExpressionLiteral313,22452
+    LineTerminator=2LineTerminator314,22483
+    OpenBracket=3OpenBracket315,22504
+    CloseBracket=4CloseBracket316,22522
+    OpenParen=5OpenParen317,22541
+    CloseParen=6CloseParen318,22557
+    OpenBrace=7OpenBrace319,22574
+    CloseBrace=8CloseBrace320,22590
+    SemiColon=9SemiColon321,22607
+    Comma=10Comma322,22623
+    Assign=11Assign323,22636
+    QuestionMark=12QuestionMark324,22650
+    Colon=13Colon325,22670
+    Dot=14Dot326,22683
+    PlusPlus=15PlusPlus327,22694
+    MinusMinus=16MinusMinus328,22710
+    Plus=17Plus329,22728
+    Minus=18Minus330,22740
+    BitNot=19BitNot331,22753
+    Not=20Not332,22767
+    Multiply=21Multiply333,22778
+    Divide=22Divide334,22794
+    Modulus=23Modulus335,22808
+    RightShiftArithmetic=24RightShiftArithmetic336,22823
+    LeftShiftArithmetic=25LeftShiftArithmetic337,22851
+    RightShiftLogical=26RightShiftLogical338,22878
+    LessThan=27LessThan339,22903
+    MoreThan=28MoreThan340,22919
+    LessThanEquals=29LessThanEquals341,22935
+    GreaterThanEquals=30GreaterThanEquals342,22957
+    Equals=31Equals343,22982
+    NotEquals=32NotEquals344,22996
+    IdentityEquals=33IdentityEquals345,23013
+    IdentityNotEquals=34IdentityNotEquals346,23035
+    BitAnd=35BitAnd347,23060
+    BitXOr=36BitXOr348,23074
+    BitOr=37BitOr349,23088
+    And=38And350,23101
+    Or=39Or351,23112
+    MultiplyAssign=40MultiplyAssign352,23122
+    DivideAssign=41DivideAssign353,23144
+    ModulusAssign=42ModulusAssign354,23164
+    PlusAssign=43PlusAssign355,23185
+    MinusAssign=44MinusAssign356,23203
+    LeftShiftArithmeticAssign=45LeftShiftArithmeticAssign357,23222
+    RightShiftArithmeticAssign=46RightShiftArithmeticAssign358,23255
+    RightShiftLogicalAssign=47RightShiftLogicalAssign359,23289
+    BitAndAssign=48BitAndAssign360,23320
+    BitXorAssign=49BitXorAssign361,23340
+    BitOrAssign=50BitOrAssign362,23360
+    Get=51Get363,23379
+    Set=52Set364,23390
+    NullLiteral=53NullLiteral365,23401
+    BooleanLiteral=54BooleanLiteral366,23420
+    DecimalLiteral=55DecimalLiteral367,23442
+    HexIntegerLiteral=56HexIntegerLiteral368,23464
+    OctalIntegerLiteral=57OctalIntegerLiteral369,23489
+    Break=58Break370,23516
+    Do=59Do371,23529
+    Instanceof=60Instanceof372,23539
+    Typeof=61Typeof373,23557
+    Case=62Case374,23571
+    Else=63Else375,23583
+    New=64New376,23595
+    Var=65Var377,23606
+    Catch=66Catch378,23617
+    Finally=67Finally379,23630
+    Return=68Return380,23645
+    Void=69Void381,23659
+    Continue=70Continue382,23671
+    For=71For383,23687
+    Switch=72Switch384,23698
+    While=73While385,23712
+    Debugger=74Debugger386,23725
+    Function=75Function387,23741
+    This=76This388,23757
+    With=77With389,23769
+    Default=78Default390,23781
+    If=79If391,23796
+    Throw=80Throw392,23806
+    Delete=81Delete393,23819
+    In=82In394,23833
+    Try=83Try395,23843
+    Class=84Class396,23854
+    Enum=85Enum397,23867
+    Extends=86Extends398,23879
+    Super=87Super399,23894
+    Const=88Const400,23907
+    Export=89Export401,23920
+    Import=90Import402,23934
+    Implements=91Implements403,23948
+    Let=92Let404,23966
+    Private=93Private405,23977
+    Public=94Public406,23992
+    Interface=95Interface407,24006
+    Package=96Package408,24023
+    Protected=97Protected409,24038
+    Static=98Static410,24055
+    Yield=99Yield411,24069
+    Identifier=100Identifier412,24082
+    StringLiteral=101StringLiteral413,24101
+    WhiteSpaces=102WhiteSpaces414,24123
+    MultiLineComment=103MultiLineComment415,24143
+    SingleLineComment=104SingleLineComment416,24168
+    UnexpectedCharacter=105UnexpectedCharacter417,24194
+    tokenNames = [ "<INVALID>", "RegularExpressionLiteral", "LineTerminator", tokenNames419,24223
+    RULE_program = 0RULE_program439,25712
+    RULE_statements = 1RULE_statements440,25733
+    RULE_statement = 2RULE_statement441,25757
+    RULE_block = 3RULE_block442,25780
+    RULE_statementList = 4RULE_statementList443,25799
+    RULE_variableStatement = 5RULE_variableStatement444,25826
+    RULE_variableDeclarationList = 6RULE_variableDeclarationList445,25857
+    RULE_variableDeclaration = 7RULE_variableDeclaration446,25894
+    RULE_initialiser = 8RULE_initialiser447,25927
+    RULE_emptyStatement = 9RULE_emptyStatement448,25952
+    RULE_expressionStatement = 10RULE_expressionStatement449,25980
+    RULE_ifStatement = 11RULE_ifStatement450,26014
+    RULE_iterationStatement = 12RULE_iterationStatement451,26040
+    RULE_continueStatement = 13RULE_continueStatement452,26073
+    RULE_breakStatement = 14RULE_breakStatement453,26105
+    RULE_returnStatement = 15RULE_returnStatement454,26134
+    RULE_withStatement = 16RULE_withStatement455,26164
+    RULE_switchStatement = 17RULE_switchStatement456,26192
+    RULE_caseBlock = 18RULE_caseBlock457,26222
+    RULE_caseClause = 19RULE_caseClause458,26246
+    RULE_defaultClause = 20RULE_defaultClause459,26271
+    RULE_labelledStatement = 21RULE_labelledStatement460,26299
+    RULE_throwStatement = 22RULE_throwStatement461,26331
+    RULE_tryStatement = 23RULE_tryStatement462,26360
+    RULE_catchProduction = 24RULE_catchProduction463,26387
+    RULE_finallyProduction = 25RULE_finallyProduction464,26417
+    RULE_debuggerStatement = 26RULE_debuggerStatement465,26449
+    RULE_formalParameterList = 27RULE_formalParameterList466,26481
+    RULE_functionBody = 28RULE_functionBody467,26515
+    RULE_arrayLiteral = 29RULE_arrayLiteral468,26542
+    RULE_elementList = 30RULE_elementList469,26569
+    RULE_elision = 31RULE_elision470,26595
+    RULE_objectLiteral = 32RULE_objectLiteral471,26617
+    RULE_propertyAssignment = 33RULE_propertyAssignment472,26645
+    RULE_propertyName = 34RULE_propertyName473,26678
+    RULE_arguments = 35RULE_arguments474,26705
+    RULE_argumentList = 36RULE_argumentList475,26729
+    RULE_expressionSequence = 37RULE_expressionSequence476,26756
+    RULE_singleExpression = 38RULE_singleExpression477,26789
+    RULE_incrementOperator = 39RULE_incrementOperator478,26820
+    RULE_assignmentOperator = 40RULE_assignmentOperator479,26852
+    RULE_literal = 41RULE_literal480,26885
+    RULE_numericLiteral = 42RULE_numericLiteral481,26907
+    RULE_identifierName = 43RULE_identifierName482,26936
+    RULE_reservedWord = 44RULE_reservedWord483,26965
+    RULE_keyword = 45RULE_keyword484,26992
+    RULE_futureReservedWord = 46RULE_futureReservedWord485,27014
+    RULE_eos = 47RULE_eos486,27047
+    RULE_eof = 48RULE_eof487,27065
+    ruleNames =  [ "program", "statements", "statement", "block", "statementList", ruleNames489,27084
+    def __init__(self, input:TokenStream):__init__504,28207
+    class ProgramContext(ParserRuleContext):ProgramContext512,28454
+        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):__init__514,28500
+        def EOF(self):EOF518,28675
+        def statements(self):statements521,28757
+        def getRuleIndex(self):getRuleIndex525,28871
+        def enterRule(self, listener:ParseTreeListener):enterRule528,28953
+        def exitRule(self, listener:ParseTreeListener):exitRule532,29114
+        def accept(self, visitor:ParseTreeVisitor):accept536,29273
+    def program(self):program545,29505
+    class StatementsContext(ParserRuleContext):StatementsContext569,31292
+        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):__init__571,31341
+        def statement(self, i:int=None):statement575,31516
+        def getRuleIndex(self):getRuleIndex582,31772
+        def enterRule(self, listener:ParseTreeListener):enterRule585,31857
+        def exitRule(self, listener:ParseTreeListener):exitRule589,32021
+        def accept(self, visitor:ParseTreeVisitor):accept593,32183
+    def statements(self):statements602,32418
+    class StatementContext(ParserRuleContext):StatementContext629,34371
+        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):__init__631,34419
+        def tryStatement(self):tryStatement635,34594
+        def switchStatement(self):switchStatement639,34712
+        def withStatement(self):withStatement643,34836
+        def debuggerStatement(self):debuggerStatement647,34956
+        def labelledStatement(self):labelledStatement651,35084
+        def emptyStatement(self):emptyStatement655,35212
+        def breakStatement(self):breakStatement659,35334
+        def ifStatement(self):ifStatement663,35456
+        def variableStatement(self):variableStatement667,35572
+        def expressionStatement(self):expressionStatement671,35700
+        def throwStatement(self):throwStatement675,35832
+        def iterationStatement(self):iterationStatement679,35954
+        def continueStatement(self):continueStatement683,36084
+        def block(self):block687,36212
+        def returnStatement(self):returnStatement691,36316
+        def getRuleIndex(self):getRuleIndex695,36440
+        def enterRule(self, listener:ParseTreeListener):enterRule698,36524
+        def exitRule(self, listener:ParseTreeListener):exitRule702,36687
+        def accept(self, visitor:ParseTreeVisitor):accept706,36848
+    def statement(self):statement715,37082
+    class BlockContext(ParserRuleContext):BlockContext821,40162
+        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):__init__823,40206
+        def statementList(self):statementList827,40381
+        def getRuleIndex(self):getRuleIndex831,40501
+        def enterRule(self, listener:ParseTreeListener):enterRule834,40581
+        def exitRule(self, listener:ParseTreeListener):exitRule838,40740
+        def accept(self, visitor:ParseTreeVisitor):accept842,40897
+    def block(self):block851,41127
+    class StatementListContext(ParserRuleContext):StatementListContext877,42988
+        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):__init__879,43040
+        def statement(self, i:int=None):statement883,43215
+        def getRuleIndex(self):getRuleIndex890,43471
+        def enterRule(self, listener:ParseTreeListener):enterRule893,43559
+        def exitRule(self, listener:ParseTreeListener):exitRule897,43726
+        def accept(self, visitor:ParseTreeVisitor):accept901,43891
+    def statementList(self):statementList910,44129
+    class VariableStatementContext(ParserRuleContext):VariableStatementContext937,46091
+        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):__init__939,46147
+        def eos(self):eos943,46322
+        def variableDeclarationList(self):variableDeclarationList947,46422
+        def Var(self):Var951,46562
+        def getRuleIndex(self):getRuleIndex954,46644
+        def enterRule(self, listener:ParseTreeListener):enterRule957,46736
+        def exitRule(self, listener:ParseTreeListener):exitRule961,46907
+        def accept(self, visitor:ParseTreeVisitor):accept965,47076
+    def variableStatement(self):variableStatement974,47318
+    class VariableDeclarationListContext(ParserRuleContext):VariableDeclarationListContext994,48000
+        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):__init__996,48062
+        def variableDeclaration(self, i:int=None):variableDeclaration1000,48237
+        def getRuleIndex(self):getRuleIndex1007,48523
+        def enterRule(self, listener:ParseTreeListener):enterRule1010,48621
+        def exitRule(self, listener:ParseTreeListener):exitRule1014,48798
+        def accept(self, visitor:ParseTreeVisitor):accept1018,48973
+    def variableDeclarationList(self):variableDeclarationList1027,49221
+    class VariableDeclarationContext(ParserRuleContext):VariableDeclarationContext1056,50353
+        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):__init__1058,50411
+        def Identifier(self):Identifier1062,50586
+        def initialiser(self):initialiser1065,50682
+        def getRuleIndex(self):getRuleIndex1069,50798
+        def enterRule(self, listener:ParseTreeListener):enterRule1072,50892
+        def exitRule(self, listener:ParseTreeListener):exitRule1076,51065
+        def accept(self, visitor:ParseTreeVisitor):accept1080,51236
+    def variableDeclaration(self):variableDeclaration1089,51480
+    class InitialiserContext(ParserRuleContext):InitialiserContext1112,52246
+        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):__init__1114,52296
+        def singleExpression(self):singleExpression1118,52471
+        def getRuleIndex(self):getRuleIndex1122,52597
+        def enterRule(self, listener:ParseTreeListener):enterRule1125,52683
+        def exitRule(self, listener:ParseTreeListener):exitRule1129,52848
+        def accept(self, visitor:ParseTreeVisitor):accept1133,53011
+    def initialiser(self):initialiser1142,53247
+    class EmptyStatementContext(ParserRuleContext):EmptyStatementContext1160,53855
+        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):__init__1162,53908
+        def SemiColon(self):SemiColon1166,54083
+        def getRuleIndex(self):getRuleIndex1169,54177
+        def enterRule(self, listener:ParseTreeListener):enterRule1172,54266
+        def exitRule(self, listener:ParseTreeListener):exitRule1176,54434
+        def accept(self, visitor:ParseTreeVisitor):accept1180,54600
+    def emptyStatement(self):emptyStatement1189,54839
+    class ExpressionStatementContext(ParserRuleContext):ExpressionStatementContext1205,55392
+        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):__init__1207,55450
+        def expressionSequence(self):expressionSequence1211,55625
+        def getRuleIndex(self):getRuleIndex1215,55755
+        def enterRule(self, listener:ParseTreeListener):enterRule1218,55849
+        def exitRule(self, listener:ParseTreeListener):exitRule1222,56022
+        def accept(self, visitor:ParseTreeVisitor):accept1226,56193
+    def expressionStatement(self):expressionStatement1235,56437
+    class IfStatementContext(ParserRuleContext):IfStatementContext1251,57005
+        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):__init__1253,57055
+        def expressionSequence(self):expressionSequence1257,57230
+        def Else(self):Else1261,57360
+        def statement(self, i:int=None):statement1264,57444
+        def If(self):If1271,57700
+        def getRuleIndex(self):getRuleIndex1274,57780
+        def enterRule(self, listener:ParseTreeListener):enterRule1277,57866
+        def exitRule(self, listener:ParseTreeListener):exitRule1281,58031
+        def accept(self, visitor:ParseTreeVisitor):accept1285,58194
+    def ifStatement(self):ifStatement1294,58430
+    class IterationStatementContext(ParserRuleContext):IterationStatementContext1327,59497
+        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):__init__1329,59554
+        def getRuleIndex(self):getRuleIndex1334,59730
+        def copyFrom(self, ctx:ParserRuleContext):copyFrom1338,59829
+    class DoStatementContext(IterationStatementContext):DoStatementContext1343,59917
+        def __init__(self, parser, ctx:ParserRuleContext): # actually a ECMAScriptParser.IterationStatementContext)__init__1345,59975
+        def While(self):While1349,60160
+        def expressionSequence(self):expressionSequence1351,60245
+        def Do(self):Do1354,60374
+        def eos(self):eos1356,60453
+        def statement(self):statement1359,60552
+        def enterRule(self, listener:ParseTreeListener):enterRule1363,60664
+        def exitRule(self, listener:ParseTreeListener):exitRule1367,60829
+        def accept(self, visitor:ParseTreeVisitor):accept1371,60992
+    class WhileStatementContext(IterationStatementContext):WhileStatementContext1378,61226
+        def __init__(self, parser, ctx:ParserRuleContext): # actually a ECMAScriptParser.IterationStatementContext)__init__1380,61287
+        def While(self):While1384,61472
+        def expressionSequence(self):expressionSequence1386,61557
+        def statement(self):statement1389,61686
+        def enterRule(self, listener:ParseTreeListener):enterRule1393,61798
+        def exitRule(self, listener:ParseTreeListener):exitRule1397,61966
+        def accept(self, visitor:ParseTreeVisitor):accept1401,62132
+    class ForStatementContext(IterationStatementContext):ForStatementContext1408,62369
+        def __init__(self, parser, ctx:ParserRuleContext): # actually a ECMAScriptParser.IterationStatementContext)__init__1410,62428
+        def For(self):For1414,62613
+        def variableDeclarationList(self):variableDeclarationList1416,62694
+        def statement(self):statement1419,62833
+        def Var(self):Var1422,62944
+        def expressionSequence(self, i:int=None):expressionSequence1424,63025
+        def enterRule(self, listener:ParseTreeListener):enterRule1431,63308
+        def exitRule(self, listener:ParseTreeListener):exitRule1435,63474
+        def accept(self, visitor:ParseTreeVisitor):accept1439,63638
+    class ForInStatementContext(IterationStatementContext):ForInStatementContext1446,63873
+        def __init__(self, parser, ctx:ParserRuleContext): # actually a ECMAScriptParser.IterationStatementContext)__init__1448,63934
+        def expressionSequence(self):expressionSequence1452,64119
+        def variableDeclaration(self):variableDeclaration1455,64248
+        def In(self):In1458,64379
+        def For(self):For1460,64458
+        def statement(self):statement1462,64539
+        def singleExpression(self):singleExpression1465,64650
+        def Var(self):Var1468,64775
+        def enterRule(self, listener:ParseTreeListener):enterRule1471,64857
+        def exitRule(self, listener:ParseTreeListener):exitRule1475,65025
+        def accept(self, visitor:ParseTreeVisitor):accept1479,65191
+    def iterationStatement(self):iterationStatement1487,65429
+    class ContinueStatementContext(ParserRuleContext):ContinueStatementContext1651,74587
+        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):__init__1653,74643
+        def Identifier(self):Identifier1657,74818
+        def Continue(self):Continue1660,74914
+        def eos(self):eos1663,75006
+        def getRuleIndex(self):getRuleIndex1667,75106
+        def enterRule(self, listener:ParseTreeListener):enterRule1670,75198
+        def exitRule(self, listener:ParseTreeListener):exitRule1674,75369
+        def accept(self, visitor:ParseTreeVisitor):accept1678,75538
+    def continueStatement(self):continueStatement1687,75780
+    class BreakStatementContext(ParserRuleContext):BreakStatementContext1712,76600
+        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):__init__1714,76653
+        def Identifier(self):Identifier1718,76828
+        def eos(self):eos1721,76924
+        def Break(self):Break1725,77024
+        def getRuleIndex(self):getRuleIndex1728,77110
+        def enterRule(self, listener:ParseTreeListener):enterRule1731,77199
+        def exitRule(self, listener:ParseTreeListener):exitRule1735,77367
+        def accept(self, visitor:ParseTreeVisitor):accept1739,77533
+    def breakStatement(self):breakStatement1748,77772
+    class ReturnStatementContext(ParserRuleContext):ReturnStatementContext1773,78580
+        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):__init__1775,78634
+        def expressionSequence(self):expressionSequence1779,78809
+        def eos(self):eos1783,78939
+        def Return(self):Return1787,79039
+        def getRuleIndex(self):getRuleIndex1790,79127
+        def enterRule(self, listener:ParseTreeListener):enterRule1793,79217
+        def exitRule(self, listener:ParseTreeListener):exitRule1797,79386
+        def accept(self, visitor:ParseTreeVisitor):accept1801,79553
+    def returnStatement(self):returnStatement1810,79793
+    class WithStatementContext(ParserRuleContext):WithStatementContext1835,80604
+        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):__init__1837,80656
+        def expressionSequence(self):expressionSequence1841,80831
+        def statement(self):statement1845,80961
+        def With(self):With1849,81073
+        def getRuleIndex(self):getRuleIndex1852,81157
+        def enterRule(self, listener:ParseTreeListener):enterRule1855,81245
+        def exitRule(self, listener:ParseTreeListener):exitRule1859,81412
+        def accept(self, visitor:ParseTreeVisitor):accept1863,81577
+    def withStatement(self):withStatement1872,81815
+    class SwitchStatementContext(ParserRuleContext):SwitchStatementContext1896,82624
+        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):__init__1898,82678
+        def expressionSequence(self):expressionSequence1902,82853
+        def Switch(self):Switch1906,82983
+        def caseBlock(self):caseBlock1909,83071
+        def getRuleIndex(self):getRuleIndex1913,83183
+        def enterRule(self, listener:ParseTreeListener):enterRule1916,83273
+        def exitRule(self, listener:ParseTreeListener):exitRule1920,83442
+        def accept(self, visitor:ParseTreeVisitor):accept1924,83609
+    def switchStatement(self):switchStatement1933,83849
+    class CaseBlockContext(ParserRuleContext):CaseBlockContext1957,84666
+        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):__init__1959,84714
+        def defaultClause(self, i:int=None):defaultClause1963,84889
+        def caseClause(self, i:int=None):caseClause1970,85157
+        def getRuleIndex(self):getRuleIndex1977,85416
+        def enterRule(self, listener:ParseTreeListener):enterRule1980,85500
+        def exitRule(self, listener:ParseTreeListener):exitRule1984,85663
+        def accept(self, visitor:ParseTreeVisitor):accept1988,85824
+    def caseBlock(self):caseBlock1997,86058
+    class CaseClauseContext(ParserRuleContext):CaseClauseContext2039,87455
+        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):__init__2041,87504
+        def expressionSequence(self):expressionSequence2045,87679
+        def statementList(self):statementList2049,87809
+        def Case(self):Case2053,87929
+        def getRuleIndex(self):getRuleIndex2056,88013
+        def enterRule(self, listener:ParseTreeListener):enterRule2059,88098
+        def exitRule(self, listener:ParseTreeListener):exitRule2063,88262
+        def accept(self, visitor:ParseTreeVisitor):accept2067,88424
+    def caseClause(self):caseClause2076,88659
+    class DefaultClauseContext(ParserRuleContext):DefaultClauseContext2104,90594
+        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):__init__2106,90646
+        def Default(self):Default2110,90821
+        def statementList(self):statementList2113,90911
+        def getRuleIndex(self):getRuleIndex2117,91031
+        def enterRule(self, listener:ParseTreeListener):enterRule2120,91119
+        def exitRule(self, listener:ParseTreeListener):exitRule2124,91286
+        def accept(self, visitor:ParseTreeVisitor):accept2128,91451
+    def defaultClause(self):defaultClause2137,91689
+    class LabelledStatementContext(ParserRuleContext):LabelledStatementContext2163,93568
+        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):__init__2165,93624
+        def Identifier(self):Identifier2169,93799
+        def statement(self):statement2172,93895
+        def getRuleIndex(self):getRuleIndex2176,94007
+        def enterRule(self, listener:ParseTreeListener):enterRule2179,94099
+        def exitRule(self, listener:ParseTreeListener):exitRule2183,94270
+        def accept(self, visitor:ParseTreeVisitor):accept2187,94439
+    def labelledStatement(self):labelledStatement2196,94681
+    class ThrowStatementContext(ParserRuleContext):ThrowStatementContext2216,95367
+        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):__init__2218,95420
+        def expressionSequence(self):expressionSequence2222,95595
+        def Throw(self):Throw2226,95725
+        def eos(self):eos2229,95811
+        def getRuleIndex(self):getRuleIndex2233,95911
+        def enterRule(self, listener:ParseTreeListener):enterRule2236,96000
+        def exitRule(self, listener:ParseTreeListener):exitRule2240,96168
+        def accept(self, visitor:ParseTreeVisitor):accept2244,96334
+    def throwStatement(self):throwStatement2253,96573
+    class TryStatementContext(ParserRuleContext):TryStatementContext2273,97243
+        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):__init__2275,97294
+        def catchProduction(self):catchProduction2279,97469
+        def finallyProduction(self):finallyProduction2283,97593
+        def Try(self):Try2287,97721
+        def block(self):block2290,97803
+        def getRuleIndex(self):getRuleIndex2294,97907
+        def enterRule(self, listener:ParseTreeListener):enterRule2297,97994
+        def exitRule(self, listener:ParseTreeListener):exitRule2301,98160
+        def accept(self, visitor:ParseTreeVisitor):accept2305,98324
+    def tryStatement(self):tryStatement2314,98561
+    class CatchProductionContext(ParserRuleContext):CatchProductionContext2362,100083
+        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):__init__2364,100137
+        def Catch(self):Catch2368,100312
+        def Identifier(self):Identifier2371,100398
+        def block(self):block2374,100494
+        def getRuleIndex(self):getRuleIndex2378,100598
+        def enterRule(self, listener:ParseTreeListener):enterRule2381,100688
+        def exitRule(self, listener:ParseTreeListener):exitRule2385,100857
+        def accept(self, visitor:ParseTreeVisitor):accept2389,101024
+    def catchProduction(self):catchProduction2398,101264
+    class FinallyProductionContext(ParserRuleContext):FinallyProductionContext2422,102077
+        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):__init__2424,102133
+        def Finally(self):Finally2428,102308
+        def block(self):block2431,102398
+        def getRuleIndex(self):getRuleIndex2435,102502
+        def enterRule(self, listener:ParseTreeListener):enterRule2438,102594
+        def exitRule(self, listener:ParseTreeListener):exitRule2442,102765
+        def accept(self, visitor:ParseTreeVisitor):accept2446,102934
+    def finallyProduction(self):finallyProduction2455,103176
+    class DebuggerStatementContext(ParserRuleContext):DebuggerStatementContext2473,103791
+        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):__init__2475,103847
+        def eos(self):eos2479,104022
+        def Debugger(self):Debugger2483,104122
+        def getRuleIndex(self):getRuleIndex2486,104214
+        def enterRule(self, listener:ParseTreeListener):enterRule2489,104306
+        def exitRule(self, listener:ParseTreeListener):exitRule2493,104477
+        def accept(self, visitor:ParseTreeVisitor):accept2497,104646
+    def debuggerStatement(self):debuggerStatement2506,104888
+    class FormalParameterListContext(ParserRuleContext):FormalParameterListContext2524,105502
+        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):__init__2526,105560
+        def Identifier(self, i:int=None):Identifier2530,105735
+        def getRuleIndex(self):getRuleIndex2536,105958
+        def enterRule(self, listener:ParseTreeListener):enterRule2539,106052
+        def exitRule(self, listener:ParseTreeListener):exitRule2543,106225
+        def accept(self, visitor:ParseTreeVisitor):accept2547,106396
+    def formalParameterList(self):formalParameterList2556,106640
+    class FunctionBodyContext(ParserRuleContext):FunctionBodyContext2585,107662
+        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):__init__2587,107713
+        def statements(self):statements2591,107888
+        def getRuleIndex(self):getRuleIndex2595,108002
+        def enterRule(self, listener:ParseTreeListener):enterRule2598,108089
+        def exitRule(self, listener:ParseTreeListener):exitRule2602,108255
+        def accept(self, visitor:ParseTreeVisitor):accept2606,108419
+    def functionBody(self):functionBody2615,108656
+    class ArrayLiteralContext(ParserRuleContext):ArrayLiteralContext2637,110399
+        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):__init__2639,110450
+        def elision(self):elision2643,110625
+        def elementList(self):elementList2647,110733
+        def getRuleIndex(self):getRuleIndex2651,110849
+        def enterRule(self, listener:ParseTreeListener):enterRule2654,110936
+        def exitRule(self, listener:ParseTreeListener):exitRule2658,111102
+        def accept(self, visitor:ParseTreeVisitor):accept2662,111266
+    def arrayLiteral(self):arrayLiteral2671,111503
+    class ElementListContext(ParserRuleContext):ElementListContext2711,112732
+        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):__init__2713,112782
+        def elision(self, i:int=None):elision2717,112957
+        def singleExpression(self, i:int=None):singleExpression2724,113207
+        def getRuleIndex(self):getRuleIndex2731,113484
+        def enterRule(self, listener:ParseTreeListener):enterRule2734,113570
+        def exitRule(self, listener:ParseTreeListener):exitRule2738,113735
+        def accept(self, visitor:ParseTreeVisitor):accept2742,113898
+    def elementList(self):elementList2751,114134
+    class ElisionContext(ParserRuleContext):ElisionContext2795,115654
+        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):__init__2797,115700
+        def getRuleIndex(self):getRuleIndex2802,115876
+        def enterRule(self, listener:ParseTreeListener):enterRule2805,115958
+        def exitRule(self, listener:ParseTreeListener):exitRule2809,116119
+        def accept(self, visitor:ParseTreeVisitor):accept2813,116278
+    def elision(self):elision2822,116510
+    class ObjectLiteralContext(ParserRuleContext):ObjectLiteralContext2849,117409
+        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):__init__2851,117461
+        def propertyAssignment(self, i:int=None):propertyAssignment2855,117636
+        def getRuleIndex(self):getRuleIndex2862,117919
+        def enterRule(self, listener:ParseTreeListener):enterRule2865,118007
+        def exitRule(self, listener:ParseTreeListener):exitRule2869,118174
+        def accept(self, visitor:ParseTreeVisitor):accept2873,118339
+    def objectLiteral(self):objectLiteral2882,118577
+    class PropertyAssignmentContext(ParserRuleContext):PropertyAssignmentContext2928,121689
+        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):__init__2930,121746
+        def getRuleIndex(self):getRuleIndex2935,121922
+        def copyFrom(self, ctx:ParserRuleContext):copyFrom2939,122021
+    class PropertyExpressionAssignmentContext(PropertyAssignmentContext):PropertyExpressionAssignmentContext2944,122109
+        def __init__(self, parser, ctx:ParserRuleContext): # actually a ECMAScriptParser.PropertyAssignmentContext)__init__2946,122184
+        def Set(self):Set2950,122369
+        def Get(self):Get2952,122450
+        def singleExpression(self):singleExpression2954,122531
+        def propertyName(self):propertyName2957,122656
+        def enterRule(self, listener:ParseTreeListener):enterRule2961,122774
+        def exitRule(self, listener:ParseTreeListener):exitRule2965,122956
+        def accept(self, visitor:ParseTreeVisitor):accept2969,123136
+    class PropertySetterContext(PropertyAssignmentContext):PropertySetterContext2976,123387
+        def __init__(self, parser, ctx:ParserRuleContext): # actually a ECMAScriptParser.PropertyAssignmentContext)__init__2978,123448
+        def Identifier(self, i:int=None):Identifier2982,123633
+        def functionBody(self):functionBody2987,123855
+        def Set(self):Set2990,123972
+        def enterRule(self, listener:ParseTreeListener):enterRule2993,124054
+        def exitRule(self, listener:ParseTreeListener):exitRule2997,124222
+        def accept(self, visitor:ParseTreeVisitor):accept3001,124388
+    class PropertyGetterContext(PropertyAssignmentContext):PropertyGetterContext3008,124625
+        def __init__(self, parser, ctx:ParserRuleContext): # actually a ECMAScriptParser.PropertyAssignmentContext)__init__3010,124686
+        def Identifier(self):Identifier3014,124871
+        def functionBody(self):functionBody3016,124966
+        def Get(self):Get3019,125083
+        def enterRule(self, listener:ParseTreeListener):enterRule3022,125165
+        def exitRule(self, listener:ParseTreeListener):exitRule3026,125333
+        def accept(self, visitor:ParseTreeVisitor):accept3030,125499
+    def propertyAssignment(self):propertyAssignment3038,125737
+    class PropertyNameContext(ParserRuleContext):PropertyNameContext3127,129002
+        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):__init__3129,129053
+        def numericLiteral(self):numericLiteral3133,129228
+        def StringLiteral(self):StringLiteral3137,129350
+        def identifierName(self):identifierName3140,129452
+        def getRuleIndex(self):getRuleIndex3144,129574
+        def enterRule(self, listener:ParseTreeListener):enterRule3147,129661
+        def exitRule(self, listener:ParseTreeListener):exitRule3151,129827
+        def accept(self, visitor:ParseTreeVisitor):accept3155,129991
+    def propertyName(self):propertyName3164,130228
+    class ArgumentsContext(ParserRuleContext):ArgumentsContext3197,131922
+        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):__init__3199,131970
+        def argumentList(self):argumentList3203,132145
+        def getRuleIndex(self):getRuleIndex3207,132263
+        def enterRule(self, listener:ParseTreeListener):enterRule3210,132347
+        def exitRule(self, listener:ParseTreeListener):exitRule3214,132510
+        def accept(self, visitor:ParseTreeVisitor):accept3218,132671
+    def arguments(self):arguments3227,132905
+    class ArgumentListContext(ParserRuleContext):ArgumentListContext3253,134422
+        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):__init__3255,134473
+        def singleExpression(self, i:int=None):singleExpression3259,134648
+        def getRuleIndex(self):getRuleIndex3266,134925
+        def enterRule(self, listener:ParseTreeListener):enterRule3269,135012
+        def exitRule(self, listener:ParseTreeListener):exitRule3273,135178
+        def accept(self, visitor:ParseTreeVisitor):accept3277,135342
+    def argumentList(self):argumentList3286,135579
+    class ExpressionSequenceContext(ParserRuleContext):ExpressionSequenceContext3315,136576
+        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):__init__3317,136633
+        def singleExpression(self, i:int=None):singleExpression3321,136808
+        def getRuleIndex(self):getRuleIndex3328,137085
+        def enterRule(self, listener:ParseTreeListener):enterRule3331,137178
+        def exitRule(self, listener:ParseTreeListener):exitRule3335,137350
+        def accept(self, visitor:ParseTreeVisitor):accept3339,137520
+    def expressionSequence(self):expressionSequence3348,137763
+    class SingleExpressionContext(ParserRuleContext):SingleExpressionContext3377,138878
+        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):__init__3379,138933
+        def getRuleIndex(self):getRuleIndex3384,139109
+        def copyFrom(self, ctx:ParserRuleContext):copyFrom3388,139206
+    class ParenthesizedExpressionContext(SingleExpressionContext):ParenthesizedExpressionContext3392,139293
+        def __init__(self, parser, ctx:ParserRuleContext): # actually a ECMAScriptParser.SingleExpressionContext)__init__3394,139361
+        def expressionSequence(self):expressionSequence3398,139544
+        def enterRule(self, listener:ParseTreeListener):enterRule3402,139674
+        def exitRule(self, listener:ParseTreeListener):exitRule3406,139851
+        def accept(self, visitor:ParseTreeVisitor):accept3410,140026
+    class TernaryExpressionContext(SingleExpressionContext):TernaryExpressionContext3417,140272
+        def __init__(self, parser, ctx:ParserRuleContext): # actually a ECMAScriptParser.SingleExpressionContext)__init__3419,140334
+        def singleExpression(self, i:int=None):singleExpression3423,140517
+        def enterRule(self, listener:ParseTreeListener):enterRule3430,140794
+        def exitRule(self, listener:ParseTreeListener):exitRule3434,140965
+        def accept(self, visitor:ParseTreeVisitor):accept3438,141134
+    class ObjectLiteralExpressionContext(SingleExpressionContext):ObjectLiteralExpressionContext3445,141374
+        def __init__(self, parser, ctx:ParserRuleContext): # actually a ECMAScriptParser.SingleExpressionContext)__init__3447,141442
+        def objectLiteral(self):objectLiteral3451,141625
+        def enterRule(self, listener:ParseTreeListener):enterRule3455,141745
+        def exitRule(self, listener:ParseTreeListener):exitRule3459,141922
+        def accept(self, visitor:ParseTreeVisitor):accept3463,142097
+    class NewExpressionContext(SingleExpressionContext):NewExpressionContext3470,142343
+        def __init__(self, parser, ctx:ParserRuleContext): # actually a ECMAScriptParser.SingleExpressionContext)__init__3472,142401
+        def New(self):New3476,142584
+        def arguments(self):arguments3478,142665
+        def singleExpression(self):singleExpression3481,142776
+        def enterRule(self, listener:ParseTreeListener):enterRule3485,142902
+        def exitRule(self, listener:ParseTreeListener):exitRule3489,143069
+        def accept(self, visitor:ParseTreeVisitor):accept3493,143234
+    class LiteralExpressionContext(SingleExpressionContext):LiteralExpressionContext3500,143470
+        def __init__(self, parser, ctx:ParserRuleContext): # actually a ECMAScriptParser.SingleExpressionContext)__init__3502,143532
+        def literal(self):literal3506,143715
+        def enterRule(self, listener:ParseTreeListener):enterRule3510,143823
+        def exitRule(self, listener:ParseTreeListener):exitRule3514,143994
+        def accept(self, visitor:ParseTreeVisitor):accept3518,144163
+    class ArrayLiteralExpressionContext(SingleExpressionContext):ArrayLiteralExpressionContext3525,144403
+        def __init__(self, parser, ctx:ParserRuleContext): # actually a ECMAScriptParser.SingleExpressionContext)__init__3527,144470
+        def arrayLiteral(self):arrayLiteral3531,144653
+        def enterRule(self, listener:ParseTreeListener):enterRule3535,144771
+        def exitRule(self, listener:ParseTreeListener):exitRule3539,144947
+        def accept(self, visitor:ParseTreeVisitor):accept3543,145121
+    class MemberDotExpressionContext(SingleExpressionContext):MemberDotExpressionContext3550,145366
+        def __init__(self, parser, ctx:ParserRuleContext): # actually a ECMAScriptParser.SingleExpressionContext)__init__3552,145430
+        def identifierName(self):identifierName3556,145613
+        def singleExpression(self):singleExpression3559,145734
+        def enterRule(self, listener:ParseTreeListener):enterRule3563,145860
+        def exitRule(self, listener:ParseTreeListener):exitRule3567,146033
+        def accept(self, visitor:ParseTreeVisitor):accept3571,146204
+    class UnaryExpressionContext(SingleExpressionContext):UnaryExpressionContext3578,146446
+        def __init__(self, parser, ctx:ParserRuleContext): # actually a ECMAScriptParser.SingleExpressionContext)__init__3580,146506
+        def Delete(self):Delete3584,146689
+        def Void(self):Void3586,146776
+        def singleExpression(self):singleExpression3588,146859
+        def Typeof(self):Typeof3591,146984
+        def enterRule(self, listener:ParseTreeListener):enterRule3594,147072
+        def exitRule(self, listener:ParseTreeListener):exitRule3598,147241
+        def accept(self, visitor:ParseTreeVisitor):accept3602,147408
+    class MemberIndexExpressionContext(SingleExpressionContext):MemberIndexExpressionContext3609,147646
+        def __init__(self, parser, ctx:ParserRuleContext): # actually a ECMAScriptParser.SingleExpressionContext)__init__3611,147712
+        def expressionSequence(self):expressionSequence3615,147895
+        def singleExpression(self):singleExpression3618,148024
+        def enterRule(self, listener:ParseTreeListener):enterRule3622,148150
+        def exitRule(self, listener:ParseTreeListener):exitRule3626,148325
+        def accept(self, visitor:ParseTreeVisitor):accept3630,148498
+    class IdentifierExpressionContext(SingleExpressionContext):IdentifierExpressionContext3637,148742
+        def __init__(self, parser, ctx:ParserRuleContext): # actually a ECMAScriptParser.SingleExpressionContext)__init__3639,148807
+        def Identifier(self):Identifier3643,148990
+        def enterRule(self, listener:ParseTreeListener):enterRule3646,149086
+        def exitRule(self, listener:ParseTreeListener):exitRule3650,149260
+        def accept(self, visitor:ParseTreeVisitor):accept3654,149432
+    class ArgumentsExpressionContext(SingleExpressionContext):ArgumentsExpressionContext3661,149675
+        def __init__(self, parser, ctx:ParserRuleContext): # actually a ECMAScriptParser.SingleExpressionContext)__init__3663,149739
+        def arguments(self):arguments3667,149922
+        def singleExpression(self):singleExpression3670,150033
+        def enterRule(self, listener:ParseTreeListener):enterRule3674,150159
+        def exitRule(self, listener:ParseTreeListener):exitRule3678,150332
+        def accept(self, visitor:ParseTreeVisitor):accept3682,150503
+    class ThisExpressionContext(SingleExpressionContext):ThisExpressionContext3689,150745
+        def __init__(self, parser, ctx:ParserRuleContext): # actually a ECMAScriptParser.SingleExpressionContext)__init__3691,150804
+        def This(self):This3695,150987
+        def enterRule(self, listener:ParseTreeListener):enterRule3698,151071
+        def exitRule(self, listener:ParseTreeListener):exitRule3702,151239
+        def accept(self, visitor:ParseTreeVisitor):accept3706,151405
+    class FunctionExpressionContext(SingleExpressionContext):FunctionExpressionContext3713,151642
+        def __init__(self, parser, ctx:ParserRuleContext): # actually a ECMAScriptParser.SingleExpressionContext)__init__3715,151705
+        def Identifier(self):Identifier3719,151888
+        def formalParameterList(self):formalParameterList3721,151983
+        def functionBody(self):functionBody3724,152114
+        def Function(self):Function3727,152231
+        def enterRule(self, listener:ParseTreeListener):enterRule3730,152323
+        def exitRule(self, listener:ParseTreeListener):exitRule3734,152495
+        def accept(self, visitor:ParseTreeVisitor):accept3738,152665
+    class BinaryExpressionContext(SingleExpressionContext):BinaryExpressionContext3745,152906
+        def __init__(self, parser, ctx:ParserRuleContext): # actually a ECMAScriptParser.SingleExpressionContext)__init__3747,152967
+        def Instanceof(self):Instanceof3751,153150
+        def In(self):In3753,153245
+        def singleExpression(self, i:int=None):singleExpression3755,153324
+        def enterRule(self, listener:ParseTreeListener):enterRule3762,153601
+        def exitRule(self, listener:ParseTreeListener):exitRule3766,153771
+        def accept(self, visitor:ParseTreeVisitor):accept3770,153939
+    class AssignmentOperatorExpressionContext(SingleExpressionContext):AssignmentOperatorExpressionContext3777,154178
+        def __init__(self, parser, ctx:ParserRuleContext): # actually a ECMAScriptParser.SingleExpressionContext)__init__3779,154251
+        def Identifier(self):Identifier3783,154434
+        def identifierName(self):identifierName3785,154529
+        def assignmentOperator(self):assignmentOperator3788,154650
+        def singleExpression(self):singleExpression3791,154779
+        def expressionSequence(self, i:int=None):expressionSequence3794,154904
+        def enterRule(self, listener:ParseTreeListener):enterRule3801,155187
+        def exitRule(self, listener:ParseTreeListener):exitRule3805,155369
+        def accept(self, visitor:ParseTreeVisitor):accept3809,155549
+    class PostUnaryAssignmentExpressionContext(SingleExpressionContext):PostUnaryAssignmentExpressionContext3816,155800
+        def __init__(self, parser, ctx:ParserRuleContext): # actually a ECMAScriptParser.SingleExpressionContext)__init__3818,155874
+        def expressionSequence(self):expressionSequence3822,156057
+        def Identifier(self):Identifier3825,156186
+        def incrementOperator(self):incrementOperator3827,156281
+        def identifierName(self):identifierName3830,156408
+        def singleExpression(self):singleExpression3833,156529
+        def enterRule(self, listener:ParseTreeListener):enterRule3837,156655
+        def exitRule(self, listener:ParseTreeListener):exitRule3841,156838
+        def accept(self, visitor:ParseTreeVisitor):accept3845,157019
+    class UnaryAssignmentExpressionContext(SingleExpressionContext):UnaryAssignmentExpressionContext3852,157271
+        def __init__(self, parser, ctx:ParserRuleContext): # actually a ECMAScriptParser.SingleExpressionContext)__init__3854,157341
+        def expressionSequence(self):expressionSequence3858,157524
+        def incrementOperator(self):incrementOperator3861,157653
+        def Identifier(self):Identifier3864,157780
+        def identifierName(self):identifierName3866,157875
+        def singleExpression(self):singleExpression3869,157996
+        def enterRule(self, listener:ParseTreeListener):enterRule3873,158122
+        def exitRule(self, listener:ParseTreeListener):exitRule3877,158301
+        def accept(self, visitor:ParseTreeVisitor):accept3881,158478
+    def singleExpression(self, _p:int=0):singleExpression3889,158727
+    class IncrementOperatorContext(ParserRuleContext):IncrementOperatorContext4409,183756
+        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):__init__4411,183812
+        def getRuleIndex(self):getRuleIndex4416,183988
+        def enterRule(self, listener:ParseTreeListener):enterRule4419,184080
+        def exitRule(self, listener:ParseTreeListener):exitRule4423,184251
+        def accept(self, visitor:ParseTreeVisitor):accept4427,184420
+    def incrementOperator(self):incrementOperator4436,184662
+    class AssignmentOperatorContext(ParserRuleContext):AssignmentOperatorContext4456,185423
+        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):__init__4458,185480
+        def getRuleIndex(self):getRuleIndex4463,185656
+        def enterRule(self, listener:ParseTreeListener):enterRule4466,185749
+        def exitRule(self, listener:ParseTreeListener):exitRule4470,185921
+        def accept(self, visitor:ParseTreeVisitor):accept4474,186091
+    def assignmentOperator(self):assignmentOperator4483,186334
+    class LiteralContext(ParserRuleContext):LiteralContext4503,187433
+        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):__init__4505,187479
+        def numericLiteral(self):numericLiteral4509,187654
+        def StringLiteral(self):StringLiteral4513,187776
+        def NullLiteral(self):NullLiteral4516,187878
+        def RegularExpressionLiteral(self):RegularExpressionLiteral4519,187976
+        def BooleanLiteral(self):BooleanLiteral4522,188100
+        def getRuleIndex(self):getRuleIndex4525,188204
+        def enterRule(self, listener:ParseTreeListener):enterRule4528,188286
+        def exitRule(self, listener:ParseTreeListener):exitRule4532,188447
+        def accept(self, visitor:ParseTreeVisitor):accept4536,188606
+    def literal(self):literal4545,188838
+    class NumericLiteralContext(ParserRuleContext):NumericLiteralContext4577,190178
+        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):__init__4579,190231
+        def DecimalLiteral(self):DecimalLiteral4583,190406
+        def OctalIntegerLiteral(self):OctalIntegerLiteral4586,190510
+        def HexIntegerLiteral(self):HexIntegerLiteral4589,190624
+        def getRuleIndex(self):getRuleIndex4592,190734
+        def enterRule(self, listener:ParseTreeListener):enterRule4595,190823
+        def exitRule(self, listener:ParseTreeListener):exitRule4599,190991
+        def accept(self, visitor:ParseTreeVisitor):accept4603,191157
+    def numericLiteral(self):numericLiteral4612,191396
+    class IdentifierNameContext(ParserRuleContext):IdentifierNameContext4632,192223
+        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):__init__4634,192276
+        def Identifier(self):Identifier4638,192451
+        def reservedWord(self):reservedWord4641,192547
+        def getRuleIndex(self):getRuleIndex4645,192665
+        def enterRule(self, listener:ParseTreeListener):enterRule4648,192754
+        def exitRule(self, listener:ParseTreeListener):exitRule4652,192922
+        def accept(self, visitor:ParseTreeVisitor):accept4656,193088
+    def identifierName(self):identifierName4665,193327
+    class ReservedWordContext(ParserRuleContext):ReservedWordContext4693,194782
+        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):__init__4695,194833
+        def futureReservedWord(self):futureReservedWord4699,195008
+        def keyword(self):keyword4703,195138
+        def NullLiteral(self):NullLiteral4707,195246
+        def BooleanLiteral(self):BooleanLiteral4710,195344
+        def getRuleIndex(self):getRuleIndex4713,195448
+        def enterRule(self, listener:ParseTreeListener):enterRule4716,195535
+        def exitRule(self, listener:ParseTreeListener):exitRule4720,195701
+        def accept(self, visitor:ParseTreeVisitor):accept4724,195865
+    def reservedWord(self):reservedWord4733,196102
+    class KeywordContext(ParserRuleContext):KeywordContext4770,197899
+        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):__init__4772,197945
+        def Catch(self):Catch4776,198120
+        def Throw(self):Throw4779,198206
+        def For(self):For4782,198292
+        def While(self):While4785,198374
+        def Continue(self):Continue4788,198460
+        def Instanceof(self):Instanceof4791,198552
+        def This(self):This4794,198648
+        def Void(self):Void4797,198732
+        def Try(self):Try4800,198816
+        def Finally(self):Finally4803,198898
+        def Return(self):Return4806,198988
+        def If(self):If4809,199076
+        def Var(self):Var4812,199156
+        def Switch(self):Switch4815,199238
+        def Do(self):Do4818,199326
+        def Default(self):Default4821,199406
+        def Delete(self):Delete4824,199496
+        def New(self):New4827,199584
+        def In(self):In4830,199666
+        def Else(self):Else4833,199746
+        def Debugger(self):Debugger4836,199830
+        def Typeof(self):Typeof4839,199922
+        def Break(self):Break4842,200010
+        def With(self):With4845,200096
+        def Function(self):Function4848,200180
+        def Case(self):Case4851,200272
+        def getRuleIndex(self):getRuleIndex4854,200356
+        def enterRule(self, listener:ParseTreeListener):enterRule4857,200438
+        def exitRule(self, listener:ParseTreeListener):exitRule4861,200599
+        def accept(self, visitor:ParseTreeVisitor):accept4865,200758
+    def keyword(self):keyword4874,200990
+    class FutureReservedWordContext(ParserRuleContext):FutureReservedWordContext4894,202417
+        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):__init__4896,202474
+        def Implements(self):Implements4900,202649
+        def Protected(self):Protected4903,202745
+        def Let(self):Let4906,202839
+        def Private(self):Private4909,202921
+        def Class(self):Class4912,203011
+        def Static(self):Static4915,203097
+        def Const(self):Const4918,203185
+        def Super(self):Super4921,203271
+        def Import(self):Import4924,203357
+        def Enum(self):Enum4927,203445
+        def Extends(self):Extends4930,203529
+        def Public(self):Public4933,203619
+        def Yield(self):Yield4936,203707
+        def Export(self):Export4939,203793
+        def Package(self):Package4942,203881
+        def Interface(self):Interface4945,203971
+        def getRuleIndex(self):getRuleIndex4948,204065
+        def enterRule(self, listener:ParseTreeListener):enterRule4951,204158
+        def exitRule(self, listener:ParseTreeListener):exitRule4955,204330
+        def accept(self, visitor:ParseTreeVisitor):accept4959,204500
+    def futureReservedWord(self):futureReservedWord4968,204743
+    class EosContext(ParserRuleContext):EosContext4988,205953
+        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):__init__4990,205995
+        def EOF(self):EOF4994,206170
+        def SemiColon(self):SemiColon4997,206252
+        def getRuleIndex(self):getRuleIndex5000,206346
+        def enterRule(self, listener:ParseTreeListener):enterRule5003,206424
+        def exitRule(self, listener:ParseTreeListener):exitRule5007,206581
+        def accept(self, visitor:ParseTreeVisitor):accept5011,206736
+    def eos(self):eos5020,206964
+    class EofContext(ParserRuleContext):EofContext5062,208379
+        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):__init__5064,208421
+        def EOF(self):EOF5068,208596
+        def getRuleIndex(self):getRuleIndex5071,208678
+        def enterRule(self, listener:ParseTreeListener):enterRule5074,208756
+        def exitRule(self, listener:ParseTreeListener):exitRule5078,208913
+        def accept(self, visitor:ParseTreeVisitor):accept5082,209068
+    def eof(self):eof5091,209296
+    def sempred(self, localctx:RuleContext, ruleIndex:int, predIndex:int):sempred5109,209812
+    def singleExpression_sempred(self, localctx:SingleExpressionContext, predIndex:int):singleExpression_sempred5120,210282
+    def eos_sempred(self, localctx:EosContext, predIndex:int):eos_sempred5201,212319
+
+ECMAScriptParser/__init__.py,0
+
+ECMAScriptParser/ECMAScriptLexer.py,5850
+def serializedATN():serializedATN5,88
+class ECMAScriptLexer(Lexer):ECMAScriptLexer522,39494
+    atn = ATNDeserializer().deserialize(serializedATN())atn524,39525
+    decisionsToDFA = [ DFA(ds, i) for i, ds in enumerate(atn.decisionToState) ]decisionsToDFA526,39583
+    RegularExpressionLiteral = 1RegularExpressionLiteral528,39664
+    LineTerminator = 2LineTerminator529,39697
+    OpenBracket = 3OpenBracket530,39720
+    CloseBracket = 4CloseBracket531,39740
+    OpenParen = 5OpenParen532,39761
+    CloseParen = 6CloseParen533,39779
+    OpenBrace = 7OpenBrace534,39798
+    CloseBrace = 8CloseBrace535,39816
+    SemiColon = 9SemiColon536,39835
+    Comma = 10Comma537,39853
+    Assign = 11Assign538,39868
+    QuestionMark = 12QuestionMark539,39884
+    Colon = 13Colon540,39906
+    Dot = 14Dot541,39921
+    PlusPlus = 15PlusPlus542,39934
+    MinusMinus = 16MinusMinus543,39952
+    Plus = 17Plus544,39972
+    Minus = 18Minus545,39986
+    BitNot = 19BitNot546,40001
+    Not = 20Not547,40017
+    Multiply = 21Multiply548,40030
+    Divide = 22Divide549,40048
+    Modulus = 23Modulus550,40064
+    RightShiftArithmetic = 24RightShiftArithmetic551,40081
+    LeftShiftArithmetic = 25LeftShiftArithmetic552,40111
+    RightShiftLogical = 26RightShiftLogical553,40140
+    LessThan = 27LessThan554,40167
+    MoreThan = 28MoreThan555,40185
+    LessThanEquals = 29LessThanEquals556,40203
+    GreaterThanEquals = 30GreaterThanEquals557,40227
+    Equals = 31Equals558,40254
+    NotEquals = 32NotEquals559,40270
+    IdentityEquals = 33IdentityEquals560,40289
+    IdentityNotEquals = 34IdentityNotEquals561,40313
+    BitAnd = 35BitAnd562,40340
+    BitXOr = 36BitXOr563,40356
+    BitOr = 37BitOr564,40372
+    And = 38And565,40387
+    Or = 39Or566,40400
+    MultiplyAssign = 40MultiplyAssign567,40412
+    DivideAssign = 41DivideAssign568,40436
+    ModulusAssign = 42ModulusAssign569,40458
+    PlusAssign = 43PlusAssign570,40481
+    MinusAssign = 44MinusAssign571,40501
+    LeftShiftArithmeticAssign = 45LeftShiftArithmeticAssign572,40522
+    RightShiftArithmeticAssign = 46RightShiftArithmeticAssign573,40557
+    RightShiftLogicalAssign = 47RightShiftLogicalAssign574,40593
+    BitAndAssign = 48BitAndAssign575,40626
+    BitXorAssign = 49BitXorAssign576,40648
+    BitOrAssign = 50BitOrAssign577,40670
+    Get = 51Get578,40691
+    Set = 52Set579,40704
+    NullLiteral = 53NullLiteral580,40717
+    BooleanLiteral = 54BooleanLiteral581,40738
+    DecimalLiteral = 55DecimalLiteral582,40762
+    HexIntegerLiteral = 56HexIntegerLiteral583,40786
+    OctalIntegerLiteral = 57OctalIntegerLiteral584,40813
+    Break = 58Break585,40842
+    Do = 59Do586,40857
+    Instanceof = 60Instanceof587,40869
+    Typeof = 61Typeof588,40889
+    Case = 62Case589,40905
+    Else = 63Else590,40919
+    New = 64New591,40933
+    Var = 65Var592,40946
+    Catch = 66Catch593,40959
+    Finally = 67Finally594,40974
+    Return = 68Return595,40991
+    Void = 69Void596,41007
+    Continue = 70Continue597,41021
+    For = 71For598,41039
+    Switch = 72Switch599,41052
+    While = 73While600,41068
+    Debugger = 74Debugger601,41083
+    Function = 75Function602,41101
+    This = 76This603,41119
+    With = 77With604,41133
+    Default = 78Default605,41147
+    If = 79If606,41164
+    Throw = 80Throw607,41176
+    Delete = 81Delete608,41191
+    In = 82In609,41207
+    Try = 83Try610,41219
+    Class = 84Class611,41232
+    Enum = 85Enum612,41247
+    Extends = 86Extends613,41261
+    Super = 87Super614,41278
+    Const = 88Const615,41293
+    Export = 89Export616,41308
+    Import = 90Import617,41324
+    Implements = 91Implements618,41340
+    Let = 92Let619,41360
+    Private = 93Private620,41373
+    Public = 94Public621,41390
+    Interface = 95Interface622,41406
+    Package = 96Package623,41425
+    Protected = 97Protected624,41442
+    Static = 98Static625,41461
+    Yield = 99Yield626,41477
+    Identifier = 100Identifier627,41492
+    StringLiteral = 101StringLiteral628,41513
+    WhiteSpaces = 102WhiteSpaces629,41537
+    MultiLineComment = 103MultiLineComment630,41559
+    SingleLineComment = 104SingleLineComment631,41586
+    UnexpectedCharacter = 105UnexpectedCharacter632,41614
+    modeNames = [ "DEFAULT_MODE" ]modeNames635,41646
+    tokenNames = [ "<INVALID>",tokenNames637,41682
+    ruleNames = [ "RegularExpressionLiteral", "LineTerminator", "OpenBracket", ruleNames654,42821
+    grammarFileName = "ECMAScript.g4"grammarFileName688,45512
+    def __init__(self, input=None):__init__690,45551
+    def sempred(self, localctx:RuleContext, ruleIndex:int, predIndex:int):sempred698,45819
+    def OctalIntegerLiteral_sempred(self, localctx:RuleContext, predIndex:int):OctalIntegerLiteral_sempred719,46736
+    def Implements_sempred(self, localctx:RuleContext, predIndex:int):Implements_sempred724,46901
+    def Protected_sempred(self, localctx:RuleContext, predIndex:int):Protected_sempred729,47053
+    def RegularExpressionLiteral_sempred(self, localctx:RuleContext, predIndex:int):RegularExpressionLiteral_sempred734,47204
+    def Let_sempred(self, localctx:RuleContext, predIndex:int):Let_sempred739,47377
+    def Private_sempred(self, localctx:RuleContext, predIndex:int):Private_sempred744,47522
+    def Yield_sempred(self, localctx:RuleContext, predIndex:int):Yield_sempred749,47671
+    def Public_sempred(self, localctx:RuleContext, predIndex:int):Public_sempred754,47819
+    def Package_sempred(self, localctx:RuleContext, predIndex:int):Package_sempred759,47967
+    def Static_sempred(self, localctx:RuleContext, predIndex:int):Static_sempred764,48116
+    def Interface_sempred(self, localctx:RuleContext, predIndex:int):Interface_sempred769,48264
+
+ECMAScriptParser/Parser.py,204
+class Parser(ECMAScriptParser):Parser4,78
+  def __init__(self, input:antlr4.TokenStream):__init__5,110
+  def here(self, type):here21,623
+  def lineTerminatorAhead(self):lineTerminatorAhead40,1465
+
+ECMAScriptParser/ECMAScriptListener.py,9864
+class ECMAScriptListener(ParseTreeListener):ECMAScriptListener5,152
+    def enterPropertyExpressionAssignment(self, ctx):enterPropertyExpressionAssignment8,282
+    def exitPropertyExpressionAssignment(self, ctx):exitPropertyExpressionAssignment12,433
+    def enterAssignmentOperator(self, ctx):enterAssignmentOperator17,575
+    def exitAssignmentOperator(self, ctx):exitAssignmentOperator21,706
+    def enterEos(self, ctx):enterEos26,823
+    def exitEos(self, ctx):exitEos30,924
+    def enterProgram(self, ctx):enterProgram35,1030
+    def exitProgram(self, ctx):exitProgram39,1139
+    def enterArgumentList(self, ctx):enterArgumentList44,1254
+    def exitArgumentList(self, ctx):exitArgumentList48,1373
+    def enterArgumentsExpression(self, ctx):enterArgumentsExpression53,1500
+    def exitArgumentsExpression(self, ctx):exitArgumentsExpression57,1633
+    def enterThisExpression(self, ctx):enterThisExpression62,1762
+    def exitThisExpression(self, ctx):exitThisExpression66,1885
+    def enterIdentifierName(self, ctx):enterIdentifierName71,2009
+    def exitIdentifierName(self, ctx):exitIdentifierName75,2132
+    def enterBinaryExpression(self, ctx):enterBinaryExpression80,2258
+    def exitBinaryExpression(self, ctx):exitBinaryExpression84,2385
+    def enterFutureReservedWord(self, ctx):enterFutureReservedWord89,2515
+    def exitFutureReservedWord(self, ctx):exitFutureReservedWord93,2646
+    def enterInitialiser(self, ctx):enterInitialiser98,2771
+    def exitInitialiser(self, ctx):exitInitialiser102,2888
+    def enterStatementList(self, ctx):enterStatementList107,3008
+    def exitStatementList(self, ctx):exitStatementList111,3129
+    def enterPropertyGetter(self, ctx):enterPropertyGetter116,3252
+    def exitPropertyGetter(self, ctx):exitPropertyGetter120,3375
+    def enterBlock(self, ctx):enterBlock125,3490
+    def exitBlock(self, ctx):exitBlock129,3595
+    def enterExpressionStatement(self, ctx):enterExpressionStatement134,3715
+    def exitExpressionStatement(self, ctx):exitExpressionStatement138,3848
+    def enterKeyword(self, ctx):enterKeyword143,3970
+    def exitKeyword(self, ctx):exitKeyword147,4079
+    def enterElementList(self, ctx):enterElementList152,4193
+    def exitElementList(self, ctx):exitElementList156,4310
+    def enterNumericLiteral(self, ctx):enterNumericLiteral161,4431
+    def exitNumericLiteral(self, ctx):exitNumericLiteral165,4554
+    def enterForInStatement(self, ctx):enterForInStatement170,4678
+    def exitForInStatement(self, ctx):exitForInStatement174,4801
+    def enterEmptyStatement(self, ctx):enterEmptyStatement179,4925
+    def exitEmptyStatement(self, ctx):exitEmptyStatement183,5048
+    def enterLabelledStatement(self, ctx):enterLabelledStatement188,5175
+    def exitLabelledStatement(self, ctx):exitLabelledStatement192,5304
+    def enterPropertySetter(self, ctx):enterPropertySetter197,5431
+    def exitPropertySetter(self, ctx):exitPropertySetter201,5554
+    def enterNewExpression(self, ctx):enterNewExpression206,5677
+    def exitNewExpression(self, ctx):exitNewExpression210,5798
+    def enterLiteralExpression(self, ctx):enterLiteralExpression215,5924
+    def exitLiteralExpression(self, ctx):exitLiteralExpression219,6053
+    def enterArrayLiteralExpression(self, ctx):enterArrayLiteralExpression224,6188
+    def exitArrayLiteralExpression(self, ctx):exitArrayLiteralExpression228,6327
+    def enterMemberDotExpression(self, ctx):enterMemberDotExpression233,6464
+    def exitMemberDotExpression(self, ctx):exitMemberDotExpression237,6597
+    def enterWithStatement(self, ctx):enterWithStatement242,6725
+    def exitWithStatement(self, ctx):exitWithStatement246,6846
+    def enterMemberIndexExpression(self, ctx):enterMemberIndexExpression251,6976
+    def exitMemberIndexExpression(self, ctx):exitMemberIndexExpression255,7113
+    def enterFormalParameterList(self, ctx):enterFormalParameterList260,7249
+    def exitFormalParameterList(self, ctx):exitFormalParameterList264,7382
+    def enterIncrementOperator(self, ctx):enterIncrementOperator269,7514
+    def exitIncrementOperator(self, ctx):exitIncrementOperator273,7643
+    def enterAssignmentOperatorExpression(self, ctx):enterAssignmentOperatorExpression278,7784
+    def exitAssignmentOperatorExpression(self, ctx):exitAssignmentOperatorExpression282,7935
+    def enterPostUnaryAssignmentExpression(self, ctx):enterPostUnaryAssignmentExpression287,8088
+    def exitPostUnaryAssignmentExpression(self, ctx):exitPostUnaryAssignmentExpression291,8241
+    def enterTernaryExpression(self, ctx):enterTernaryExpression296,8383
+    def exitTernaryExpression(self, ctx):exitTernaryExpression300,8512
+    def enterTryStatement(self, ctx):enterTryStatement305,8637
+    def exitTryStatement(self, ctx):exitTryStatement309,8756
+    def enterDebuggerStatement(self, ctx):enterDebuggerStatement314,8881
+    def exitDebuggerStatement(self, ctx):exitDebuggerStatement318,9010
+    def enterDoStatement(self, ctx):enterDoStatement323,9134
+    def exitDoStatement(self, ctx):exitDoStatement327,9251
+    def enterObjectLiteralExpression(self, ctx):enterObjectLiteralExpression332,9381
+    def exitObjectLiteralExpression(self, ctx):exitObjectLiteralExpression336,9522
+    def enterArrayLiteral(self, ctx):enterArrayLiteral341,9653
+    def exitArrayLiteral(self, ctx):exitArrayLiteral345,9772
+    def enterElision(self, ctx):enterElision350,9887
+    def exitElision(self, ctx):exitElision354,9996
+    def enterStatements(self, ctx):enterStatements359,10109
+    def exitStatements(self, ctx):exitStatements363,10224
+    def enterUnaryExpression(self, ctx):enterUnaryExpression368,10345
+    def exitUnaryExpression(self, ctx):exitUnaryExpression372,10470
+    def enterWhileStatement(self, ctx):enterWhileStatement377,10595
+    def exitWhileStatement(self, ctx):exitWhileStatement381,10718
+    def enterReturnStatement(self, ctx):enterReturnStatement386,10843
+    def exitReturnStatement(self, ctx):exitReturnStatement390,10968
+    def enterSwitchStatement(self, ctx):enterSwitchStatement395,11094
+    def exitSwitchStatement(self, ctx):exitSwitchStatement399,11219
+    def enterExpressionSequence(self, ctx):enterExpressionSequence404,11348
+    def exitExpressionSequence(self, ctx):exitExpressionSequence408,11479
+    def enterLiteral(self, ctx):enterLiteral413,11600
+    def exitLiteral(self, ctx):exitLiteral417,11709
+    def enterVariableStatement(self, ctx):enterVariableStatement422,11829
+    def exitVariableStatement(self, ctx):exitVariableStatement426,11958
+    def enterFunctionExpression(self, ctx):enterFunctionExpression431,12089
+    def exitFunctionExpression(self, ctx):exitFunctionExpression435,12220
+    def enterDefaultClause(self, ctx):enterDefaultClause440,12347
+    def exitDefaultClause(self, ctx):exitDefaultClause444,12468
+    def enterStatement(self, ctx):enterStatement449,12586
+    def exitStatement(self, ctx):exitStatement453,12699
+    def enterForStatement(self, ctx):enterForStatement458,12816
+    def exitForStatement(self, ctx):exitForStatement462,12935
+    def enterCaseBlock(self, ctx):enterCaseBlock467,13052
+    def exitCaseBlock(self, ctx):exitCaseBlock471,13165
+    def enterParenthesizedExpression(self, ctx):enterParenthesizedExpression476,13293
+    def exitParenthesizedExpression(self, ctx):exitParenthesizedExpression480,13434
+    def enterObjectLiteral(self, ctx):enterObjectLiteral485,13566
+    def exitObjectLiteral(self, ctx):exitObjectLiteral489,13687
+    def enterThrowStatement(self, ctx):enterThrowStatement494,13810
+    def exitThrowStatement(self, ctx):exitThrowStatement498,13933
+    def enterBreakStatement(self, ctx):enterBreakStatement503,14057
+    def exitBreakStatement(self, ctx):exitBreakStatement507,14180
+    def enterIfStatement(self, ctx):enterIfStatement512,14301
+    def exitIfStatement(self, ctx):exitIfStatement516,14418
+    def enterReservedWord(self, ctx):enterReservedWord521,14537
+    def exitReservedWord(self, ctx):exitReservedWord525,14656
+    def enterVariableDeclaration(self, ctx):enterVariableDeclaration530,14783
+    def exitVariableDeclaration(self, ctx):exitVariableDeclaration534,14916
+    def enterFinallyProduction(self, ctx):enterFinallyProduction539,15048
+    def exitFinallyProduction(self, ctx):exitFinallyProduction543,15177
+    def enterIdentifierExpression(self, ctx):enterIdentifierExpression548,15310
+    def exitIdentifierExpression(self, ctx):exitIdentifierExpression552,15445
+    def enterPropertyName(self, ctx):enterPropertyName557,15573
+    def exitPropertyName(self, ctx):exitPropertyName561,15692
+    def enterCatchProduction(self, ctx):enterCatchProduction566,15815
+    def exitCatchProduction(self, ctx):exitCatchProduction570,15940
+    def enterContinueStatement(self, ctx):enterContinueStatement575,16068
+    def exitContinueStatement(self, ctx):exitContinueStatement579,16197
+    def enterCaseClause(self, ctx):enterCaseClause584,16320
+    def exitCaseClause(self, ctx):exitCaseClause588,16435
+    def enterArguments(self, ctx):enterArguments593,16550
+    def exitArguments(self, ctx):exitArguments597,16663
+    def enterVariableDeclarationList(self, ctx):enterVariableDeclarationList602,16791
+    def exitVariableDeclarationList(self, ctx):exitVariableDeclarationList606,16932
+    def enterFunctionBody(self, ctx):enterFunctionBody611,17063
+    def exitFunctionBody(self, ctx):exitFunctionBody615,17182
+    def enterEof(self, ctx):enterEof620,17293
+    def exitEof(self, ctx):exitEof624,17394
+    def enterUnaryAssignmentExpression(self, ctx):enterUnaryAssignmentExpression629,17518
+    def exitUnaryAssignmentExpression(self, ctx):exitUnaryAssignmentExpression633,17663
+
+es.py,26
+def main(argv):main9,95
+
+Tests/03_variables/02_block.js,55
+var a = 2;a1,0
+var b = 1;b2,11
+  var b = 4;b7,69
+
+Tests/03_variables/01_definition.js,65
+var a = 10;a1,0
+var b = 5;b2,12
+var c = a+b*2, d = 1;c7,69
+
+Tests/03_variables/03_assignment.js,0
+
+Tests/06_functions/05_no_param_func.js,25
+function func()func1,0
+
+Tests/06_functions/04_lambda.js,46
+var myLambda = function (p1, p2)myLambda1,0
+
+Tests/06_functions/02_define.js,43
+function myFunction(p1, p2)myFunction1,0
+
+Tests/06_functions/01_math.js,0
+
+Tests/06_functions/03_call.js,43
+function myFunction(p1, p2)myFunction1,0
+
+Tests/05_arrays.js,0
+
+Tests/04_statements/02_iterations.js,0
+
+Tests/04_statements/01_if.js,0
+
+Tests/04_statements/03_control.js,0
+
+Tests/04_statements/05_exceptions.js,0
+
+Tests/04_statements/04_switch.js,0
+
+Tests/02_expressions/04_division.js,0
+
+Tests/02_expressions/07_binary_ops.js,0
+
+Tests/02_expressions/05_combined.js,0
+
+Tests/02_expressions/01_addition.js,0
+
+Tests/02_expressions/03_multiplication.js,0
+
+Tests/02_expressions/02_substraction.js,0
+
+Tests/02_expressions/06_unary_ops.js,0
+
+Tests/07_normal_order.js,73
+function func_true()func_true1,0
+function func_false()func_false7,85
+
+Tests/08_objects/02_modify.js,182
+var car = {type:"Fiat", model:500, color:"white"};type1,0
+var car = {type:"Fiat", model:500, color:"white"};model1,0
+var car = {type:"Fiat", model:500, color:"white"};color1,0
+
+Tests/08_objects/04_new.js,38
+var person = new Object();person1,0
+
+Tests/08_objects/08_properties.js,63
+  elements: ["eggshell", "orange peel", "worm"],elements2,13
+
+Tests/08_objects/03_members.js,521
+var car = {type:"Fiat", model:500, color:"white", changeColor: function(val) { this.color = val; } };type1,0
+var car = {type:"Fiat", model:500, color:"white", changeColor: function(val) { this.color = val; } };model1,0
+var car = {type:"Fiat", model:500, color:"white", changeColor: function(val) { this.color = val; } };color1,0
+var car = {type:"Fiat", model:500, color:"white", changeColor: function(val) { this.color = val; } };changeColor1,0
+console.log(car.color)console.log.changeColor.log.changeType2,102
+
+Tests/08_objects/05_constructor.js,151
+    this.fullname = function() { return this.firstName + " " + this.lastName }fullname6,150
+function person(first, last, age, eyecolor) {person1,0
+
+Tests/08_objects/01_definition.js,0
+
+Tests/08_objects/06_prototype.js,117
+function person(first, last, age, eyecolor) {person1,0
+person.prototype.nationality = "English";nationality7,152
+
+Tests/08_objects/07_inheritance.js,213
+var Base = function(x) {Base1,0
+  getX : function(){getX7,106
+var Child = function(x){Child12,159
+Child.prototype = Object.create(Base.prototype);Child16,209
+Child.prototype.getX = function(){getX19,271
+
+Tests/08_objects/09_properties_defineProperty.js,57
+function person(first, last, age, eyecolor) {person2,1
+
+Tests/01_literals.js,0
+
+Interpreter/InterpreterVisitor.py,5158
+class InterpreterVisitor(ECMAScriptVisitor):InterpreterVisitor11,257
+    def __init__(self, environment = Environment(), input=None):__init__13,303
+    def visitTerminal(self, node):visitTerminal19,590
+    def visitPropertyExpressionAssignment(self, ctx):visitPropertyExpressionAssignment23,740
+    def visitAssignmentOperator(self, ctx):visitAssignmentOperator28,925
+    def visitEos(self, ctx):visitEos33,1085
+    def visitProgram(self, ctx):visitProgram38,1234
+    def visitArgumentList(self, ctx):visitArgumentList43,1369
+    def visitArgumentsExpression(self, ctx):visitArgumentsExpression52,1662
+    def visitThisExpression(self, ctx):visitThisExpression60,1936
+    def visitIdentifierName(self, ctx):visitIdentifierName65,2103
+    def visitBinaryExpression(self, ctx):visitBinaryExpression70,2261
+    def visitFutureReservedWord(self, ctx):visitFutureReservedWord75,2434
+    def visitInitialiser(self, ctx):visitInitialiser80,2602
+    def visitStatementList(self, ctx):visitStatementList85,2765
+    def visitPropertyGetter(self, ctx):visitPropertyGetter90,2931
+    def visitBlock(self, ctx):visitBlock95,3089
+    def visitExpressionStatement(self, ctx):visitExpressionStatement100,3252
+    def visitKeyword(self, ctx):visitKeyword105,3392
+    def visitElementList(self, ctx):visitElementList110,3549
+    def visitNumericLiteral(self, ctx):visitNumericLiteral115,3713
+    def visitForInStatement(self, ctx):visitForInStatement120,3866
+    def visitEmptyStatement(self, ctx):visitEmptyStatement125,4033
+    def visitLabelledStatement(self, ctx):visitLabelledStatement130,4203
+    def visitPropertySetter(self, ctx):visitPropertySetter135,4373
+    def visitNewExpression(self, ctx):visitNewExpression140,4539
+    def visitLiteralExpression(self, ctx):visitLiteralExpression145,4708
+    def visitArrayLiteralExpression(self, ctx):visitArrayLiteralExpression150,4870
+    def visitMemberDotExpression(self, ctx):visitMemberDotExpression155,5050
+    def visitWithStatement(self, ctx):visitWithStatement162,5288
+    def visitMemberIndexExpression(self, ctx):visitMemberIndexExpression167,5461
+    def visitFormalParameterList(self, ctx):visitFormalParameterList172,5640
+    def visitIncrementOperator(self, ctx):visitIncrementOperator177,5815
+    def visitAssignmentOperatorExpression(self, ctx):visitAssignmentOperatorExpression182,5999
+    def visitPostUnaryAssignmentExpression(self, ctx):visitPostUnaryAssignmentExpression187,6195
+    def visitTernaryExpression(self, ctx):visitTernaryExpression192,6380
+    def visitTryStatement(self, ctx):visitTryStatement197,6548
+    def visitDebuggerStatement(self, ctx):visitDebuggerStatement202,6716
+    def visitDoStatement(self, ctx):visitDoStatement207,6883
+    def visitObjectLiteralExpression(self, ctx):visitObjectLiteralExpression212,7056
+    def visitArrayLiteral(self, ctx):visitArrayLiteral217,7230
+    def visitElision(self, ctx):visitElision222,7388
+    def visitStatements(self, ctx):visitStatements227,7544
+    def visitUnaryExpression(self, ctx):visitUnaryExpression232,7685
+    def visitWhileStatement(self, ctx):visitWhileStatement237,7853
+    def visitReturnStatement(self, ctx):visitReturnStatement242,8021
+    def visitSwitchStatement(self, ctx):visitSwitchStatement247,8190
+    def visitExpressionSequence(self, ctx):visitExpressionSequence252,8362
+    def visitLiteral(self, ctx):visitLiteral257,8508
+    def visitVariableStatement(self, ctx):visitVariableStatement263,8726
+    def visitFunctionExpression(self, ctx):visitFunctionExpression268,8900
+    def visitDefaultClause(self, ctx):visitDefaultClause273,9070
+    def visitStatement(self, ctx):visitStatement278,9231
+    def visitForStatement(self, ctx):visitForStatement283,9366
+    def visitCaseBlock(self, ctx):visitCaseBlock288,9526
+    def visitParenthesizedExpression(self, ctx):visitParenthesizedExpression293,9697
+    def visitObjectLiteral(self, ctx):visitObjectLiteral298,9872
+    def visitThrowStatement(self, ctx):visitThrowStatement303,10038
+    def visitBreakStatement(self, ctx):visitBreakStatement308,10205
+    def visitIfStatement(self, ctx):visitIfStatement313,10369
+    def visitReservedWord(self, ctx):visitReservedWord318,10531
+    def visitVariableDeclaration(self, ctx):visitVariableDeclaration323,10701
+    def visitFinallyProduction(self, ctx):visitFinallyProduction328,10876
+    def visitIdentifierExpression(self, ctx):visitIdentifierExpression333,11052
+    def visitPropertyName(self, ctx):visitPropertyName338,11234
+    def visitCatchProduction(self, ctx):visitCatchProduction343,11400
+    def visitContinueStatement(self, ctx):visitContinueStatement348,11571
+    def visitCaseClause(self, ctx):visitCaseClause353,11737
+    def visitArguments(self, ctx):visitArguments358,11895
+    def visitVariableDeclarationList(self, ctx):visitVariableDeclarationList363,12053
+    def visitFunctionBody(self, ctx):visitFunctionBody368,12227
+    def visitEof(self, ctx):visitEof373,12381
+    def visitUnaryAssignmentExpression(self, ctx):visitUnaryAssignmentExpression378,12548
+
+Interpreter/Object.py,313
+class Object:Object3,43
+  def __init__(self):__init__4,57
+class ObjectModule:ObjectModule7,91
+  def __init__(self):__init__8,111
+  def __call__(self, this, *args):__call__11,166
+  def create(self, this, prototype):create13,210
+  def defineProperty(self, this, obj, name, param):defineProperty25,562
+
+Interpreter/Console.py,66
+class Console:Console1,0
+  def log(self, this, value):log2,15
+
+Interpreter/Math.py,690
+class MathModule:MathModule4,27
+  def min(self, this, *args):min5,45
+  def max(self, this, *args):max7,96
+  def random(self, this):random9,147
+  def log(self, this, x):log11,200
+  def exp(self, this, x):exp13,249
+  def abs(self, this, x):abs15,298
+  def cos(self, this, x):cos17,348
+  def acos(self, this, x):acos19,397
+  def sin(self, this, x):sin21,448
+  def asin(self, this, x):asin23,497
+  def tan(self, this, x):tan25,548
+  def atan(self, this, x):atan27,597
+  def round(self, this, x):round29,648
+  def ceil(self, this, x):ceil31,703
+  def floor(self, this, x):floor33,761
+  def pow(self, this, x, y):pow35,821
+  def sqrt(self, this, x):sqrt37,871
+
+Interpreter/ControlExceptions.py,286
+class BreakException(Exception):BreakException1,0
+  def __init__(self):__init__2,33
+class ContinueException(Exception):ContinueException6,66
+  def __init__(self):__init__7,102
+class ReturnException(Exception):ReturnException11,135
+  def __init__(self, value):__init__15,250
+
+Interpreter/__init__.py,0
+
+Interpreter/Property.py,449
+class ReadOnlyException(Exception):ReadOnlyException3,14
+  def __init__(self):__init__7,117
+class WriteOnlyException(Exception):WriteOnlyException10,149
+  def __init__(self):__init__14,254
+class Property:Property17,286
+  def __init__(self):__init__24,562
+  def __init__(self, object):__init__27,594
+  def get(self):get30,648
+  def set(self, value):set39,841
+  def merge(self, other):merge48,1046
+  def clone(self):clone60,1350
+
+Interpreter/ESException.py,90
+class ESException(Exception):ESException1,0
+  def __init__(self, value):__init__5,108
+
+Interpreter/Environment.py,291
+class Environment:Environment3,35
+  def __init__(self, parent = None):__init__7,112
+    class Container:Container12,291
+  def defineVariable(self, name, init = None):defineVariable17,382
+  def setVariable(self, name, value):setVariable24,569
+  def value(self, name):value38,1109
+
+Interpreter/Function.py,195
+class Function:Function3,49
+  def __init__(self, args, environment, body):__init__20,562
+  def call(self, that, this, *args):call29,1006
+  def __call__(self, this, *args):__call__55,1850
