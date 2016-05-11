@@ -23,6 +23,9 @@ class JSList:
     def __str__(self):
         return str(self.listan)
 
+    def append(self, dummy, item):
+        self.listan.append(item)
+
     # Push is the actual JavaScript name,
     # but append was used in the original tests.
     def push(self, this, item):
