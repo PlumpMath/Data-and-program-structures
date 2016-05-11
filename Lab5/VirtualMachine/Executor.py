@@ -1,3 +1,4 @@
+from Interpreter.Environment import Environment
 from VirtualMachine.Stack import Stack
 from VirtualMachine.OpCode import OpCode
 
@@ -13,7 +14,7 @@ class Executor:
     self.opmaps  = {}
     # Stack
     self.opmaps[OpCode.PUSH] = Executor.execute_push
-    self.opmaps[OpCode.POP] = Executor.execute_pop    
+    self.opmaps[OpCode.POP] = Executor.execute_pop
     # ...
 
     # Environment and objects manipulation
@@ -23,19 +24,19 @@ class Executor:
     # Binary arithmetic operation
     # Binary bolean operation
     # Unary operations
-   
-    
-  
+
+
+
   def execute(self, program):
     '''
     Execute the program given in argument
     '''
-    
+
     # You might have to modify this later.
     for inst in program.instructions:
       inst = program.instructions[self.current_index]
       f = self.opmaps[inst.opcode]
-      
+
       f(self, *inst.params)
 
   def execute_push(self, value):
@@ -43,7 +44,7 @@ class Executor:
     Execute the PUSH instruction
     '''
     pass
-  
+
   def execute_pop(self, count):
     '''
     Execute the POP instruction

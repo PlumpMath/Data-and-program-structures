@@ -4,7 +4,12 @@ class Stack:
   '''
   def __init__(self):
     self.stack = []
-  
+
+
+  def __str__(self):
+    return str(self.stack)
+
+
   def pop(self):
     '''
     Remove the top element of the stack
@@ -12,12 +17,14 @@ class Stack:
     v = self.stack[-1]
     self.stack.pop()
     return v
-  
+
+
   def push(self, v):
     '''
     Push a value v on the top of the stack
     '''
     self.stack.append(v)
+
 
   def swap(self):
     '''
@@ -27,12 +34,14 @@ class Stack:
     b = self.pop()
     self.stack.append(a)
     self.stack.append(b)
-  
+
+
   def dup(self):
     '''
     Duplicate the top element of the stack
     '''
     self.stack.append(self.stack[-1])
+
 
   def size(self):
     '''
