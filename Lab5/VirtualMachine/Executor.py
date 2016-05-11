@@ -124,9 +124,14 @@ class Executor:
       value = getattr(obj, index)
     self.stack.push(value)
 
+  def execute_STORE_MEMBER(self, index):
+    obj = self.stack.pop()
+    value = self.stack.peek()
+    if type(obj) == list:
+      obj[int(index)] = value
+    else:
+      setattr(obj, index, value)
 
-  def execute_STORE_MEMBER(self):
-    pass
   def execute_LOAD_INDEX(self):
     pass
   def execute_STORE_INDEX(self):
