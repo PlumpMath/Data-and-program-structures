@@ -9,6 +9,7 @@ class Executor:
   def __init__(self, environment = Environment()):
     self.environment = environment
     self.stack  = Stack()
+    self.program_counter = 0
 
     # The following code acts as a switch statements for OpCodes
     self.opmaps  = {}
@@ -76,16 +77,19 @@ class Executor:
     self.opmaps[OpCode.NOT] = Executor.execute_NOT
 
 
-
   def execute(self, program):
     ''' Execute the program given in argument. '''
     # You might have to modify this later.
-    for inst in program.instructions:
-      f = self.opmaps[inst.opcode]
-      f(self, *inst.params)
+    program_length = len(program.instructions)
+    while self.program_counter < program_length:
+      instruction = program.instructions[self.program_counter]
+      f = self.opmaps[instruction.opcode]
+      self.program_counter += 1
+      f(self, *instruction.params)
 
 
-    # Stack Manipulation
+
+  # Stack Manipulation
   def execute_NOP(self):
     pass
 
@@ -103,7 +107,7 @@ class Executor:
     self.stack.swap()
 
 
-    # Environment and objects manipulation
+  # Environment and objects manipulation
   def execute_LOAD(self, name):
     self.stack.push(self.environment.value(name))
 
@@ -154,15 +158,22 @@ class Executor:
       setattr(obj, index, value)
     self.stack.push(value)
 
+
     # Control
-  def execute_JMP(self):
-    pass
-  def execute_IFJMP(self):
-    pass
-  def execute_UNLESSJMP(self):
-    pass
+  def execute_JMP(self, position):
+    self.program_counter = position
+
+  def execute_IFJMP(self, position):
+    if self.stack.pop():
+      self.program_counter = position
+
+  def execute_UNLESSJMP(self, position):
+    if not self.stack.pop():
+      self.program_counter = position
+
   def execute_CALL(self):
     pass
+
   def execute_NEW(self):
     pass
   def execute_RET(self):
