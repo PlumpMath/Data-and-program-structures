@@ -102,15 +102,29 @@ class Executor:
   def execute_SWAP(self):
     self.stack.swap()
 
+
     # Environment and objects manipulation
-  def execute_LOAD(self):
-    pass
-  def execute_STORE(self):
-    pass
-  def execute_DCL(self):
-    pass
-  def execute_LOAD_MEMBER(self):
-    pass
+  def execute_LOAD(self, name):
+    self.stack.push(self.environment.value(name))
+
+  def execute_STORE(self, name):
+    self.environment.setVariable(name, self.stack.peek())
+
+  def execute_DCL(self, name):
+    self.environment.defineVariable(name)
+
+  def execute_LOAD_MEMBER(self, index):
+    obj = self.stack.pop()
+    if type(obj) == list:
+      if index == 'length':
+        value = len(obj)
+      else:
+        value = obj[int(index)]
+    else:
+      value = getattr(obj, index)
+    self.stack.push(value)
+
+
   def execute_STORE_MEMBER(self):
     pass
   def execute_LOAD_INDEX(self):

@@ -14,9 +14,7 @@ class Stack:
     '''
     Remove the top element of the stack
     '''
-    v = self.stack[-1]
-    self.stack.pop()
-    return v
+    return self.stack.pop()
 
 
   def push(self, v):
@@ -48,3 +46,10 @@ class Stack:
     Return the number of elements in the stack
     '''
     return len(self.stack)
+
+
+  def peek(self):
+    '''
+    Peek at the top item of the stack.
+    '''
+    return self.stack[-1]
