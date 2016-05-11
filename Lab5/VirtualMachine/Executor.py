@@ -28,25 +28,19 @@ class Executor:
 
 
   def execute(self, program):
-    '''
-    Execute the program given in argument
-    '''
-
+    ''' Execute the program given in argument. '''
     # You might have to modify this later.
     for inst in program.instructions:
-      inst = program.instructions[self.current_index]
       f = self.opmaps[inst.opcode]
-
       f(self, *inst.params)
 
+
   def execute_push(self, value):
-    '''
-    Execute the PUSH instruction
-    '''
-    pass
+    ''' Execute the PUSH instruction. '''
+    self.stack.push(value)
+
 
   def execute_pop(self, count):
-    '''
-    Execute the POP instruction
-    '''
-    pass
+    ''' Execute the POP instruction. '''
+    for x in range(0, count):
+      self.stack.pop()
