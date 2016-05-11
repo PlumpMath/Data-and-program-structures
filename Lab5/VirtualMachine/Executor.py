@@ -133,9 +133,26 @@ class Executor:
       setattr(obj, index, value)
 
   def execute_LOAD_INDEX(self):
-    pass
+    index = self.stack.pop()
+    obj = self.stack.pop()
+    if type(obj) == list:
+      if index == 'length':
+        value = len(obj)
+      else:
+        value = obj[int(index)]
+    else:
+      value = getattr(obj, str(index))
+    self.stack.push(value)
+
   def execute_STORE_INDEX(self):
-    pass
+    index = self.stack.pop()
+    obj = self.stack.pop()
+    value = self.stack.pop()
+    if type(obj) == list:
+      obj[index] = value
+    else:
+      setattr(obj, index, value)
+    self.stack.push(value)
 
     # Control
   def execute_JMP(self):
