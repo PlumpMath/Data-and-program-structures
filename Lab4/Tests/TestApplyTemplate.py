@@ -8,11 +8,13 @@ sys.path.append(os.path.join(current_dir, '../'))
 import unittest
 from ApplyTemplate import apply_template
 
+
 def func_body(v):
     v = v * x
 
 def func_return():
   return v
+
 
 @apply_template("__body__", func_body, "__return__", func_return)
 def func1(v):
@@ -20,11 +22,13 @@ def func1(v):
     __body__
   __return__
 
+
 @apply_template("__body__", func_body, "__return__", func_return)
 def func2(v):
   x = 2
   __body__
   __return__
+
 
 class TestApplyTemplate(unittest.TestCase):
   def test_func1(self):
