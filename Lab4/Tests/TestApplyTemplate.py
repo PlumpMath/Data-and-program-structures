@@ -26,6 +26,7 @@ def func1(v):
 @apply_template("__body__", func_body, "__return__", func_return)
 def func2(v):
   x = 2
+  a = "blaha"
   __body__
   __return__
 
