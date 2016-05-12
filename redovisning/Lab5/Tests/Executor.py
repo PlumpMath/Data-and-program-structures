@@ -252,7 +252,7 @@ class TestExecutor(unittest.TestCase):
       [[OpCode.PUSH, args], [OpCode.PUSH, code], [OpCode.MAKE_FUNC]],
       [Function(None, None, None)],
       {}, {})
-    self.assertEqual(stack[0].argNames, args)
+    self.assertEqual(stack[0].args, args)
     code.add_instruction(Instruction(OpCode.PUSH, 1.0))
     code.add_instruction(Instruction(OpCode.RET))
     self.run_test_executor(

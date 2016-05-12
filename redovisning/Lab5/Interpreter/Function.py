@@ -25,7 +25,7 @@ class Function:
     used when defining the function and a lambda function defining the body to be called (should take one single argument, which is the environment)
     '''
     self.parent = environment
-    self.argNames = args; # argNames contain a list of the names of the arguments
+    self.args = args;
     self.body = body
     self.prototype = ObjectModule()
 
@@ -75,7 +75,7 @@ class Function:
       localEnvironment.defineVariable("this", this)
     if thatVar:
       localEnvironment.defineVariable("that", thatVar)
-    argValuePairs = zip(self.argNames, args)
+    argValuePairs = zip(self.args, args)
     for name, value in argValuePairs:
       localEnvironment.defineVariable(name, value)
 
