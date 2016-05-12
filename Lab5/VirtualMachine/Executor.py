@@ -104,7 +104,6 @@ class Executor:
           raise es
       except ReturnException as re:
         self.program_counter = self.program_counter_stack.pop()
-        print(len(self.program_counter_stack))
         if len(self.program_counter_stack) == 0:
           raise re
         else:
