@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 
+import Utils
 import unittest
 from Interpreter.Environment    import Environment
 from Interpreter.Object         import Object
 from Interpreter.Function       import Function
 from Interpreter.Property       import Property
-import Utils
 from VirtualMachine.OpCode      import OpCode
 from VirtualMachine.Code        import Code
 from VirtualMachine.Instruction import Instruction
@@ -248,11 +248,17 @@ class TestExecutor(unittest.TestCase):
   def test_042_make_function(self):
     args = ['a', 'b']
     code = Code()
-    (stack, env) = self.run_test_executor( [[OpCode.PUSH, args], [OpCode.PUSH, code], [OpCode.MAKE_FUNC]], [Function(None, None, None)], {}, {})
+    (stack, env) = self.run_test_executor(
+      [[OpCode.PUSH, args], [OpCode.PUSH, code], [OpCode.MAKE_FUNC]],
+      [Function(None, None, None)],
+      {}, {})
     self.assertEqual(stack[0].argNames, args)
     code.add_instruction(Instruction(OpCode.PUSH, 1.0))
     code.add_instruction(Instruction(OpCode.RET))
-    self.run_test_executor( [[OpCode.PUSH, []], [OpCode.PUSH, code], [OpCode.MAKE_FUNC], [OpCode.CALL, 0] ], [1.0], {}, {})
+    self.run_test_executor(
+      [[OpCode.PUSH, []], [OpCode.PUSH, code], [OpCode.MAKE_FUNC], [OpCode.CALL, 0] ],
+      [1.0],
+      {}, {})
 
   def test_043_make_getter(self):
     f = Function(None, None, None)

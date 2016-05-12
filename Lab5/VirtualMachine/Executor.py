@@ -15,6 +15,7 @@ class Executor:
     self.stack  = Stack()
     self.try_stack  = Stack()
     self.program_counter = 0
+    self.program_counter_stack = []
 
     # The following code acts as a switch statements for OpCodes
     self.opmaps  = {}
@@ -86,6 +87,9 @@ class Executor:
     ''' Execute the program given in argument. '''
     # You might have to modify this later.
     program_length = len(program.instructions)
+    self.program_counter_stack.append(self.program_counter)
+    self.program_counter = 0
+
     while self.program_counter < program_length:
       instruction = program.instructions[self.program_counter]
       f = self.opmaps[instruction.opcode]
@@ -93,12 +97,19 @@ class Executor:
 
       try:
         f(self, *instruction.params)
-      except ESException as e:
-        if e.value:
-          self.execute_JMP(e.value)
+      except ESException as es:
+        if es.value:
+          self.execute_JMP(es.value)
         else:
-          raise e
-
+          raise es
+      except ReturnException as re:
+        self.program_counter = self.program_counter_stack.pop()
+        print(len(self.program_counter_stack))
+        if len(self.program_counter_stack) == 0:
+          raise re
+        else:
+          return re.value
+    self.program_counter = self.program_counter_stack.pop()
 
   # Stack Manipulation
   def execute_NOP(self):
@@ -243,9 +254,16 @@ class Executor:
 
   def execute_MAKE_FUNC(self):
     body = self.stack.pop()
+
+    def body_func(env):
+      self.environment = env
+      retval = self.execute(body_func.body)
+      self.environment = self.environment.parent
+      return retval
+    body_func.body = body
+
     arguments = self.stack.pop()
-    # TODO: Perhaps this shouldn't be a Function?
-    function = Function(arguments, self.environment, body)
+    function = Function(arguments, self.environment, body_func)
     self.stack.push(function)
 
   def execute_MAKE_GETTER(self):
