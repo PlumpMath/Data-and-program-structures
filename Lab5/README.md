@@ -1,29 +1,12 @@
-To run one test, do:
+We made one semantic modification to the tests:
 
-```
-./es.py ./Tests/01_literals.js
-```
+-- self.assertEqual(stack[0].args, args)
+++ self.assertEqual(stack[0].argNames, args)
 
-
-In order to run one test and compare its outputs to the expected outputs, run:
-
-```
-./espytester.py ./es.py ./ 01_literals
-```
-
-Note how 01_literals is the name a file inside the Tests folder. So in order to run the tests in 02_expressions/01_addition.js we execute:
-
-```
-./espytester.py ./es.py ./ 02_expressions/01_addition
-```
+Detta var eftersom vår Function hade argumenten under namnet argNames istället för args - och vi visste inte vid tillfället huruvida vi var godkända på Lab 3 och tänkte att det skulle skapa kaos att synkronisera förändringar från olika källor i SVN-repot.
 
 To run all tests:
 
 ```
-./espytester.py ./es.py ./
+./run_tests
 ```
-
-
-
-Current:
-./espytester.py ./es.py ./ 08_object/02_modify
