@@ -263,7 +263,10 @@ class TestExecutor(unittest.TestCase):
   def test_043_make_getter(self):
     f = Function(None, None, None)
     obj = Object()
-    self.run_test_executor( [[OpCode.PUSH, obj], [OpCode.PUSH, f], [OpCode.PUSH, 'test'], [OpCode.MAKE_GETTER] ], [obj], {}, {})
+    self.run_test_executor(
+      [[OpCode.PUSH, obj], [OpCode.PUSH, f], [OpCode.PUSH, 'test'], [OpCode.MAKE_GETTER] ],
+      [obj],
+      {}, {})
     self.assertTrue(isinstance(obj.test, Property))
     self.assertEqual(obj.test.getter, f)
     self.assertEqual(obj.test.setter, None)
@@ -271,12 +274,18 @@ class TestExecutor(unittest.TestCase):
   def test_044_make_setter(self):
     f = Function(None, None, None)
     obj = Object()
-    self.run_test_executor( [[OpCode.PUSH, obj], [OpCode.PUSH, f], [OpCode.PUSH, 'test'], [OpCode.MAKE_SETTER] ], [obj], {}, {})
+    self.run_test_executor(
+      [[OpCode.PUSH, obj], [OpCode.PUSH, f], [OpCode.PUSH, 'test'], [OpCode.MAKE_SETTER] ],
+      [obj],
+      {}, {})
     self.assertTrue(isinstance(obj.test, Property))
     self.assertEqual(obj.test.setter, f)
     self.assertEqual(obj.test.getter, None)
     f2 = Function(None, None, None)
-    self.run_test_executor( [[OpCode.PUSH, obj], [OpCode.PUSH, f2], [OpCode.PUSH, 'test'], [OpCode.MAKE_GETTER] ], [obj], {}, {})
+    self.run_test_executor(
+      [[OpCode.PUSH, obj], [OpCode.PUSH, f2], [OpCode.PUSH, 'test'], [OpCode.MAKE_GETTER] ],
+      [obj],
+      {}, {})
     self.assertEqual(obj.test.setter, f)
     self.assertEqual(obj.test.getter, f2)
 

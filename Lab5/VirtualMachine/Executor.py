@@ -1,3 +1,4 @@
+from Interpreter.Property          import Property
 from Interpreter.Function          import Function
 from Interpreter.ESException       import ESException
 from Interpreter.Object            import Object
@@ -266,9 +267,30 @@ class Executor:
     self.stack.push(function)
 
   def execute_MAKE_GETTER(self):
-    pass
+    name = self.stack.pop()
+    func = self.stack.pop()
+    obj  = self.stack.pop()
+    prop = Property(obj)
+    prop.getter = func
+    if hasattr(obj, name):
+      prop.merge(getattr(obj, name))
+    else:
+      setattr(prop, 'setter', None)
+    setattr(obj, name, prop)
+    self.stack.push(obj)
+
   def execute_MAKE_SETTER(self):
-    pass
+    name = self.stack.pop()
+    func = self.stack.pop()
+    obj  = self.stack.pop()
+    prop = Property(obj)
+    prop.setter = func
+    if hasattr(obj, name):
+      prop.merge(getattr(obj, name))
+    else:
+      setattr(prop, 'getter', None)
+    setattr(obj, name, prop)
+    self.stack.push(obj)
 
     # Binary arithmetic operation
   def execute_ADD(self):
