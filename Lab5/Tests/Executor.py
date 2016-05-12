@@ -291,7 +291,10 @@ class TestExecutor(unittest.TestCase):
 
 
   def run_test_binary(self, opcode, arg1, arg2, result):
-    self.run_test_executor([[OpCode.PUSH, arg1], [OpCode.PUSH, arg2], [opcode]], [result], {}, {})
+    self.run_test_executor(
+      [[OpCode.PUSH, arg1], [OpCode.PUSH, arg2], [opcode]],
+      [result],
+      {}, {})
 
   def test_050_add(self):
     self.run_test_binary(OpCode.ADD, 1.0, 2.0, 3.0)
@@ -323,43 +326,36 @@ class TestExecutor(unittest.TestCase):
     self.run_test_binary(OpCode.SUPPERIOR,  8.0, 2.0, True)
     self.run_test_binary(OpCode.SUPPERIOR,  2.0, 2.0, False)
 
-
   def test_061_supperior_equal(self):
     self.run_test_binary(OpCode.SUPPERIOR_EQUAL, -8.0, 2.0, False)
     self.run_test_binary(OpCode.SUPPERIOR_EQUAL,  8.0, 2.0, True)
     self.run_test_binary(OpCode.SUPPERIOR_EQUAL,  2.0, 2.0, True)
-
 
   def test_062_inferior(self):
     self.run_test_binary(OpCode.INFERIOR, -8.0, 2.0, True)
     self.run_test_binary(OpCode.INFERIOR,  8.0, 2.0, False)
     self.run_test_binary(OpCode.INFERIOR,  2.0, 2.0, False)
 
-
   def test_063_inferior_equal(self):
     self.run_test_binary(OpCode.INFERIOR_EQUAL, -8.0, 2.0, True)
     self.run_test_binary(OpCode.INFERIOR_EQUAL,  8.0, 2.0, False)
     self.run_test_binary(OpCode.INFERIOR_EQUAL,  2.0, 2.0, True)
-
 
   def test_064_equal(self):
     self.run_test_binary(OpCode.EQUAL, -8.0, 2.0, False)
     self.run_test_binary(OpCode.EQUAL,  8.0, 2.0, False)
     self.run_test_binary(OpCode.EQUAL,  2.0, 2.0, True)
 
-
   def test_065_different(self):
     self.run_test_binary(OpCode.DIFFERENT, -8.0, 2.0, True)
     self.run_test_binary(OpCode.DIFFERENT,  8.0, 2.0, True)
     self.run_test_binary(OpCode.DIFFERENT,  2.0, 2.0, False)
-
 
   def test_066_and(self):
     self.run_test_binary(OpCode.AND, True, True, True)
     self.run_test_binary(OpCode.AND, True, False, False)
     self.run_test_binary(OpCode.AND, False, True, False)
     self.run_test_binary(OpCode.AND, False, False, False)
-
 
   def test_067_and(self):
     self.run_test_binary(OpCode.OR, True, True, True)

@@ -1,3 +1,5 @@
+import operator
+
 from Interpreter.Property          import Property
 from Interpreter.Function          import Function
 from Interpreter.ESException       import ESException
@@ -292,46 +294,98 @@ class Executor:
     setattr(obj, name, prop)
     self.stack.push(obj)
 
-    # Binary arithmetic operation
+  # Binary arithmetic operation
   def execute_ADD(self):
-    pass
+    arg1 = self.stack.pop()
+    arg2 = self.stack.pop()
+    self.stack.push(arg1 + arg2)
+
   def execute_MUL(self):
-    pass
+    arg1 = self.stack.pop()
+    arg2 = self.stack.pop()
+    self.stack.push(arg1 * arg2)
+
   def execute_SUB(self):
-    pass
+    arg1 = self.stack.pop()
+    arg2 = self.stack.pop()
+    self.stack.push(arg2 - arg1)
+
   def execute_DIV(self):
-    pass
+    arg1 = self.stack.pop()
+    arg2 = self.stack.pop()
+    self.stack.push(arg2 / arg1)
+
   def execute_MOD(self):
-    pass
+    arg1 = self.stack.pop()
+    arg2 = self.stack.pop()
+    self.stack.push(arg2 % arg1)
+
   def execute_LEFT_SHIFT(self):
-    pass
+    arg1 = self.stack.pop()
+    arg2 = self.stack.pop()
+    self.stack.push(int(arg2) << int(arg1))
+
   def execute_RIGHT_SHIFT(self):
-    pass
+    arg1 = self.stack.pop()
+    arg2 = self.stack.pop()
+    self.stack.push(int(arg2) >> int(arg1))
+
   def execute_UNSIGNED_RIGHT_SHIFT(self):
-    pass
+    arg1 = self.stack.pop()
+    arg2 = self.stack.pop()
+    self.stack.push(int(arg2) % 0x100000000 >> int(arg1))
+
 
     # Binary bolean operation
   def execute_SUPPERIOR(self):
-    pass
+    arg1 = self.stack.pop()
+    arg2 = self.stack.pop()
+    self.stack.push(operator.lt(arg1, arg2))
+
   def execute_SUPPERIOR_EQUAL(self):
-    pass
+    arg1 = self.stack.pop()
+    arg2 = self.stack.pop()
+    self.stack.push(operator.le(arg1, arg2))
+
   def execute_INFERIOR(self):
-    pass
+    arg1 = self.stack.pop()
+    arg2 = self.stack.pop()
+    self.stack.push(operator.gt(arg1, arg2))
+
   def execute_INFERIOR_EQUAL(self):
-    pass
+    arg1 = self.stack.pop()
+    arg2 = self.stack.pop()
+    self.stack.push(operator.ge(arg1, arg2))
+
   def execute_EQUAL(self):
-    pass
+    arg1 = self.stack.pop()
+    arg2 = self.stack.pop()
+    self.stack.push(operator.eq(arg1, arg2))
+
   def execute_DIFFERENT(self):
-    pass
+    arg1 = self.stack.pop()
+    arg2 = self.stack.pop()
+    self.stack.push(operator.ne(arg1, arg2))
+
   def execute_AND(self):
-    pass
+    arg1 = self.stack.pop()
+    arg2 = self.stack.pop()
+    self.stack.push(operator.and_(arg2, arg1))
+
   def execute_OR(self):
-    pass
+    arg1 = self.stack.pop()
+    arg2 = self.stack.pop()
+    self.stack.push(operator.or_(arg2, arg1))
 
     # Unary operations
   def execute_NEG(self):
-    pass
+    number = self.stack.pop()
+    self.stack.push(operator.neg(number))
+
   def execute_TILDE(self):
-    pass
+    number = self.stack.pop()
+    self.stack.push(operator.invert(int(number)))
+
   def execute_NOT(self):
-    pass
+    arg = self.stack.pop()
+    self.stack.push(operator.not_(arg))
