@@ -1,3 +1,4 @@
+from Interpreter.Function          import Function
 from Interpreter.ESException       import ESException
 from Interpreter.Object            import Object
 from Interpreter.ControlExceptions import BreakException, ContinueException, ReturnException
@@ -169,7 +170,7 @@ class Executor:
     self.stack.push(value)
 
 
-    # Control
+  # Control
   def execute_JMP(self, position):
     self.program_counter = position
 
@@ -210,7 +211,7 @@ class Executor:
       self.execute_JMP(default)
 
 
-    # Exceptions
+  # Exceptions
   def execute_TRY_PUSH(self, index):
     self.try_stack.push(index)
 
@@ -224,13 +225,29 @@ class Executor:
     except IndexError as ie:
       raise ESException(None)
 
-    # Array and Objects creation
-  def execute_MAKE_ARRAY(self):
-    pass
-  def execute_MAKE_OBJECT(self):
-    pass
+
+  # Array and Objects creation
+  def execute_MAKE_ARRAY(self, nr_elements):
+    array = []
+    for i in range(0, nr_elements):
+      array.insert(0, self.stack.pop())
+    self.stack.push(array)
+
+  def execute_MAKE_OBJECT(self, nr_elements):
+    obj = Object()
+    for i in range(0, nr_elements):
+      key = self.stack.pop()
+      value = self.stack.pop()
+      setattr(obj, key, value)
+    self.stack.push(obj)
+
   def execute_MAKE_FUNC(self):
-    pass
+    body = self.stack.pop()
+    arguments = self.stack.pop()
+    # TODO: Perhaps this shouldn't be a Function?
+    function = Function(arguments, self.environment, body)
+    self.stack.push(function)
+
   def execute_MAKE_GETTER(self):
     pass
   def execute_MAKE_SETTER(self):

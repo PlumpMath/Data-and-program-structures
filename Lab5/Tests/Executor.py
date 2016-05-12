@@ -249,7 +249,7 @@ class TestExecutor(unittest.TestCase):
     args = ['a', 'b']
     code = Code()
     (stack, env) = self.run_test_executor( [[OpCode.PUSH, args], [OpCode.PUSH, code], [OpCode.MAKE_FUNC]], [Function(None, None, None)], {}, {})
-    self.assertEqual(stack[0].args, args)
+    self.assertEqual(stack[0].argNames, args)
     code.add_instruction(Instruction(OpCode.PUSH, 1.0))
     code.add_instruction(Instruction(OpCode.RET))
     self.run_test_executor( [[OpCode.PUSH, []], [OpCode.PUSH, code], [OpCode.MAKE_FUNC], [OpCode.CALL, 0] ], [1.0], {}, {})
