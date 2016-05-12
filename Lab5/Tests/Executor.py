@@ -228,7 +228,10 @@ class TestExecutor(unittest.TestCase):
 
 
   def test_030_exception(self):
-    self.run_test_executor([[ OpCode.TRY_PUSH, 5], [OpCode.PUSH, 1.0], [OpCode.THROW], [OpCode.PUSH, 3.0], [OpCode.TRY_POP]  ], [1.0], {}, {})
+    self.run_test_executor(
+      [[ OpCode.TRY_PUSH, 5], [OpCode.PUSH, 1.0], [OpCode.THROW], [OpCode.PUSH, 3.0], [OpCode.TRY_POP]  ],
+      [1.0],
+      {}, {})
 
     self.assertRaises(ESException, self.run_test_executor, [[OpCode.PUSH, 1.0], [OpCode.THROW] ], [], {}, {})
     self.assertRaises(ESException, self.run_test_executor, [[ OpCode.TRY_PUSH, 5], [OpCode.PUSH, 1.0], [OpCode.PUSH, 3.0], [OpCode.TRY_POP], [OpCode.THROW]], [], {}, {})

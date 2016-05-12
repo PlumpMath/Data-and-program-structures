@@ -1,6 +1,9 @@
-from Interpreter.Environment import Environment
-from VirtualMachine.Stack import Stack
-from VirtualMachine.OpCode import OpCode
+from Interpreter.ESException       import ESException
+from Interpreter.Object            import Object
+from Interpreter.ControlExceptions import BreakException, ContinueException, ReturnException
+from Interpreter.Environment       import Environment
+from VirtualMachine.Stack          import Stack
+from VirtualMachine.OpCode         import OpCode
 
 class Executor:
   '''
@@ -9,6 +12,7 @@ class Executor:
   def __init__(self, environment = Environment()):
     self.environment = environment
     self.stack  = Stack()
+    self.try_stack  = Stack()
     self.program_counter = 0
 
     # The following code acts as a switch statements for OpCodes
@@ -85,8 +89,14 @@ class Executor:
       instruction = program.instructions[self.program_counter]
       f = self.opmaps[instruction.opcode]
       self.program_counter += 1
-      f(self, *instruction.params)
 
+      try:
+        f(self, *instruction.params)
+      except ESException as e:
+        if e.value:
+          self.execute_JMP(e.value)
+        else:
+          raise e
 
 
   # Stack Manipulation
@@ -171,23 +181,48 @@ class Executor:
     if not self.stack.pop():
       self.program_counter = position
 
-  def execute_CALL(self):
-    pass
+  def execute_CALL(self, nr_arguments):
+    func = self.stack.pop()
+    arguments = []
+    for i in range(0, nr_arguments):
+      arguments.append(self.stack.pop())
+    self.stack.push(func(arguments))
 
-  def execute_NEW(self):
-    pass
+  def execute_NEW(self, nr_arguments):
+    constructor = self.stack.pop()
+    arguments = []
+    for i in range(0, nr_arguments):
+      arguments.insert(0, self.stack.pop())
+    obj = Object()
+    constructor(obj, *arguments)
+    self.stack.push(obj)
+
   def execute_RET(self):
-    pass
-  def execute_SWITCH(self):
-    pass
+    retval = self.stack.pop()
+    raise ReturnException(retval)
+
+  def execute_SWITCH(self, default):
+    switch_map = self.stack.pop()
+    index = self.stack.pop()
+    if index in switch_map:
+      self.execute_JMP(switch_map[index])
+    else:
+      self.execute_JMP(default)
+
 
     # Exceptions
-  def execute_TRY_PUSH(self):
-    pass
+  def execute_TRY_PUSH(self, index):
+    self.try_stack.push(index)
+
   def execute_TRY_POP(self):
-    pass
+    self.try_stack.pop()
+
   def execute_THROW(self):
-    pass
+    try:
+      value = self.try_stack.pop()
+      raise ESException(value)
+    except IndexError as ie:
+      raise ESException(None)
 
     # Array and Objects creation
   def execute_MAKE_ARRAY(self):
