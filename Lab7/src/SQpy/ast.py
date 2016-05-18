@@ -22,8 +22,8 @@ class token(Enum):
 class ast(object):
   def __init__(self, token, **kwargs):
     self.token = token
-    for name,value in kwargs.items():
-      self.__setattr__(name,value)
+    for name, value in kwargs.items():
+      self.__setattr__(name, value)
 
   @staticmethod
   def identifier(*ids):
