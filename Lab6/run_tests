@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 TEST_NAME=$2
 GC_DIR="`pwd`/$1"
 
@@ -16,9 +18,6 @@ for TEST in "${TESTS[@]}"
 do
     if [ $TEST_NAME = "all" -o $TEST_NAME = $TEST ]
     then
-        PYTHONPATH="$GC_DIR:$PYTHONPATH" "$DIR"/Tests/"$TEST".py
-        # unittest.main will by default call sys.exit() with a flag
-        # indicating that the test was successfull or not
-        if [[ $? != 0 ]]; then exit $?; fi
+      PYTHONPATH="$GC_DIR:$PYTHONPATH" "$DIR"/Tests/"$TEST".py
     fi
 done
