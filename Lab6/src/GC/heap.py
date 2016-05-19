@@ -5,7 +5,7 @@ class heap(object):
   # size: the size (in bytes) of the heap
   def __init__(self, size):
     self.data = bytearray(size)
-    pass
+    self.allocated_space = 0
 
   # return the index to the begining of a block with size (in bytes)
   def allocate(self, size):
@@ -17,11 +17,11 @@ class heap(object):
 
   # Return the current total (allocatable) free space
   def total_free_space(self):
-    pass
+    return len(self.data) - 4
 
   # Return the current total allocated memory
   def total_allocated_space(self):
-    pass
+    return self.allocated_space
 
   def allocate_array(self, count):
     pointer = self.allocate(count * 4)
