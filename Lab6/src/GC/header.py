@@ -22,11 +22,14 @@ def header_is_pointers_array(heap, pointer):
 
 
 def header_mark_as_pointers_array(heap, pointer):
-  pass
+  mask = 1 << 5
+  heap[pointer + 3] = heap[pointer + 3] | mask
 
 
 def header_mark_as_bytes_array(heap, pointer):
-  pass
+  mask = ~(1 << 5)
+  heap[pointer + 3] = heap[pointer + 3] & mask
+
 
 
 def header_get_size(heap, pointer):
