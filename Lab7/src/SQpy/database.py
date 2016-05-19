@@ -38,6 +38,8 @@ class database(object):
         lambda q: self.comparison(q.operands, operator.gt),
       token.identifier:
         lambda q: self.identifier(q.identifier),
+      token.update:
+        lambda q: self.update(q.table, q.set, q.where)
     }[query.token](query)
 
 
@@ -90,3 +92,13 @@ class database(object):
       # manage the list comparisons.
       return [getattr(row, key) for key in identifiers][0]
     return f
+
+  def update(self, table, set, where):
+    print(table, set, where)
+    wanted = list(filter(self.execute(where), self._tables[table]))
+    result = []
+    for row in wanted:
+      index = self._tables[table].index(row)
+      for key, value in set:
+        row = row._replace(**{key: value})
+      self._tables[table][index] = row
