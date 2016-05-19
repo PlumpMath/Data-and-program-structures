@@ -30,8 +30,17 @@ class database(object):
       token.op_and:
         lambda q: self.op_and(q.operands),
       token.op_equal:
-        lambda q: self.op_equal(q.operands)
+        lambda q: self.op_equal(q.operands),
+      token.identifier:
+        lambda q: self.identifier(q.identifier)
     }[query.token](query)
+
+
+  def execute_or_literal(self, node, row):
+    if isinstance(node, ast):
+      return self.execute(node)(row)
+    else:
+      return node
 
 
   def create_table(self, name, columns):
@@ -47,8 +56,7 @@ class database(object):
 
 
   def delete_from(self, table, where):
-    self._tables[table] = self._tables[table] -\
-                          list(filter(self.execute(where), self._tables[table]))
+    self._tables[table] = [items for items in self._tables[table] if items not in list(filter(self.execute(where), self._tables[table]))]
 
 
   def op_and(self, operands):
@@ -64,14 +72,12 @@ class database(object):
     print("Operands:", operands)
     def f(row):
       print("Row:", row)
-      op0 = execute_or_literal(self, operands[0], row)
-      op1 = execute_or_literal(self, operands[1], row)
+      op0 = self.execute_or_literal(operands[0], row)
+      op1 = self.execute_or_literal(operands[1], row)
       return op0 == op1
     return f
 
 
-  def execute_or_literal(self, node, row):
-    if isinstance(node, ast):
-      return node(row)
-    else:
-      return node
+  def identifier(self, identifier):
+    print("Identifier:", identifier)
+    return lambda _: identifier
