@@ -1,10 +1,13 @@
-from .header import * 
+from .header import *
 
 def pointer_array_count(heap, pointer):
-  pass
+  return header_get_size(heap, pointer) / 4
+
 
 def pointer_array_get(heap, pointer, index):
-  pass
+  number = read_int(heap, pointer + 4 + 4 * index)
+  return number
+
 
 def pointer_array_set(heap, pointer, index, value):
-  pass
+  write_int(heap, pointer + 4 + 4 * index, value)
