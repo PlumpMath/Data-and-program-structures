@@ -6,18 +6,29 @@ class heap(object):
   def __init__(self, size):
     self.data = bytearray(size)
     self.allocated_space = 0
+    self.free = 4
+    header_set_size(self.data, 0, size - 4)
 
   # return the index to the begining of a block with size (in bytes)
   def allocate(self, size):
-    pass
+    pointer = self.find_free(size + 4, 0)
+    print(pointer)
+    if pointer is not None:
+      self.allocated_space += size
+      header_set_size(self.data, pointer, size)
+      header_set_used_flag(self.data, pointer, True)
+    else:
+      raise Exception
+
 
   # unallocate the memory at the given index
   def disallocate(self, pointer):
+    self.allocated_space -= header_get_size(self.data, pointer)
     pass
 
   # Return the current total (allocatable) free space
   def total_free_space(self):
-    return len(self.data) - 4
+    return header_get_size(self.data, 0)
 
   # Return the current total allocated memory
   def total_allocated_space(self):
@@ -32,3 +43,11 @@ class heap(object):
     pointer = self.allocate(count)
     header_mark_as_bytes_array(self.data, pointer)
     return pointer
+
+  def find_free(self, min_size, pointer):
+    print(header_get_size(self.data, pointer))
+    if not header_get_used_flag(self.data, pointer) and \
+       header_get_size(self.data, pointer) >= min_size:
+      return pointer
+    else:
+      return self.find_free(min_size, pointer_array_get(self.data, pointer, 0))
