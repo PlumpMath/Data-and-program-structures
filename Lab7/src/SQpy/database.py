@@ -1,3 +1,4 @@
+import operator
 from collections import namedtuple
 from .ast import token, ast
 
@@ -30,9 +31,13 @@ class database(object):
       token.op_and:
         lambda q: self.op_and(q.operands),
       token.op_equal:
-        lambda q: self.op_equal(q.operands),
+        lambda q: self.comparison(q.operands, operator.eq),
+      token.op_inferior:
+        lambda q: self.comparison(q.operands, operator.lt),
+      token.op_superior:
+        lambda q: self.comparison(q.operands, operator.gt),
       token.identifier:
-        lambda q: self.identifier(q.identifier)
+        lambda q: self.identifier(q.identifier),
     }[query.token](query)
 
 
@@ -44,7 +49,7 @@ class database(object):
 
 
   def create_table(self, name, columns):
-    self._table_classes[name] = namedtuple(name + '_table', columns)
+    self._table_classes[name] = namedtuple(name + '_row', columns)
     self._table_classes[name].__new__.__defaults__ = (None,) * len(self._table_classes[name]._fields)
     self._tables[name] = []
 
@@ -56,7 +61,9 @@ class database(object):
 
 
   def delete_from(self, table, where):
-    self._tables[table] = [items for items in self._tables[table] if items not in list(filter(self.execute(where), self._tables[table]))]
+    unwanted = filter(self.execute(where), self._tables[table])
+    for row in unwanted:
+      self._tables[table].remove(row)
 
 
   def op_and(self, operands):
@@ -68,16 +75,18 @@ class database(object):
     return f
 
 
-  def op_equal(self, operands):
-    print("Operands:", operands)
+  def comparison(self, operands, comparator):
     def f(row):
-      print("Row:", row)
       op0 = self.execute_or_literal(operands[0], row)
       op1 = self.execute_or_literal(operands[1], row)
-      return op0 == op1
+      return comparator(op0, op1)
     return f
 
 
-  def identifier(self, identifier):
-    print("Identifier:", identifier)
-    return lambda _: identifier
+  def identifier(self, identifiers):
+    def f(row):
+      # Remove [0] in case of multiple identifiers in the list.
+      # Then add code in op_equal and it's brethren to
+      # manage the list comparisons.
+      return [getattr(row, key) for key in identifiers][0]
+    return f
