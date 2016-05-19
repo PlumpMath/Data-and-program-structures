@@ -94,9 +94,7 @@ class database(object):
     return f
 
   def update(self, table, set, where):
-    print(table, set, where)
-    wanted = list(filter(self.execute(where), self._tables[table]))
-    result = []
+    wanted = filter(self.execute(where), self._tables[table])
     for row in wanted:
       index = self._tables[table].index(row)
       for key, value in set:
