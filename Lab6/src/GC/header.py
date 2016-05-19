@@ -41,12 +41,20 @@ def header_mark_as_bytes_array(heap, pointer):
 
 
 def header_get_size(heap, pointer):
-  ba = bytearray()
-  for i in range (0, 4):
-    ba.append(heap[pointer+i])
-  number = int.from_bytes(ba, 'little')
+  number = get_header(heap, pointer)
   return number & ~(111 << 29)
 
 
 def header_set_size(heap, pointer, size):
-  pass
+  number = get_header(heap, pointer)
+  flags = number & (111 << 29)
+  ba = (size | flags).to_bytes(4, 'little')
+  for i in range(0, 4):
+    heap[pointer + i] = ba[i]
+
+
+def get_header(heap, pointer):
+  ba = bytearray()
+  for i in range (0, 4):
+    ba.append(heap[pointer+i])
+  return int.from_bytes(ba, 'little')
