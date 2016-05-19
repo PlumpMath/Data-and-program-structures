@@ -11,10 +11,12 @@ class heap(object):
 
   # return the index to the begining of a block with size (in bytes)
   def allocate(self, size):
-    pointer = self.find_free(size + 4, 0)
+    size += 4
+    pointer = self.find_free(size, self.free)
     print(pointer)
     if pointer is not None:
       self.allocated_space += size
+      self.free += size
       header_set_size(self.data, pointer, size)
       header_set_used_flag(self.data, pointer, True)
     else:
