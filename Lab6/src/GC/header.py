@@ -7,7 +7,8 @@ def header_set_garbage_flag(heap, pointer, value):
   pass
 
 def header_get_used_flag(heap, pointer):
-  pass
+  mask = 1 << 6
+  return heap[pointer + 3] & mask != 0
 
 def header_set_used_flag(heap, pointer, value):
   pass
