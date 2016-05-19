@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -i
+set -e
 
 TEST_NAME=$2
 GC_DIR="`pwd`/$1/src/"

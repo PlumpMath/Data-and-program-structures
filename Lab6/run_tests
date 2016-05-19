@@ -3,7 +3,7 @@
 set -e
 
 TEST_NAME=$2
-GC_DIR="`pwd`/$1"
+GC_DIR="`pwd`/$1/src/"
 
 DIR=$( cd -P "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 
