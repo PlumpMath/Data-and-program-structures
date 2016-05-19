@@ -27,7 +27,7 @@ def header_get_size(heap, pointer):
   for i in range (0, 4):
     ba.append(heap[pointer+i])
   number = int.from_bytes(ba, 'little')
-  return number & 0b00011111111111111111111111111111
+  return number & ~(111 << 29)
 
 def header_set_size(heap, pointer, size):
   pass
