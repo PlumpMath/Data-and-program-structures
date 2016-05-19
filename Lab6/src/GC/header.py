@@ -4,7 +4,11 @@ def header_get_garbage_flag(heap, pointer):
 
 
 def header_set_garbage_flag(heap, pointer, value):
-  pass
+  mask = 1 << 7
+  if value:
+    heap[pointer + 3] = heap[pointer + 3] | mask
+  else:
+    heap[pointer + 3] = heap[pointer + 3] & ~mask
 
 
 def header_get_used_flag(heap, pointer):
@@ -13,7 +17,11 @@ def header_get_used_flag(heap, pointer):
 
 
 def header_set_used_flag(heap, pointer, value):
-  pass
+  mask = 1 << 6
+  if value:
+    heap[pointer + 3] = heap[pointer + 3] | mask
+  else:
+    heap[pointer + 3] = heap[pointer + 3] & ~mask
 
 
 def header_is_pointers_array(heap, pointer):
