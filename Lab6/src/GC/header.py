@@ -1,6 +1,6 @@
 def header_get_garbage_flag(heap, pointer):
-  mask = 0b01000000
-  return heap[pointer] & mask == 0
+  mask = 1 << 7
+  return heap[pointer + 3] & mask != 0
 
 
 def header_set_garbage_flag(heap, pointer, value):
@@ -22,16 +22,11 @@ def header_mark_as_bytes_array(heap, pointer):
   pass
 
 def header_get_size(heap, pointer):
-  mask_size = 0b00001111
-  print("Get size:", bin(mask_size))
   number = bytearray()
-  number.append(heap[pointer] & mask_size)
-  print("Heap:", heap[pointer])
-  print("Masked heap:", heap[pointer] & mask_size)
-  for i in range (1, 4):
+  for i in range (0, 4):
     number.append(heap[pointer+i])
-  print(number)
-  return int.from_bytes(number, 'big')
+  print("Number:", number)
+  return int.from_bytes(number, 'little')
 
 def header_set_size(heap, pointer, size):
   pass
