@@ -23,7 +23,6 @@ def header_set_used_flag(heap, pointer, value):
   else:
     heap[pointer + 3] = heap[pointer + 3] & ~mask
 
-
 def header_is_pointers_array(heap, pointer):
   mask = 1 << 5
   return heap[pointer + 3] & mask != 0

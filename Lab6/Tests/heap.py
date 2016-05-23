@@ -10,6 +10,7 @@ import unittest
 
 class Heap(unittest.TestCase):
   def test_allocation(self):
+    print("--------Marker A--------")
     heap = GC.heap(1000)
     self.assertEqual(heap.total_free_space(), 996)
     self.assertEqual(heap.total_allocated_space(), 0)
@@ -24,7 +25,9 @@ class Heap(unittest.TestCase):
 
     self.assertEqual(pointer, 0)
     self.assertTrue(GC.header_get_used_flag(heap.data, pointer))
+
     self.assertEqual(GC.header_get_size(heap.data, pointer), 10)
+
     next_free_pointer = pointer + 14
     self.assertFalse(GC.header_get_used_flag(heap.data, next_free_pointer))
     self.assertEqual(GC.header_get_size(heap.data, next_free_pointer), 982)
@@ -37,13 +40,14 @@ class Heap(unittest.TestCase):
     self.assertEqual(pointer, 14)
     self.assertTrue(GC.header_get_used_flag(heap.data, pointer))
     self.assertEqual(GC.header_get_size(heap.data, pointer), 12)
+
     next_free_pointer = pointer + 16
     self.assertFalse(GC.header_get_used_flag(heap.data, next_free_pointer))
     self.assertEqual(GC.header_get_size(heap.data, next_free_pointer), 966)
+    print("--------Marker B--------")
 
   def test_desallocation_simple(self):
     heap = GC.heap(1000)
-
     pointer1 = heap.allocate(10)
     pointer2 = heap.allocate(12)
     pointer3 = heap.allocate(30)
@@ -54,7 +58,6 @@ class Heap(unittest.TestCase):
 
     self.assertEqual(heap.total_free_space(), 932)
     self.assertEqual(heap.total_allocated_space(), 52)
-
     heap.disallocate(pointer3)
 
     self.assertEqual(heap.total_free_space(), 966)
