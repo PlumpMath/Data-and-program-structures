@@ -10,7 +10,6 @@ import unittest
 
 class Heap(unittest.TestCase):
   def test_allocation(self):
-    print("--------Marker A--------")
     heap = GC.heap(1000)
     self.assertEqual(heap.total_free_space(), 996)
     self.assertEqual(heap.total_allocated_space(), 0)
@@ -44,7 +43,7 @@ class Heap(unittest.TestCase):
     next_free_pointer = pointer + 16
     self.assertFalse(GC.header_get_used_flag(heap.data, next_free_pointer))
     self.assertEqual(GC.header_get_size(heap.data, next_free_pointer), 966)
-    print("--------Marker B--------")
+
 
   def test_desallocation_simple(self):
     heap = GC.heap(1000)
@@ -199,7 +198,6 @@ class Heap(unittest.TestCase):
 
   def test_best_fit(self):
     heap = GC.heap(1000)
-
     pointer1 = heap.allocate(10)
     pointer2 = heap.allocate(18)
     pointer3 = heap.allocate(30)
