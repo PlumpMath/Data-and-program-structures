@@ -89,6 +89,7 @@ class heap(object):
       two_steps_forward = self.next_free_space(next_free)
       self.make_free(pointer, own_size + next_size, two_steps_forward)
       self.clear(next_free)
+      self.beancount_freeheader()
       # We might have yet another free space infront of us.
       self.merge_following_free_spaces(pointer)
     else:
@@ -153,12 +154,17 @@ class heap(object):
   def beancount_alloc(self, size):
     self.free_space -= (size+HEADER_SIZE)
     self.allocated_space += size
+    print("alloc:",self.free_space)
 
 
   def beancount_free(self, size):
-    self.free_space += (size+HEADER_SIZE)
+    self.free_space += (size)
     self.allocated_space -= size
-
+    print("free:",self.free_space)
+    
+  def beancount_freeheader(self):
+    self.free_space += (HEADER_SIZE)
+    print("free(header):",self.free_space)    
 
   def set_free_pointer(self, pointer):
     if not header_get_used_flag(self.data, pointer):

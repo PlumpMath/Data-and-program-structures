@@ -46,6 +46,7 @@ class Heap(unittest.TestCase):
 
 
   def test_desallocation_simple(self):
+    
     heap = GC.heap(1000)
     pointer1 = heap.allocate(10)
     pointer2 = heap.allocate(12)
@@ -83,12 +84,13 @@ class Heap(unittest.TestCase):
       self.assertEqual(heap.data[pointer2 + i], 0)
 
   def test_desallocation_complex_1(self):
+    print("")
+    print("Complex 1")
+    heap = GC.heap(1000) #996 + 4 (1000)
 
-    heap = GC.heap(1000)
-
-    pointer1 = heap.allocate(10)
-    pointer2 = heap.allocate(12)
-    pointer3 = heap.allocate(30)
+    pointer1 = heap.allocate(10) # 982 + 10 + 4(996) +2
+    pointer2 = heap.allocate(12) # 966 + 12 + 4(982) +0
+    pointer3 = heap.allocate(30) # 932 + 30 + 4(966) +6
 
     self.assertEqual(pointer1, 0)
     self.assertEqual(pointer2, 14)
@@ -138,6 +140,7 @@ class Heap(unittest.TestCase):
       self.assertEqual(heap.data[pointer2 + i], 0)
 
   def test_desallocation_complex_2(self):
+    print("")
     heap = GC.heap(1000)
 
     pointer1 = heap.allocate(10)
@@ -197,6 +200,7 @@ class Heap(unittest.TestCase):
     self.assertEqual(GC.pointer_array_get(heap.data, pointer3, 0), pointer5)
 
   def test_best_fit(self):
+    print("")
     heap = GC.heap(1000)
     pointer1 = heap.allocate(10)
     pointer2 = heap.allocate(18)
