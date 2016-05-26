@@ -156,12 +156,15 @@ class heap(object):
   def find_free(self, min_size, previous, new):
     if new > self.size:
       raise Exception("Unable to allocate, no large enough spot available.")
+    next_free = self.next_free_space(new)
     if header_get_used_flag(self.data, new):
       raise Exception("Free pointer chain broken by used data!")
-    if header_get_size(self.data, new) >= min_size:
+    if header_get_size(self.data, new) == min_size:
+      return (previous, new)
+    elif next_free is None:
       return (previous, new)
     else:
-      return self.find_free(min_size, new, self.next_free_space(new))
+      return self.find_free(min_size, new, next_free)
 
 
   def beancount_alloc(self, size):
