@@ -3,6 +3,7 @@ from .pointers_array import *
 
 HEADER_SIZE = 4
 INT_SIZE = 4
+MIN_FREE_THRESHOLD = HEADER_SIZE + INT_SIZE
 
 class heap(object):
 
@@ -66,12 +67,14 @@ class heap(object):
     elif next_free is not None:
       if next_free > new:
         self.set_next_free(current, new)
-        self.set_next_free( new, next_free)
+        self.set_next_free(new, next_free)
       else:
         self.insert_into_free_chain(current, next_free, new)
     elif previous is not None:
       self.set_next_free(previous, new)
       self.set_next_free(new, current)
+    else:
+      raise Exception("This shuold never happen.")
 
 
   def set_next_free(self, writing_to, next):
@@ -159,9 +162,8 @@ class heap(object):
     next_free = self.next_free_space(new)
     if header_get_used_flag(self.data, new):
       raise Exception("Free pointer chain broken by used data!")
-    if header_get_size(self.data, new) == min_size:
-      return (previous, new)
-    elif next_free is None:
+    elif header_get_size(self.data, new) == min_size or next_free is None \
+         or header_get_size(self.data, new) >= min_size + MIN_FREE_THRESHOLD:
       return (previous, new)
     else:
       return self.find_free(min_size, new, next_free)
