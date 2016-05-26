@@ -23,22 +23,21 @@ class heap(object):
     self.beancount_alloc(size)
     leftover_space = header_get_size(self.data, new) - size - HEADER_SIZE
     header_set_size(self.data, new, size)
-    header_set_used_flag(self.data, new, True)
-
     # If there is free space left after the area we just allocated.
     if leftover_space > 0:
       next_free = self.make_free(new + size + HEADER_SIZE, leftover_space)
     else:
-      print("WAT:", new)
       next_free = self.next_free_space(new)
-
+    print("Size:", size, ", Previous:", previous, ", New:", new, ", Next_free:", next_free)
     # Sort out the free pointer linking chain.
     # If we're in the middle of the chain.
-    if previous:
-      write_int(self.data, previous, next_free)
+    if previous is not None:
+      if next_free is not None:
+        self.set_next_free(previous, next_free)
     # If we're at the very begining
     else:
       self.first_free = next_free
+    header_set_used_flag(self.data, new, True)
 
     return new
 
@@ -53,7 +52,6 @@ class heap(object):
     self.merge_all_continuous_free_spaces()
 
 
-
   def insert_into_free_chain(self, previous, current, new):
     if current is None:
       return
@@ -61,20 +59,20 @@ class heap(object):
     if current == self.first_free and new < current:
       self.first_free = new
       self.set_next_free(new, current)
-    elif next_free:
+    elif next_free is not None:
       if next_free > new:
         self.set_next_free(current, new)
         self.set_next_free( new, next_free)
       else:
         self.insert_into_free_chain(current, next_free, new)
-    elif previous:
+    elif previous is not None:
       self.set_next_free(previous, new)
       self.set_next_free(new, current)
 
 
   def set_next_free(self, writing_to, next):
     if not header_get_used_flag(self.data, writing_to):
-      write_int(self.data, writing_to + 4, next)
+      write_int(self.data, writing_to + HEADER_SIZE, next)
     else:
       raise Exception("Attempt to set next_free pointer on non-free data:", writing_to, ", target:", next)
 
@@ -106,11 +104,11 @@ class heap(object):
       result = read_int(self.data, pointer + 4)
       return result if result != 0 else None
     else:
-      return None
+      raise Exception("Detected link to non-free space")
 
 
   def make_free(self, pointer, size, next_free=None):
-    if next_free:
+    if next_free is not None:
       write_int(self.data, pointer + 4, next_free)
     else:
       write_int(self.data, pointer + 4, 0)
@@ -148,7 +146,6 @@ class heap(object):
 
 
   def find_free(self, min_size, previous, new):
-    print("Find_free:", "min_size:", min_size, "prev:", previous, "new:", new, "size_free:", header_get_size(self.data, new))
     if new > self.size:
       raise Exception("Unable to allocate, no large enough spot available.")
     if header_get_used_flag(self.data, new):
