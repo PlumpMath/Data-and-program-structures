@@ -42,12 +42,3 @@ class mark_sweep(object):
           continue
         else:
           self.mark_reachable(ptr)
-
-
-
-  def sweep(self):
-    pass
-
-
-  def __rec_collect(self, pointer):
-    pass
