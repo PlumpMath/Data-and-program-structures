@@ -162,10 +162,10 @@ class heap(object):
     self.free_space += (size)
     self.allocated_space -= size
     print("free:",self.free_space)
-    
+
   def beancount_freeheader(self):
     self.free_space += (HEADER_SIZE)
-    print("free(header):",self.free_space)    
+    print("free(header):",self.free_space)
 
   def set_free_pointer(self, pointer):
     if not header_get_used_flag(self.data, pointer):
