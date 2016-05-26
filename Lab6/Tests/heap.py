@@ -84,8 +84,6 @@ class Heap(unittest.TestCase):
       self.assertEqual(heap.data[pointer2 + i], 0)
 
   def test_desallocation_complex_1(self):
-    print("")
-    print("Complex 1")
     heap = GC.heap(1000) #996 + 4 (1000)
 
     pointer1 = heap.allocate(10) # 982 + 10 + 4(996) +2
@@ -129,12 +127,7 @@ class Heap(unittest.TestCase):
     self.assertEqual(heap.total_allocated_space(), 40)
     self.assertEqual(GC.header_get_size(heap.data, pointer2), 12)
     self.assertFalse(GC.header_get_used_flag(heap.data, pointer2))
-    print("-------------------Marker------------------")
-    print("Free",heap.total_free_space(),"Allocated",heap.total_allocated_space())
     heap.disallocate(pointer1)
-    print("Free",heap.total_free_space(),"Allocated",heap.total_allocated_space())
-    print(heap.first_free)
-    print("-------------------Marker------------------")
     self.assertEqual(heap.total_free_space(), 958)
     self.assertEqual(heap.total_allocated_space(), 30)
     self.assertEqual(GC.header_get_size(heap.data, pointer1), 26)
@@ -144,6 +137,7 @@ class Heap(unittest.TestCase):
 
   def test_desallocation_complex_2(self):
     print("")
+    print("Complex 2")
     heap = GC.heap(1000)
 
     pointer1 = heap.allocate(10)
@@ -169,6 +163,7 @@ class Heap(unittest.TestCase):
     self.assertEqual(GC.header_get_size(heap.data, pointer3), 30)
     self.assertFalse(GC.header_get_used_flag(heap.data, pointer3))
     self.assertEqual(GC.pointer_array_get(heap.data, pointer3, 0), pointer5 + 16)
+    print("-------------------Marker------------------")
 
     heap.disallocate(pointer4)
     self.assertEqual(GC.header_get_size(heap.data, pointer1), 10)
