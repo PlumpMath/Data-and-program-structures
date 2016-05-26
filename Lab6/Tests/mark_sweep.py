@@ -2,11 +2,11 @@
 
 import GC
 import unittest
- 
+
 class mark_sweep(unittest.TestCase):
   def test_it(self):
     heap = GC.heap(1000)
-    
+
     root  = heap.allocate_array(6)
     obj1  = heap.allocate_bytes(23)
     obj2  = heap.allocate_array(3)
@@ -23,7 +23,7 @@ class mark_sweep(unittest.TestCase):
     obj13 = heap.allocate_bytes(4)
     obj14 = heap.allocate_bytes(7)
     obj15 = heap.allocate_bytes(11)
-    
+
     GC.pointer_array_set(heap.data, root, 0, obj1)
     GC.pointer_array_set(heap.data, root, 1, obj2)
     GC.pointer_array_set(heap.data, root, 2, obj5)
@@ -39,7 +39,7 @@ class mark_sweep(unittest.TestCase):
     GC.pointer_array_set(heap.data, obj9, 0, obj4)
     GC.pointer_array_set(heap.data, obj4, 1, obj15)
     GC.pointer_array_set(heap.data, obj9, 0, obj14)
-    
+
     gc = GC.mark_sweep(heap)
     gc.collect()
     self.assertTrue(GC.header_get_used_flag(heap.data, root))

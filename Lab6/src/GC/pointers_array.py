@@ -1,7 +1,7 @@
 from .header import *
 
 def pointer_array_count(heap, pointer):
-  return header_get_size(heap, pointer) / 4
+  return header_get_size(heap, pointer) // 4
 
 
 def pointer_array_get(heap, pointer, index):
