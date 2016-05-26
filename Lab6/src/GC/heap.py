@@ -109,12 +109,16 @@ class heap(object):
 
   def make_free(self, pointer, size, next_free=None):
     if next_free is not None:
-      self.set_free_pointer(pointer, next_free)
+      self.write_next_free(pointer, next_free)
     else:
-      self.set_free_pointer(pointer, 0)
+      self.write_next_free(pointer, 0)
     header_set_used_flag(self.data, pointer, False)
     header_set_size(self.data, pointer, size)
     return pointer
+
+
+  def write_next_free(self, pointer, next_free):
+    write_int(self.data, pointer + 4, next_free)
 
 
   def clear(self, pointer):
@@ -157,18 +161,18 @@ class heap(object):
 
 
   def beancount_alloc(self, size):
-    self.free_space -= (size+HEADER_SIZE)
+    self.free_space -= size + HEADER_SIZE
     self.allocated_space += size
 
 
 
   def beancount_free(self, size):
-    self.free_space += (size)
+    self.free_space += size
     self.allocated_space -= size
 
 
   def beancount_freeheader(self):
-    self.free_space += (HEADER_SIZE)
+    self.free_space += HEADER_SIZE
 
 
   def set_free_pointer(self, pointer):
