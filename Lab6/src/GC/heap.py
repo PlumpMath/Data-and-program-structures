@@ -23,17 +23,21 @@ class heap(object):
     self.beancount_alloc(size)
     leftover_space = header_get_size(self.data, new) - size - HEADER_SIZE
     header_set_size(self.data, new, size)
+
     # If there is free space left after the area we just allocated.
     if leftover_space > 0:
-      next_free = self.make_free(new + size + HEADER_SIZE, leftover_space)
+      next_free = self.make_free(new + size + HEADER_SIZE, leftover_space,
+                                 self.next_free_space(new))
     else:
       next_free = self.next_free_space(new)
-    print("Size:", size, ", Previous:", previous, ", New:", new, ", Next_free:", next_free)
+
     # Sort out the free pointer linking chain.
     # If we're in the middle of the chain.
     if previous is not None:
       if next_free is not None:
         self.set_next_free(previous, next_free)
+      else:
+        pass
     # If we're at the very begining
     else:
       self.first_free = next_free
