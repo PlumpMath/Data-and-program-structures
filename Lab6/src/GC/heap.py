@@ -50,10 +50,14 @@ class heap(object):
 
 
   def insert_into_free_chain(self, previous, current, new):
+    print("Chain:",previous, current, new)
     if current is None:
       return
     next_free = self.next_free_space(current)
-    if next_free:
+    if current == self.first_free and new < current:
+      self.first_free = new
+      self.set_next_free(new, current)
+    elif next_free:
       if next_free > new:
         self.set_next_free(current, new)
         self.set_next_free( new, next_free)
@@ -61,9 +65,6 @@ class heap(object):
         self.insert_into_free_chain(current, next_free, new)
     elif previous:
       self.set_next_free(previous, new)
-      self.set_next_free(new, current)
-    else:
-      self.first_free = new
       self.set_next_free(new, current)
 
 
