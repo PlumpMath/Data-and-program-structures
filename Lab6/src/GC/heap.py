@@ -109,9 +109,9 @@ class heap(object):
 
   def make_free(self, pointer, size, next_free=None):
     if next_free is not None:
-      write_int(self.data, pointer + 4, next_free)
+      self.set_free_pointer(pointer, next_free)
     else:
-      write_int(self.data, pointer + 4, 0)
+      self.set_free_pointer(pointer, 0)
     header_set_used_flag(self.data, pointer, False)
     header_set_size(self.data, pointer, size)
     return pointer
