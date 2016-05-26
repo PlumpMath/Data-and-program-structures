@@ -18,14 +18,19 @@ class heap(object):
 
   # return the index to the begining of a block with size (in bytes)
   def allocate(self, size):
-    (previous, new) = self.find_free((size + HEADER_SIZE), None, self.first_free)
+    (previous, new) = self.find_free(size, None, self.first_free)
     # Allocate the new space.
     self.beancount_alloc(size)
     leftover_space = header_get_size(self.data, new) - size - HEADER_SIZE
     header_set_size(self.data, new, size)
     header_set_used_flag(self.data, new, True)
 
-    next_free = self.make_free(new + size + HEADER_SIZE, leftover_space)
+    # If there is free space left after the area we just allocated.
+    if leftover_space > 0:
+      next_free = self.make_free(new + size + HEADER_SIZE, leftover_space)
+    else:
+      print("WAT:", new)
+      next_free = self.next_free_space(new)
 
     # Sort out the free pointer linking chain.
     # If we're in the middle of the chain.
@@ -103,6 +108,7 @@ class heap(object):
     else:
       return None
 
+
   def make_free(self, pointer, size, next_free=None):
     if next_free:
       write_int(self.data, pointer + 4, next_free)
@@ -111,6 +117,7 @@ class heap(object):
     header_set_used_flag(self.data, pointer, False)
     header_set_size(self.data, pointer, size)
     return pointer
+
 
   def clear(self, pointer):
     """Empties the data space pointed to by the pointer."""
@@ -141,6 +148,7 @@ class heap(object):
 
 
   def find_free(self, min_size, previous, new):
+    print("Find_free:", "min_size:", min_size, "prev:", previous, "new:", new, "size_free:", header_get_size(self.data, new))
     if new > self.size:
       raise Exception("Unable to allocate, no large enough spot available.")
     if header_get_used_flag(self.data, new):

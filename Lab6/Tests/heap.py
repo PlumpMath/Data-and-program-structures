@@ -46,7 +46,7 @@ class Heap(unittest.TestCase):
 
 
   def test_desallocation_simple(self):
-    
+
     heap = GC.heap(1000)
     pointer1 = heap.allocate(10)
     pointer2 = heap.allocate(12)
@@ -171,7 +171,7 @@ class Heap(unittest.TestCase):
     self.assertEqual(GC.header_get_size(heap.data, pointer3), 52)
     self.assertFalse(GC.header_get_used_flag(heap.data, pointer3))
     self.assertEqual(GC.pointer_array_get(heap.data, pointer3, 0), pointer5 + 16)
-
+    print("Här är testet vi är intresserade av.")
     pointer1 = heap.allocate(10)
     self.assertEqual(pointer1, 0)
     heap.disallocate(pointer1)
