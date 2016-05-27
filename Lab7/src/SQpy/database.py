@@ -39,7 +39,11 @@ class database(object):
       token.identifier:
         lambda q: self.identifier(q.identifier),
       token.update:
-        lambda q: self.update(q.table, q.set, q.where)
+        lambda q: self.update(q.table, q.set, q.where),
+      token.select:
+        lambda q: self.select(q.columns, q.from_table),
+      token.star:
+        lambda _: lambda _: True
     }[query.token](query)
 
 
@@ -52,7 +56,9 @@ class database(object):
 
   def create_table(self, name, columns):
     self._table_classes[name] = namedtuple(name + '_row', columns)
-    self._table_classes[name].__new__.__defaults__ = (None,) * len(self._table_classes[name]._fields)
+    self._table_classes[name].__new__.__defaults__ = \
+        (None,) * len(self._table_classes[name]._fields)
+    #self._table_classes[name]._get =
     self._tables[name] = []
 
 
@@ -93,6 +99,7 @@ class database(object):
       return [getattr(row, key) for key in identifiers][0]
     return f
 
+
   def update(self, table, set, where):
     wanted = filter(self.execute(where), self._tables[table])
     for row in wanted:
@@ -100,3 +107,19 @@ class database(object):
       for key, value in set:
         row = row._replace(**{key: value})
       self._tables[table][index] = row
+
+
+  def select(self, columns, table, where=None):
+    if where is None:
+      where = ast.star()
+    wanted = filter(self.execute(where), self._tables[table])
+
+    wanted = [self._table_classes[table](row._get(columns)) for row in wanted]
+    if isinstance(columns, ast):
+      #self.execute(columns)
+      pass
+    else:
+      print("This is a list!", columns)
+      pass
+
+    return wanted
