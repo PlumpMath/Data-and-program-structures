@@ -25,7 +25,11 @@ class Function:
     used when defining the function and a lambda function defining the body to be called (should take one single argument, which is the environment)
     '''
     self.parent = environment
+<<<<<<< .working
+    self.args = args; # argNames contain a list of the names of the arguments
+=======
     self.args = args;
+>>>>>>> .new
     self.body = body
     self.prototype = ObjectModule()
 
@@ -58,7 +62,7 @@ class Function:
     self.__call__(this, *args, thatVar=that)
 
 
-  def __call__(self, this, *args, thatVar=None):
+  def __call__(self, this, *argsx, thatVar=None):
     '''
     Call the function. With the this argument.
 
@@ -75,7 +79,11 @@ class Function:
       localEnvironment.defineVariable("this", this)
     if thatVar:
       localEnvironment.defineVariable("that", thatVar)
+<<<<<<< .working
+    argValuePairs = zip(self.args, argsx)
+=======
     argValuePairs = zip(self.args, args)
+>>>>>>> .new
     for name, value in argValuePairs:
       localEnvironment.defineVariable(name, value)
 
