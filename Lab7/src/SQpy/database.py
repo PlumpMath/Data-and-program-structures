@@ -58,7 +58,7 @@ class database(object):
     self._table_classes[name] = namedtuple(name + '_row', columns)
     self._table_classes[name].__new__.__defaults__ = \
         (None,) * len(self._table_classes[name]._fields)
-    #self._table_classes[name]._get =
+    self._table_classes[name]._get = _get
     self._tables[name] = []
 
 
@@ -114,12 +114,18 @@ class database(object):
       where = ast.star()
     wanted = filter(self.execute(where), self._tables[table])
 
-    wanted = [self._table_classes[table](row._get(columns)) for row in wanted]
     if isinstance(columns, ast):
       #self.execute(columns)
       pass
     else:
-      print("This is a list!", columns)
-      pass
-
+      wanted = [self._table_classes[table](**row._get(columns)) for row in wanted]
+      print("Wanted:", wanted[0]._asdict())
     return wanted
+
+
+def _get(self, columns):
+  retval = {}
+  for key, value in self._asdict().items():
+    if key in columns:
+      retval[key] = value
+  return retval
