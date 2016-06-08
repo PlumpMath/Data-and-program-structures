@@ -7,8 +7,8 @@ import common
 class SelectJoin(unittest.TestCase):
   def test_select_inner_join(self):
     db = common.fill_tables_8()
-    
-    # SELECT cities.name AS name, cities.population / countries.population AS proportion FROM cities LEINNERFT JOIN countries ON cities.country = countries.name
+
+    # SELECT cities.name AS name, cities.population / countries.population AS proportion FROM cities LEFT INNER JOIN countries ON cities.country = countries.name
     query1 = SQpy.ast.select(
                   [(SQpy.ast.identifier('cities', 'name'), 'name'), (SQpy.ast.op_divide( SQpy.ast.identifier('cities', 'population'), SQpy.ast.identifier('countries', 'population')), 'proportion')],
                   from_table = 'cities',
@@ -21,7 +21,7 @@ class SelectJoin(unittest.TestCase):
     self.assertEqual(result1[0]._asdict(), {'name': 'Linkoping', 'proportion': 0.015515690864420131})
     self.assertEqual(result1[1]._asdict(), {'name': 'Paris', 'proportion': 0.18348193387379289})
     self.assertEqual(result1[2]._asdict(), {'name': 'Strasbourg', 'proportion': 0.011918032024553191})
-    
+
     # SELECT neighbourhoods.name AS name, neighbourhoods.population / countries.population AS proportion FROM cities INNER JOIN countries ON cities.country = countries.name INNER JOIN neighbourhoods ON neighbourhoods.city = cities.name
     query2 = SQpy.ast.select(
                   [(SQpy.ast.identifier('neighbourhoods', 'name'), 'name'), (SQpy.ast.op_divide( SQpy.ast.identifier('neighbourhoods', 'population'), SQpy.ast.identifier('countries', 'population')), 'proportion')],
@@ -42,6 +42,3 @@ class SelectJoin(unittest.TestCase):
 
 if __name__ == '__main__':
   unittest.main()
-
- 
- 

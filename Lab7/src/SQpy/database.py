@@ -96,23 +96,27 @@ class database(object):
 
 
   def row_op(self, operands, comparator):
-    def f(row):
+    def f(row, row2=None):
       op0 = self.execute_or_literal(operands[0], row)
-      op1 = self.execute_or_literal(operands[1], row)
+      if row2:
+        op1 = self.execute_or_literal(operands[1], row2)
+      else:
+        op1 = self.execute_or_literal(operands[1], row)
       return comparator(op0, op1)
     return f
 
 
-  def identifier(self, identifiers):
+  def identifier(self, identifier):
     def f(row):
       # Remove [0] in case of multiple identifiers in the list.
       # Then add code in op_equal and it's brethren to
       # manage the list comparisons.
-      if len(identifiers) == 1:
-        return getattr(row, identifiers[0])
+      if len(identifier) == 1:
+        return getattr(row, identifier[0])
+      elif isinstance(row, tuple):
+        return getattr(row, identifier[1])
       else:
-        return getattr(row, identifiers[1])
-
+        return getattr(row[identifier[0]], identifier[1])
     return f
 
 
@@ -128,6 +132,7 @@ class database(object):
   def select(self, q):
     # Related to the uglyness that is fn_count.
     self._count = 0
+    self._total_count = 0
 
     columns = q.columns
     table = q.from_table
@@ -136,11 +141,12 @@ class database(object):
       where = q.where
     else:
       where = ast.star()
-    wanted = filter(self.execute(where), self._tables[table])
+
     if hasattr(q, "joins"):
       for join in q.joins:
-        wanted = filter(self.execute(join), wanted)
-
+        wanted = self.execute(join)(table)
+    else:
+      wanted = filter(self.execute(where), self._tables[table])
 
     # Then filter columns and execute subqueries.
     if isinstance(columns, ast):
@@ -155,16 +161,23 @@ class database(object):
 
       temp_class = namedtuple('select_row', columns)
       result = []
+
+      print("Wanted:", wanted)
       for row in wanted:
-        straight_rows = row._get(columns)
-        subqueries = {key: func(row) for key, func in resultFuncs.items()}
-        result.append(temp_class(**{**straight_rows, **subqueries}))
+        if not isinstance(row, dict):
+          straight_rows = row._get(columns)
+          subqueries = {key: func(row) for key, func in resultFuncs.items()}
+          result.append(temp_class(**{**straight_rows, **subqueries}))
+        else:
+          print("Row:", row)
+          subqueries = {key: func(row) for key, func in resultFuncs.items()}
+          result.append(temp_class(**subqueries))
       if self._aggregate:
         self._aggregate = False
         wanted = [result[-1]]
       else:
         wanted = result
-    print("Wanted:", wanted)
+
     return wanted
 
 
@@ -180,7 +193,7 @@ class database(object):
 
   def fn_avg(self, field):
     self._aggregate = True
-    # Now this is both ugly and bad.
+    # The same goes for this function.
     def f(row):
       if field in row._asdict():
         self._total_count += 1
@@ -190,7 +203,17 @@ class database(object):
 
 
   def inner_join(self, table, on):
-    print("InnerJoin:", "Table:", table, "On:", on)
+    def f(from_table):
+      print("Table:", table)
+      print("From_table:", from_table)
+      retval = []
+      for row in self._tables[table]:
+        for from_row in self._tables[from_table]:
+          print("Execute on:", self.execute(on)(from_row, row))
+          if self.execute(on)(from_row, row):
+            retval.append({from_table: from_row, table: row})
+      return retval
+    return f
 
 
 def _get(self, columns):
