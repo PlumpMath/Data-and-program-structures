@@ -31,11 +31,11 @@ class database(object):
       token.op_and:
         lambda q: self.op_and(q.operands),
       token.op_equal:
-        lambda q: self.comparison(q.operands, operator.eq),
+        lambda q: self.row_op(q.operands, operator.eq),
       token.op_inferior:
-        lambda q: self.comparison(q.operands, operator.lt),
+        lambda q: self.row_op(q.operands, operator.lt),
       token.op_superior:
-        lambda q: self.comparison(q.operands, operator.gt),
+        lambda q: self.row_op(q.operands, operator.gt),
       token.identifier:
         lambda q: self.identifier(q.identifier),
       token.update:
@@ -43,7 +43,9 @@ class database(object):
       token.select:
         lambda q: self.select(q.columns, q.from_table),
       token.star:
-        lambda _: lambda _: True
+        lambda _: lambda _: True,
+      token.op_divide:
+        lambda q: self.row_op(q.operands, operator.truediv)
     }[query.token](query)
 
 
@@ -83,7 +85,7 @@ class database(object):
     return f
 
 
-  def comparison(self, operands, comparator):
+  def row_op(self, operands, comparator):
     def f(row):
       op0 = self.execute_or_literal(operands[0], row)
       op1 = self.execute_or_literal(operands[1], row)
@@ -110,16 +112,30 @@ class database(object):
 
 
   def select(self, columns, table, where=None):
+    # First filter rows
     if where is None:
       where = ast.star()
     wanted = filter(self.execute(where), self._tables[table])
 
+    # Then filter columns and execute subqueries.
     if isinstance(columns, ast):
-      #self.execute(columns)
       pass
     else:
+      resultFuncs = {}
+      for i, column in enumerate(columns):
+        if isinstance(column, tuple):
+          operation, name = column
+          resultFuncs[name] = self.execute(operation)
+          columns[i] = name
+
       temp_class = namedtuple('select_row', columns)
-      wanted = [temp_class(**row._get(columns)) for row in wanted]
+      result = []
+      for row in wanted:
+        straight_rows = row._get(columns)
+        subqueries = {key: func(row) for key, func in resultFuncs.items()}
+        result.append(temp_class(**{**straight_rows, **subqueries}))
+      wanted = result
+
     return wanted
 
 
