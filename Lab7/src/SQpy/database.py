@@ -41,7 +41,7 @@ class database(object):
       token.update:
         lambda q: self.update(q.table, q.set, q.where),
       token.select:
-        lambda q: self.select(q.columns, q.from_table),
+        lambda q: self.select(q),
       token.star:
         lambda _: lambda _: True,
       token.op_divide:
@@ -111,9 +111,13 @@ class database(object):
       self._tables[table][index] = row
 
 
-  def select(self, columns, table, where=None):
+  def select(self, q):
+    columns = q.columns
+    table = q.from_table
     # First filter rows
-    if where is None:
+    if hasattr(q, "where"):
+      where = q.where
+    else:
       where = ast.star()
     wanted = filter(self.execute(where), self._tables[table])
 
