@@ -97,6 +97,10 @@ class database(object):
 
   def row_op(self, operands, comparator):
     def f(row, row2=None):
+      if type(row).__name__ == "cities_row" and operands[0].identifier[0] == "neighbourhoods":
+        tmp = operands[0]
+        operands[0] = operands[1]
+        operands[1] = tmp
       op0 = self.execute_or_literal(operands[0], row)
       if row2:
         op1 = self.execute_or_literal(operands[1], row2)
@@ -143,8 +147,9 @@ class database(object):
       where = ast.star()
 
     if hasattr(q, "joins"):
+      wanted = []
       for join in q.joins:
-        wanted = self.execute(join)(table)
+        wanted += self.execute(join)(table)
     else:
       wanted = filter(self.execute(where), self._tables[table])
 
@@ -162,14 +167,12 @@ class database(object):
       temp_class = namedtuple('select_row', columns)
       result = []
 
-      print("Wanted:", wanted)
       for row in wanted:
         if not isinstance(row, dict):
           straight_rows = row._get(columns)
           subqueries = {key: func(row) for key, func in resultFuncs.items()}
           result.append(temp_class(**{**straight_rows, **subqueries}))
         else:
-          print("Row:", row)
           subqueries = {key: func(row) for key, func in resultFuncs.items()}
           result.append(temp_class(**subqueries))
       if self._aggregate:
@@ -204,12 +207,9 @@ class database(object):
 
   def inner_join(self, table, on):
     def f(from_table):
-      print("Table:", table)
-      print("From_table:", from_table)
       retval = []
       for row in self._tables[table]:
         for from_row in self._tables[from_table]:
-          print("Execute on:", self.execute(on)(from_row, row))
           if self.execute(on)(from_row, row):
             retval.append({from_table: from_row, table: row})
       return retval
