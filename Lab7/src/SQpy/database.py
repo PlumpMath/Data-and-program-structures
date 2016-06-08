@@ -118,8 +118,8 @@ class database(object):
       #self.execute(columns)
       pass
     else:
-      wanted = [self._table_classes[table](**row._get(columns)) for row in wanted]
-      print("Wanted:", wanted[0]._asdict())
+      temp_class = namedtuple('select_row', columns)
+      wanted = [temp_class(**row._get(columns)) for row in wanted]
     return wanted
 
 
