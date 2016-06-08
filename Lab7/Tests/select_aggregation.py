@@ -13,7 +13,6 @@ class SelectAggregation(unittest.TestCase):
                         from_table = 'cities', where=SQpy.ast.op_superior(
                             SQpy.ast.identifier('population'), 1000000))
     result = db.execute(query)
-    print(result)
     self.assertEqual(len(result), 1)
     self.assertEqual(result[0]._asdict(), {'city_count': 2, 'avg_population': 10187829.5})
 
