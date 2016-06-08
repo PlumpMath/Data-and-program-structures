@@ -53,7 +53,9 @@ class database(object):
       token.fn_count:
         lambda q: self.fn_count(q.field),
       token.fn_avg:
-        lambda q: self.fn_avg(q.field)
+        lambda q: self.fn_avg(q.field),
+      token.inner_join:
+        lambda q: self.inner_join(q.table, q.on)
     }[query.token](query)
 
 
@@ -106,7 +108,11 @@ class database(object):
       # Remove [0] in case of multiple identifiers in the list.
       # Then add code in op_equal and it's brethren to
       # manage the list comparisons.
-      return [getattr(row, key) for key in identifiers][0]
+      if len(identifiers) == 1:
+        return getattr(row, identifiers[0])
+      else:
+        return getattr(row, identifiers[1])
+
     return f
 
 
@@ -131,6 +137,10 @@ class database(object):
     else:
       where = ast.star()
     wanted = filter(self.execute(where), self._tables[table])
+    if hasattr(q, "joins"):
+      for join in q.joins:
+        wanted = filter(self.execute(join), wanted)
+
 
     # Then filter columns and execute subqueries.
     if isinstance(columns, ast):
@@ -154,7 +164,7 @@ class database(object):
         wanted = [result[-1]]
       else:
         wanted = result
-
+    print("Wanted:", wanted)
     return wanted
 
 
@@ -177,6 +187,10 @@ class database(object):
         self._total += row._asdict()[field]
       return self._total / self._total_count
     return f
+
+
+  def inner_join(self, table, on):
+    print("InnerJoin:", "Table:", table, "On:", on)
 
 
 def _get(self, columns):
