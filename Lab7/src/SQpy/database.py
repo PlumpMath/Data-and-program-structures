@@ -6,6 +6,10 @@ class database(object):
   def __init__(self):
     self._tables = {}
     self._table_classes = {}
+    self._count = 0
+    self._total = 0
+    self._total_count = 0
+    self._aggregate = False
 
 
   def tables(self):
@@ -45,7 +49,11 @@ class database(object):
       token.star:
         lambda _: lambda _: True,
       token.op_divide:
-        lambda q: self.row_op(q.operands, operator.truediv)
+        lambda q: self.row_op(q.operands, operator.truediv),
+      token.fn_count:
+        lambda q: self.fn_count(q.field),
+      token.fn_avg:
+        lambda q: self.fn_avg(q.field)
     }[query.token](query)
 
 
@@ -112,6 +120,9 @@ class database(object):
 
 
   def select(self, q):
+    # Related to the uglyness that is fn_count.
+    self._count = 0
+
     columns = q.columns
     table = q.from_table
     # First filter rows
@@ -138,9 +149,34 @@ class database(object):
         straight_rows = row._get(columns)
         subqueries = {key: func(row) for key, func in resultFuncs.items()}
         result.append(temp_class(**{**straight_rows, **subqueries}))
-      wanted = result
+      if self._aggregate:
+        self._aggregate = False
+        wanted = [result[-1]]
+      else:
+        wanted = result
 
     return wanted
+
+
+  def fn_count(self, field):
+    self._aggregate = True
+    # Now this is both ugly and bad.
+    def f(row):
+      if field in row._asdict():
+        self._count += 1
+      return self._count
+    return f
+
+
+  def fn_avg(self, field):
+    self._aggregate = True
+    # Now this is both ugly and bad.
+    def f(row):
+      if field in row._asdict():
+        self._total_count += 1
+        self._total += row._asdict()[field]
+      return self._total / self._total_count
+    return f
 
 
 def _get(self, columns):
