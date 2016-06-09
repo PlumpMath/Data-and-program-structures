@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 
+import os
+import sys
+current_dir = os.path.dirname(__file__)
+sys.path.append(os.path.join(current_dir, '../src'))
+
+
+
 import SQpy
 import unittest
 import common
@@ -30,8 +37,9 @@ class SelectJoin(unittest.TestCase):
                         on=SQpy.ast.op_equal(SQpy.ast.identifier('cities', 'country'), SQpy.ast.identifier('countries', 'name'))),
                          SQpy.ast.inner_join('neighbourhoods',
                         on=SQpy.ast.op_equal(SQpy.ast.identifier('neighbourhoods', 'city'), SQpy.ast.identifier('cities', 'name'))) ])
-
+    print("---------------------")
     result2 = list(db.execute(query2))
+    print(result2)
     self.assertEqual(len(result2), 5)
     self.assertEqual(result2[0]._asdict(), {'name': 'Berga', 'proportion': 0.0006775676619270065})
     self.assertEqual(result2[1]._asdict(), {'name': 'Lambohov', 'proportion': 0.0008961542354977699})
