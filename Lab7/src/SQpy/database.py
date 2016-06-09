@@ -108,9 +108,6 @@ class database(object):
 
   def identifier(self, identifier):
     def f(row):
-      # Remove [0] in case of multiple identifiers in the list.
-      # Then add code in op_equal and it's brethren to
-      # manage the list comparisons.
       if len(identifier) == 1:
         return getattr(row, identifier[0])
       elif isinstance(row, tuple):
@@ -208,7 +205,6 @@ class database(object):
 
 
   def inner_join(self, table, on):
-    #orignal_row is a dict with table:row
     def f(original_rows):
       retval = []
       for original_row in original_rows:
@@ -236,7 +232,6 @@ class database(object):
                     on.operands[0].identifier[1] = on.operands[1].identifier[1]
                     on.operands[1].identifier[0] = id_zero
                     on.operands[1].identifier[1] = id_one    
-                #cases, non-equal and wrong order args?
                 pass
             retval.append(new_row)
       return retval
