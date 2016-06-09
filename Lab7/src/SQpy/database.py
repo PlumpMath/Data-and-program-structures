@@ -144,14 +144,6 @@ class database(object):
       where = q.where
     else:
       where = ast.star()
-    '''
-    if hasattr(q, "joins"):
-      wanted = []
-      for join in q.joins:
-        wanted += self.execute(join)(table)
-    else:
-      wanted = filter(self.execute(where), self._tables[table])
-    '''
     wanted = filter(self.execute(where), self._tables[table])
     # Then filter columns and execute subqueries.
     if isinstance(columns, ast):
@@ -166,37 +158,25 @@ class database(object):
 
       temp_class = namedtuple('select_row', columns)
       result = []
-      i = 0
       for row in wanted:
-        print("ROW NUMBER",i)
-        i += 1
         if hasattr(q, "joins"):
             row = {table : row}
-            j = 1
+            row = [row]
             for join in q.joins:
-                print("JOIN NUMBER",j)
-                j += 1
-
                 row = self.execute(join)(row)
-                if row is not None:
-                    print("merging or no work.")
-                #if no match break from join.
-                if row is None:
-                    print("execute returned None.")
-                    break
-            #next row in table.
-            if row is None:
-                continue
-        if row is not None:
-            print("NOT NONE!")
-        if not isinstance(row, dict):
+        if isinstance(row, list) and row is not None:
+            for value in row:
+                if value is None:
+                    continue
+                subqueries = {key: func(value) for key, func in resultFuncs.items()}
+                result.append(temp_class(**subqueries)) 
+        elif not isinstance(row, dict):
           straight_rows = row._get(columns)
           subqueries = {key: func(row) for key, func in resultFuncs.items()}
           result.append(temp_class(**{**straight_rows, **subqueries}))
         else:
           subqueries = {key: func(row) for key, func in resultFuncs.items()}
           result.append(temp_class(**subqueries))
-      print("This is us now:",result)
       if self._aggregate:
         self._aggregate = False
         wanted = [result[-1]]
@@ -229,47 +209,37 @@ class database(object):
 
   def inner_join(self, table, on):
     #orignal_row is a dict with table:row
-    def f(original_row):
-      print("INNER JOIN:",original_row,"with::", table)
+    def f(original_rows):
       retval = []
-      new_row = None
-      i = 0
-      for added_row in self._tables[table]:
-        print(i)
-        if self.execute(on)(original_row,added_row):
-            print("TRUE")
-            new_row = {table:added_row , **original_row}
-        else:
-            print("FALSE", on.operands[0].identifier[0],on.operands[0].identifier[1])
-            if not on.operands[0].identifier[0] in original_row:
-                #try to swap the identifiers, cause stupid input.
-                id_zero = on.operands[0].identifier[0]
-                id_one = on.operands[0].identifier[1]
-                on.operands[0].identifier[0] = on.operands[1].identifier[0]
-                on.operands[0].identifier[1] = on.operands[1].identifier[1]
-                on.operands[1].identifier[0] = id_zero
-                on.operands[1].identifier[1] = id_one
-                if self.execute(on)(original_row,added_row):
-                    new_row = {table:added_row , **original_row}
-                    print("Why is this true?")
-                #swap back.
-                id_zero = on.operands[0].identifier[0]
-                id_one = on.operands[0].identifier[1]
-                on.operands[0].identifier[0] = on.operands[1].identifier[0]
-                on.operands[0].identifier[1] = on.operands[1].identifier[1]
-                on.operands[1].identifier[0] = id_zero
-                on.operands[1].identifier[1] = id_one    
-            #cases, non-equal and wrong order args?
-            pass
-        i += 1
-        retval.append(new_row)
-      #retval = []
-      #for row in self._tables[table]:
-      #  for from_row in self._tables[from_table]:
-      #    if self.execute(on)(from_row, row):
-      #      retval.append({from_table: from_row, table: row})
-      print("THIS IS:",retval)
-      return new_row
+      for original_row in original_rows:
+        for added_row in self._tables[table]:
+            new_row = None
+            if original_row is None:
+                continue
+            if self.execute(on)(original_row,added_row):
+                new_row = {table:added_row , **original_row}
+            else:
+                if not on.operands[0].identifier[0] in original_row:
+                    #try to swap the identifiers, cause stupid input.
+                    id_zero = on.operands[0].identifier[0]
+                    id_one = on.operands[0].identifier[1]
+                    on.operands[0].identifier[0] = on.operands[1].identifier[0]
+                    on.operands[0].identifier[1] = on.operands[1].identifier[1]
+                    on.operands[1].identifier[0] = id_zero
+                    on.operands[1].identifier[1] = id_one
+                    if self.execute(on)(original_row,added_row):
+                        new_row = {table:added_row , **original_row}
+                    #swap back.
+                    id_zero = on.operands[0].identifier[0]
+                    id_one = on.operands[0].identifier[1]
+                    on.operands[0].identifier[0] = on.operands[1].identifier[0]
+                    on.operands[0].identifier[1] = on.operands[1].identifier[1]
+                    on.operands[1].identifier[0] = id_zero
+                    on.operands[1].identifier[1] = id_one    
+                #cases, non-equal and wrong order args?
+                pass
+            retval.append(new_row)
+      return retval
     return f
 
 
