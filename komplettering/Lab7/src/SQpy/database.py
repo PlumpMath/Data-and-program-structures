@@ -166,11 +166,11 @@ class database(object):
                 if value is None:
                     continue
                 subqueries = {key: func(value) for key, func in resultFuncs.items()}
-                result.append(temp_class(**subqueries)) 
+                result.append(temp_class(**subqueries))
         elif not isinstance(row, dict):
           straight_rows = row._get(columns)
           subqueries = {key: func(row) for key, func in resultFuncs.items()}
-          result.append(temp_class(**{**straight_rows, **subqueries}))
+          result.append(temp_class(**merge_dicts(straight_rows, subqueries)))
         else:
           subqueries = {key: func(row) for key, func in resultFuncs.items()}
           result.append(temp_class(**subqueries))
@@ -209,31 +209,29 @@ class database(object):
       retval = []
       for original_row in original_rows:
         for added_row in self._tables[table]:
-            new_row = None
-            if original_row is None:
-                continue
+          new_row = None
+          if original_row is None:
+            continue
+          if self.execute(on)(original_row,added_row):
+            new_row = {table:added_row , **original_row}
+          elif not on.operands[0].identifier[0] in original_row:
+            # Try to swap the identifiers, due to backwards input.
+            id_zero = on.operands[0].identifier[0]
+            id_one = on.operands[0].identifier[1]
+            on.operands[0].identifier[0] = on.operands[1].identifier[0]
+            on.operands[0].identifier[1] = on.operands[1].identifier[1]
+            on.operands[1].identifier[0] = id_zero
+            on.operands[1].identifier[1] = id_one
             if self.execute(on)(original_row,added_row):
-                new_row = {table:added_row , **original_row}
-            else:
-                if not on.operands[0].identifier[0] in original_row:
-                    #try to swap the identifiers, cause stupid input.
-                    id_zero = on.operands[0].identifier[0]
-                    id_one = on.operands[0].identifier[1]
-                    on.operands[0].identifier[0] = on.operands[1].identifier[0]
-                    on.operands[0].identifier[1] = on.operands[1].identifier[1]
-                    on.operands[1].identifier[0] = id_zero
-                    on.operands[1].identifier[1] = id_one
-                    if self.execute(on)(original_row,added_row):
-                        new_row = {table:added_row , **original_row}
-                    #swap back.
-                    id_zero = on.operands[0].identifier[0]
-                    id_one = on.operands[0].identifier[1]
-                    on.operands[0].identifier[0] = on.operands[1].identifier[0]
-                    on.operands[0].identifier[1] = on.operands[1].identifier[1]
-                    on.operands[1].identifier[0] = id_zero
-                    on.operands[1].identifier[1] = id_one    
-                pass
-            retval.append(new_row)
+              new_row = {table: added_row, **original_row}
+            # Swap back.
+            id_zero = on.operands[0].identifier[0]
+            id_one = on.operands[0].identifier[1]
+            on.operands[0].identifier[0] = on.operands[1].identifier[0]
+            on.operands[0].identifier[1] = on.operands[1].identifier[1]
+            on.operands[1].identifier[0] = id_zero
+            on.operands[1].identifier[1] = id_one
+          retval.append(new_row)
       return retval
     return f
 
@@ -243,4 +241,10 @@ def _get(self, columns):
   for key, value in self._asdict().items():
     if key in columns:
       retval[key] = value
+  return retval
+
+
+def merge_dicts(a, b):
+  retval = a.copy()
+  retval.update(b)
   return retval
