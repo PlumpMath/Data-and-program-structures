@@ -213,7 +213,7 @@ class database(object):
           if original_row is None:
             continue
           if self.execute(on)(original_row,added_row):
-            new_row = {table:added_row , **original_row}
+            new_row = dict({table: added_row}, **original_row)
           elif not on.operands[0].identifier[0] in original_row:
             # Try to swap the identifiers, due to backwards input.
             id_zero = on.operands[0].identifier[0]
@@ -223,7 +223,7 @@ class database(object):
             on.operands[1].identifier[0] = id_zero
             on.operands[1].identifier[1] = id_one
             if self.execute(on)(original_row,added_row):
-              new_row = {table: added_row, **original_row}
+              new_row = dict({table: added_row}, **original_row)
             # Swap back.
             id_zero = on.operands[0].identifier[0]
             id_one = on.operands[0].identifier[1]
